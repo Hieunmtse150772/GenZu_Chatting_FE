@@ -1,9 +1,10 @@
+import React, { useState } from "react";
 import UserCard from "./UserCard";
 import userIcon from "../../assets/user_icon.jpg";
-import { useState } from "react";
 
 const UserList = () => {
   const [activeTab, setActiveTab] = useState("personal");
+  const [activeUserID, setActiveUserID] = useState(null);
 
   const personalChats = [
     {
@@ -18,6 +19,24 @@ const UserList = () => {
       image: userIcon,
       message:
         "Elephants have the largest brains among land animals and demonstrate remarkable intelligence.",
+    },
+    {
+      id: "3",
+      name: "Helena Hills",
+      image: userIcon,
+      message: "Will head to the Help Center...",
+    },
+    {
+      id: "4",
+      name: "Oscar Davis",
+      image: userIcon,
+      message: "Trueeeeee",
+    },
+    {
+      id: "5",
+      name: "Daniel Jay Park",
+      image: userIcon,
+      message: "lol yeah, are you coming to the lunc...",
     },
   ];
 
@@ -38,38 +57,52 @@ const UserList = () => {
     },
   ];
 
+  const handleUserClick = (id) => {
+    setActiveUserID(id);
+  };
+
   return (
-    <section>
-      <div className="flex px-4 border-b mt-4">
+    <section className="w-full h-full">
+      <div className="flex mt-4">
         <button
           onClick={() => setActiveTab("personal")}
-          className={`flex-1 text-center p-2 ${
+          className={`flex-1 text-center p-2 rounded-tl-xl rounded-bl-xl border ${
             activeTab === "personal"
-              ? "border-b-2 border-[#74CDFF]"
-              : ""
+              ? "bg-blue-300 text-black border-blue-300 shadow-lg"
+              : "bg-white text-black border-gray-300"
           }`}
         >
           Cá Nhân
         </button>
         <button
           onClick={() => setActiveTab("group")}
-          className={`flex-1 text-center p-2 ${
+          className={`flex-1 text-center p-2 rounded-tr-xl rounded-br-xl border ${
             activeTab === "group"
-              ? "border-b-2 border-[#74CDFF]"
-              : ""
+              ? "bg-blue-300 text-black border-blue-300 shadow-lg"
+              : "bg-white text-black border-gray-300"
           }`}
         >
           Nhóm
         </button>
       </div>
-      <div className="mt-4 h-full">
+      <div className="mt-4 h-full overflow-y-auto">
         {activeTab === "personal" &&
           personalChats.map((item) => (
-            <UserCard user={item} key={item.id} />
+            <UserCard
+              user={item}
+              key={item.id}
+              isActive={activeUserID === item.id}
+              onClick={() => handleUserClick(item.id)}
+            />
           ))}
         {activeTab === "group" &&
           groupChats.map((item) => (
-            <UserCard user={item} key={item.id} />
+            <UserCard
+              user={item}
+              key={item.id}
+              isActive={activeUserID === item.id}
+              onClick={() => handleUserClick(item.id)}
+            />
           ))}
       </div>
     </section>
