@@ -4,8 +4,8 @@ import AppRoutes from "./routes";
 function App() {
   return (
     <div>
-      <AppRoutes />
-      {/* <Sidebar /> */}
+      {/* <AppRoutes /> */}
+      <Sidebar />
     </div>
   );
 }

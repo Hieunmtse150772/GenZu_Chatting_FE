@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import UserCard from "./UserCard";
 import userIcon from "../../assets/user_icon.jpg";
 
@@ -34,6 +34,12 @@ const UserList = () => {
     },
     {
       id: "5",
+      name: "Daniel Jay Park",
+      image: userIcon,
+      message: "lol yeah, are you coming to the lunc...",
+    },
+    {
+      id: "6",
       name: "Daniel Jay Park",
       image: userIcon,
       message: "lol yeah, are you coming to the lunc...",

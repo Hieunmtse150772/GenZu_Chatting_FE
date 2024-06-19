@@ -18,7 +18,7 @@ const Sidebar = () => {
           <LiaUserFriendsSolid className="w-6 h-6 ml-2" />
         </div>
       </div>
-      <div>
+      <div className="bg-white">
         <UserList />
       </div>
     </div>
