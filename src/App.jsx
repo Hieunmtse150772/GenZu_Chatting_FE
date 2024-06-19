@@ -5,7 +5,7 @@ function App() {
   return (
     <div>
       <AppRoutes />
-      <Sidebar />
+      {/* <Sidebar /> */}
     </div>
   );
 }
