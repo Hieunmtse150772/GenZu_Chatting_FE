@@ -7,16 +7,18 @@ export default function Login() {
   const { user } = useUser();
 
   return (
-      <div>
+    <div>
+      <div></div>
+    <div>
       <SignedOut>
-          <SignInPage/>
+        <SignInPage />
       </SignedOut>
       <SignedIn>
         <p>Welcome, {user?.fullName}!</p>
         <p>Email: {user?.primaryEmailAddress?.emailAddress}</p>
         <UserButton />
-        
       </SignedIn>
+    </div>
     </div>
   );
 }
