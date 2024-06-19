@@ -1,7 +1,8 @@
 
+import Header from "../components/View/HeaderChat";
 
 export default function Home() {
   return (
-    <div>Home</div>
+    <Header></Header>
   )
 }
