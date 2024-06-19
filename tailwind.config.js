@@ -9,6 +9,9 @@ export default {
       colors: {
         mainBlue: "#E1F1FF",
       },
+      margin: {
+        "7px": "7px",
+      },
     },
   },
   plugins: [],
