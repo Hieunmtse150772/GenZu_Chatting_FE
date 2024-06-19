@@ -6,9 +6,9 @@ import UserList from "./UserList";
 
 const Sidebar = () => {
   return (
-    <div className="border-r border-slate-500 p-4 shadow-lg w-80 h-screen overflow-y-scroll no-scrollbar  sm:max-w-[12rem] md:w-96  lg:max-w-[20rem] hidden md:block ">
+    <div className=" border-slate-500 p-4 shadow-lg w-80 h-screen  overflow-y-scroll no-scrollbar  sm:max-w-[12rem] md:w-96  lg:max-w-[20rem] hidden md:block ">
       <div className="flex items-center justify-between mb-4">
-        <p>App</p>
+        <p className="text-xl font-bold">App</p>
         <CiSettings className="w-6 h-6 text-black outline-none  cursor-pointer" />
       </div>
       <div className="flex justify-between items-center">
