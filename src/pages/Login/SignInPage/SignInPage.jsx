@@ -1,9 +1,8 @@
 import { SignIn } from "@clerk/clerk-react";
-import React from "react";
 
 const SignInPage = () => (
   <div>
-    <SignIn />
+    <SignIn signUpUrl="/register" />
   </div>
 );
 
