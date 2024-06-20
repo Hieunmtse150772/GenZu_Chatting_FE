@@ -3,7 +3,7 @@ import ChatFooter from "./ChatFooter";
 
 function ChatBody() {
   return (
-    <section className="flex flex-col relative h-screen">
+    <div className="flex flex-col h-screen mx-2 w-full">
       <ChatHeader />
       <div className="flex flex-grow flex-col space-y-2 overflow-y-auto no-scrollbar">
         {/* <!-- Messages go here -->
@@ -108,7 +108,7 @@ function ChatBody() {
         </div>
       </div>
       <ChatFooter />
-    </section>
+    </div>
   );
 }
 

@@ -3,14 +3,9 @@ import Sidebar from "../components/Sidebar/Sidebar";
 
 export default function Home() {
   return (
-    <div className="flex h-screen ">
-      {/* Sidebar */}
+    <main className="flex">
       <Sidebar />
-
-      {/* ChatBody */}
-      <div className="flex flex-grow">
-        <ChatBody />
-      </div>
-    </div>
+      <ChatBody />
+    </main>
   );
 }
