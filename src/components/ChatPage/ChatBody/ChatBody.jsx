@@ -2,7 +2,7 @@ import ChatHeader from '../ChatHeader/ChatHeader'
 import ChatFooter from '../ChatFooter/ChatFooter'
 import DetailMessage from './DetailMessage/DetailMessage'
 
-function ChatBody() {
+function ChatBody({ toggleInfo }) {
   let message = [
     {
       id: 1,
@@ -67,7 +67,7 @@ function ChatBody() {
   ]
   return (
     <div className='flex flex-col h-screen mx-2 w-full'>
-      <ChatHeader />
+      <ChatHeader toggleInfo={toggleInfo} />
       <div className='flex flex-grow flex-col space-y-2 overflow-y-auto no-scrollbar'>
         {/* <!-- Messages go here -->
                 <!-- Example Message --> */}
