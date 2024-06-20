@@ -66,9 +66,9 @@ function ChatBody({ toggleInfo }) {
     },
   ]
   return (
-    <div className='flex flex-col h-screen mx-2 w-full'>
+    <div className='mx-2 flex h-screen w-full flex-col shadow-xl'>
       <ChatHeader toggleInfo={toggleInfo} />
-      <div className='flex flex-grow flex-col space-y-2 overflow-y-auto no-scrollbar'>
+      <div className='no-scrollbar flex flex-grow flex-col space-y-2 overflow-y-auto'>
         {/* <!-- Messages go here -->
                 <!-- Example Message --> */}
         <DetailMessage inforMessage={message} />

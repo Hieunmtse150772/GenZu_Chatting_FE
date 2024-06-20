@@ -8,24 +8,24 @@ import Switcher from '../Sidebar/Switcher/Switcher'
 
 const Sidebar = () => {
   return (
-    <div className='relative border-slate-500 bg-lightTheme p-4 shadow-lg w-80 h-screen  overflow-y-scroll no-scrollbar  sm:max-w-[12rem] md:w-96  lg:max-w-[20rem] hidden md:block dark:bg-darkTheme'>
-      <div className='flex items-center justify-between mb-4'>
+    <div className='no-scrollbar relative hidden h-screen w-80 overflow-x-hidden overflow-y-scroll border-slate-500 bg-lightTheme p-4 shadow-lg dark:bg-darkTheme sm:max-w-[12rem] md:block md:w-80 lg:max-w-[20rem]'>
+      <div className='mb-4 flex items-center justify-between'>
         <p className='text-xl font-bold dark:text-white'>App</p>
-        <IoIosLogOut className='w-8 h-8 text-black  cursor-pointer dark:text-white' />
+        <IoIosLogOut className='h-8 w-8 cursor-pointer text-black dark:text-white' />
       </div>
-      <div className='flex justify-between items-center'>
+      <div className='flex items-center justify-between'>
         <SearchInput />
-        <div className='flex  items-center ml-4 cursor-pointer outline-none'>
-          <AiOutlineUsergroupAdd className='w-6 h-6 ml-2 dark:text-white' />
-          <LiaUserFriendsSolid className='w-6 h-6 ml-2 dark:text-white' />
+        <div className='ml-4 flex cursor-pointer items-center outline-none'>
+          <AiOutlineUsergroupAdd className='ml-2 h-6 w-6 dark:text-white' />
+          <LiaUserFriendsSolid className='ml-2 h-6 w-6 dark:text-white' />
         </div>
       </div>
       <div className='flex-grow'>
         <UserList />
       </div>
-      <div className='absolute bottom-4 left-4 w-full flex items-center justify-between pr-8'>
+      <div className='absolute bottom-4 left-4 flex w-full items-center justify-between pr-8'>
         <Switcher />
-        <CiSettings className='w-6 h-6 text-black outline-none  cursor-pointer dark:text-white' />
+        <CiSettings className='h-6 w-6 cursor-pointer text-black outline-none dark:text-white' />
       </div>
     </div>
   )
