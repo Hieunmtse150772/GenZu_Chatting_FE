@@ -1,5 +1,5 @@
-import ChatHeader from "../ChatHeader";
-import ChatFooter from "../ChatFooter";
+import ChatHeader from "../ChatHeader/ChatHeader";
+import ChatFooter from "../ChatFooter/ChatFooter";
 import DetailMessage from "./DetailMessage/DetailMessage";
 
 function ChatBody() {
