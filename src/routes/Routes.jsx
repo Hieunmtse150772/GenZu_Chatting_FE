@@ -8,7 +8,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={<Login />} />
       {/* <Route path="/register" element={<SignUpComponent />} /> */}
-      <Route path="/" element={<Home />} />
+      {/* <Route path="/" element={<Home />} /> */}
 
     </Routes>
   );

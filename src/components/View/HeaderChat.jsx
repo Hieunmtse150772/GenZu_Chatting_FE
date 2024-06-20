@@ -18,19 +18,19 @@ function Header() {
                 <i className="fas fa-bars fa-2x visible md:invisible mr-10 md:mr-0 text-blue-200 cursor-pointer"></i>
                 <ul className="hidden md:flex overflow-x-hidden mr-10 font-semibold">
                     <li className="mr-6 p-1">
-                        <a className="cursor-default " href="#">
+                        <button id="setting" class="hover:bg-blue-400 rounded-md p-1">
                             <IoCallOutline size={40}/>
-                        </a>
+                        </button>
                     </li>
                     <li className="mr-6 p-1">
-                        <a className="hover:text-blue-300" href="#">
+                        <button id="setting" class="hover:bg-blue-400 rounded-md p-1">
                             <IoVideocamOutline size={40}/>
-                        </a>
+                        </button>
                     </li>
                     <li className="mr-6 p-1">
-                        <a className="hover:text-blue-300" href="#">
+                        <button id="setting" class="hover:bg-blue-400 rounded-md p-1">
                             <SlOptions size={40}/>
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </div>;
