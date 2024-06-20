@@ -1,4 +1,4 @@
-import ChatBody from "../components/View/ChatBody";
+import ChatBody from "../components/View/ChatBody/ChatBody";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { useUser, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import "./Home.css";
