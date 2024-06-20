@@ -2,7 +2,7 @@ import { SignIn } from "@clerk/clerk-react";
 
 const SignInPage = () => (
   <div>
-    <SignIn signUpUrl="/register" />
+    <SignIn signUpUrl="/login/signup" />
   </div>
 );
 
