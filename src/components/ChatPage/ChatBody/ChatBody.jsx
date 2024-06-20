@@ -66,7 +66,7 @@ function ChatBody({ toggleInfo }) {
     },
   ]
   return (
-    <div className='mx-2 flex h-screen w-full flex-col shadow-xl'>
+    <div className='mx-2 flex h-screen w-full flex-col shadow-2xl dark:bg-[#587e91]'>
       <ChatHeader toggleInfo={toggleInfo} />
       <div className='no-scrollbar flex flex-grow flex-col space-y-2 overflow-y-auto'>
         {/* <!-- Messages go here -->
