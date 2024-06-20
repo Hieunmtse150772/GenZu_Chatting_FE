@@ -2,9 +2,9 @@ import AppRoutes from "./routes";
 
 function App() {
   return (
-    <div className="flex">
-      <AppRoutes />
-    </div>
+    <>
+      <AppRoutes />;
+    </>
   );
 }
 

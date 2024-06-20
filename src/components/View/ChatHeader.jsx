@@ -7,7 +7,7 @@ import { SlOptions } from "react-icons/sl";
 
 function ChatHeader() {
   return (
-    <div className="flex justify-between items-center py-4 bg-mainBlue px-8 rounded-lg">
+    <header className="flex justify-between items-center py-4 bg-mainBlue px-8 rounded-lg">
       <div className="flex items-center space-x-4 cursor-pointer">
         <RxAvatar size={40} className="text-orange-500" />
         <div className="flex flex-col">
@@ -30,7 +30,7 @@ function ChatHeader() {
           <SlOptions size={25} />
         </button>
       </div>
-    </div>
+    </header>
   );
 }
 
