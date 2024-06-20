@@ -1,3 +1,6 @@
-body{
-    height: 500px;
+body {
+  height: 500px;
+}
+.Login {
+  background-image: url("/src/assets/galaxyBg.jpg");
 }
