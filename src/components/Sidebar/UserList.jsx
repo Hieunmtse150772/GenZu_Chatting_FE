@@ -72,9 +72,9 @@ const UserList = () => {
       <div className="flex mt-4">
         <button
           onClick={() => setActiveTab("personal")}
-          className={`flex-1 text-center p-2 rounded-tl-xl rounded-bl-xl border ${
+          className={`flex-1 text-center p-2 rounded-tl-xl rounded-bl-xl border  ${
             activeTab === "personal"
-              ? "bg-blue-300 text-black border-blue-300 shadow-lg"
+              ? "bg-blue-300 text-black border-blue-300 shadow-lg dark:text-white"
               : "bg-white text-black border-gray-300"
           }`}
         >
@@ -84,7 +84,7 @@ const UserList = () => {
           onClick={() => setActiveTab("group")}
           className={`flex-1 text-center p-2 rounded-tr-xl rounded-br-xl border ${
             activeTab === "group"
-              ? "bg-blue-300 text-black border-blue-300 shadow-lg"
+              ? "bg-blue-300 text-black border-blue-300 shadow-lg dark:text-white"
               : "bg-white text-black border-gray-300"
           }`}
         >

@@ -55,11 +55,11 @@ const UserCard = ({ user, isActive, onClick }) => {
         alt="user avatar"
         className="w-12 h-12 rounded-full object-cover"
       />
-      <div className="flex flex-col gap-2 w-full truncate">
+      <div className="flex flex-col gap-2 w-full truncate dark:text-white">
         <h3 className="text-sm font-semibold truncate">
           {user?.name}
         </h3>
-        <p className="text-sm text-gray-500 truncate">
+        <p className="text-sm text-gray-500 truncate dark:text-slate-500">
           {user?.message}
         </p>
       </div>
@@ -71,7 +71,7 @@ const UserCard = ({ user, isActive, onClick }) => {
         }`}
         onClick={handleMoreClick}
       >
-        <CgMoreO className="text-gray-500 w-5 h-5 hover:text-gray-800" />
+        <CgMoreO className="text-gray-500 w-5 h-5 hover:text-gray-800 dark:text-white" />
       </div>
       {isOptionBtnClick && (
         <div
