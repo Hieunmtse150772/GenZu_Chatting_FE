@@ -1,17 +1,15 @@
-import Header from "../components/View/HeaderChat";
-import Footer from "../components/View/FooterChat";
-import ViewChat from "../components/View/ViewChat";
+import ChatBody from "../components/View/ChatBody";
 import Sidebar from "../components/Sidebar/Sidebar";
-// import "../pages/Home.css";
 
 export default function Home() {
   return (
-    <div>
-      <Header></Header>
+    <div className="flex h-screen ">
+      {/* Sidebar */}
       <Sidebar />
-      <div className="flex-1 overflow-y-auto p-4">
-        <ViewChat></ViewChat>
-        <Footer></Footer>
+
+      {/* ChatBody */}
+      <div className="flex flex-grow">
+        <ChatBody />
       </div>
     </div>
   );
