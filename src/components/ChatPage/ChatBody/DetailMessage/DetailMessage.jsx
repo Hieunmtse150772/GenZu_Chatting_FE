@@ -25,8 +25,22 @@ export default function DetailMessage(props) {
     <div className='mx-2'>
       {message.map((item, index) =>
         item.id_user == 1 ? (
-          <div key={index} className='flex justify-end'>
-            <div className='my-4 max-w-xs rounded-lg bg-blue-200 p-2 text-black'>
+          <div key={index} className='flex justify-end' 
+                onMouseEnter={() => {setIsOptionBtnClick(true)
+                                      handleUserClick(item.id_message)
+                                    }}
+                onMouseLeave={() => setIsOptionBtnClick(false)}>
+            <div
+                className={`${
+                  isOptionBtnClick && activeMessageID == item.id_message
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-100"
+                }`}
+                
+              >
+              <FeatureAI />
+            </div>
+            <div className='my-1 max-w-xs rounded-lg bg-blue-200 p-2 text-black'>
               {item.message}
             </div>
           </div>
@@ -36,7 +50,7 @@ export default function DetailMessage(props) {
                   handleUserClick(item.id_message)
                 }}
                 onMouseLeave={() => setIsOptionBtnClick(false)}>
-            <div className='max-w-xs rounded-lg bg-gray-300 p-2 text-black' 
+            <div className='my-1 max-w-xs rounded-lg bg-gray-300 p-2 text-black' 
                 >
                     {item.message}
             </div>

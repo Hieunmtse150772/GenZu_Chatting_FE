@@ -36,7 +36,7 @@ const ChatFooter = () => {
   }
 
   const handleKeyPress = (e) => {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13 && input !='') {
       dispatch(sendMessage(input))
       setInput('') // Clear input field after dispatch
     }
@@ -50,7 +50,7 @@ const ChatFooter = () => {
         placeholder='Type your message...'
         onChange={handleChangeInput}
         onKeyDown={handleKeyPress}
-        className='flex-1 rounded-full border px-4 py-2 focus:outline-none'
+        className='flex-1 rounded-full border px-4 py-2 focus:outline outline-blue-600'
       />
       <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
         <div className='flex justify-between'>
