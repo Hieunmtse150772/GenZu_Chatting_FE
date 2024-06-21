@@ -43,7 +43,6 @@ function ChatFooter() {
   }
   return (
     <div className='relative flex items-center rounded-lg bg-white p-4'>
-      
       <input
         type='text'
         placeholder='Type your message...'
