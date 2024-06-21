@@ -1,21 +1,19 @@
-import { useUser, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
-import SignInPage from "./SignInPage/SignInPage";
-import { Routes, Route } from "react-router-dom";
-import SignUpComponent from "./SignUpPage/SignUpPage";
-import "./Login.scss";
-// import  { useEffect } from 'react';
-// import { useClerk } from '@clerk/clerk-react';
+import { useUser, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
+import SignInPage from './SignInPage/SignInPage'
+import { Routes, Route } from 'react-router-dom'
+import SignUpComponent from './SignUpPage/SignUpPage'
+import './Login.scss'
 
 export default function Login() {
-  const { user } = useUser();
+  const { user } = useUser()
 
   return (
-    <div className="Login flex bg-mainBlue my-auto mx-auto w-screen items-center justify-center h-screen">
+    <div className='LoginPage mx-auto my-auto flex h-screen w-screen items-center justify-center'>
       <div>
         <SignedOut>
           <Routes>
-            <Route path="/" element={<SignInPage />} />
-            <Route path="signup" element={<SignUpComponent />} />
+            <Route path='/' element={<SignInPage />} />
+            <Route path='signup' element={<SignUpComponent />} />
           </Routes>
         </SignedOut>
         <SignedIn>
@@ -25,5 +23,5 @@ export default function Login() {
         </SignedIn>
       </div>
     </div>
-  );
+  )
 }

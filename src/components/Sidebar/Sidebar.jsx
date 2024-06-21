@@ -5,6 +5,7 @@ import { LiaUserFriendsSolid } from 'react-icons/lia'
 import SearchInput from '../Sidebar/SearchInput/SearchInput'
 import UserList from '../Sidebar/UserList/UserList'
 import Switcher from '../Sidebar/Switcher/Switcher'
+import { UserButton } from '@clerk/clerk-react'
 
 const Sidebar = () => {
   return (
@@ -12,6 +13,7 @@ const Sidebar = () => {
       <div className='mb-4 flex items-center justify-between'>
         <p className='text-xl font-bold dark:text-white'>App</p>
         <IoIosLogOut className='h-8 w-8 cursor-pointer text-black dark:text-white' />
+        <UserButton afterSignOutUrl='/login' />
       </div>
       <div className='flex items-center justify-between'>
         <SearchInput />
