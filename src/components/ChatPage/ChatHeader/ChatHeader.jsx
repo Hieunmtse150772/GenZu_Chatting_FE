@@ -10,11 +10,13 @@ function ChatHeader({ toggleInfo }) {
           className='h-16 w-16 rounded-full'
         />
         <div className='flex flex-col'>
-          <span className='text-2xl font-semibold text-black dark:text-white'>Username</span>
+          <span className='text-xl font-semibold text-black dark:text-white md:text-2xl'>
+            Username
+          </span>
           <span className='font-semibold text-gray-500 dark:text-slate-500'>Active 2h ago</span>
         </div>
       </div>
-      <div className='flex space-x-6'>
+      <div className='flex space-x-2 md:space-x-6'>
         <button className='rounded-md p-2 hover:bg-blue-400 dark:hover:opacity-85'>
           <MdPhone size={22} />
         </button>

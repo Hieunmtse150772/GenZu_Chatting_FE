@@ -42,7 +42,7 @@ function ChatFooter() {
     }
   }
   return (
-    <div className='relative flex items-center rounded-lg bg-white p-4'>
+    <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
       <input
         type='text'
         placeholder='Type your message...'
@@ -50,18 +50,21 @@ function ChatFooter() {
         onKeyDown={handleKeyPress}
         className='flex-1 rounded-full border px-4 py-2 focus:outline-none'
       />
-      <div className='mr-4 hidden overflow-x-hidden font-semibold md:flex md:items-center'>
+      <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
         <div className='flex justify-between'>
-          <button className='rounded-md p-1 hover:bg-blue-400'>
+          <button className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'>
             <MdOutlineKeyboardVoice size={24} />
           </button>
-          <button className='rounded-md p-1 hover:bg-blue-400' onClick={toggleAttachments}>
+          <button
+            className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
+            onClick={toggleAttachments}
+          >
             <MdAttachFile size={24} />
           </button>
-          <button className='mr-2 rounded-md p-1 hover:bg-blue-400'>
+          <button className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'>
             <MdInsertEmoticon size={24} />
           </button>
-          <button className='rounded-full bg-blue-500 p-2 hover:bg-blue-600 focus:outline-none'>
+          <button className='rounded-full bg-blue-500 p-2 hover:bg-blue-600 focus:outline-none dark:text-white'>
             <LuSend size={16} />
           </button>
         </div>
