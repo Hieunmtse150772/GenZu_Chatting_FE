@@ -1,8 +1,9 @@
-import { call, put, takeEvery } from "redux-saga/effects"
-import { setMessage } from "./messageSlice"
+import { call, put, takeEvery } from 'redux-saga/effects'
+import { setMessage } from './Slice/messageSlice'
+
 
 async function CallMessage() {
-  let res = await fetch("API_DOMAIN", {
+  let res = await fetch('API_DOMAIN', {
     headers: {
       accept: 'application/json',
     },

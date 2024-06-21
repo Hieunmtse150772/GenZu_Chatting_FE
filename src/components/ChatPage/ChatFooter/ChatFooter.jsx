@@ -4,7 +4,7 @@ import { LuSend } from 'react-icons/lu'
 import { MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { FaFile, FaImage, FaVideo, FaHeadphones } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
-import { sendMessage } from '../../../redux/messageSlice'
+import { sendMessage } from '../../../redux/Slice/messageSlice'
 
 function ChatFooter() {
   const [showAttachments, setShowAttachments] = useState(false)
@@ -45,6 +45,7 @@ function ChatFooter() {
     <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
       <input
         type='text'
+        value={input}
         placeholder='Type your message...'
         onChange={handleChangeInput}
         onKeyDown={handleKeyPress}
