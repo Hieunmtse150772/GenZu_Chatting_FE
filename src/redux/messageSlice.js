@@ -68,8 +68,12 @@ const messageSlice = createSlice({
   name: 'message',
   initialState,
   reducers: {
-    sendMessage: (state) => {
-      return { ...state }
+    sendMessage: (state, action) => {
+      console.log(action.payload)
+      return {
+        ...state,
+        message: [...state.message, action.payload],
+      }
     },
     setMessage: (state) => {
       return { ...state }

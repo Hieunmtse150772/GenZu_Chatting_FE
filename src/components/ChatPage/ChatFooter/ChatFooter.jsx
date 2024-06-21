@@ -3,9 +3,13 @@ import { MdOutlineKeyboardVoice } from 'react-icons/md'
 import { LuSend } from 'react-icons/lu'
 import { MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { FaFile, FaImage, FaVideo, FaHeadphones } from 'react-icons/fa'
+import { useDispatch } from 'react-redux'
+import { sendMessage } from '../../../redux/messageSlice'
 
 function ChatFooter() {
   const [showAttachments, setShowAttachments] = useState(false)
+  const [input, setInput] = useState('')
+  const dispatch = useDispatch()
   const fileInputRefs = {
     file: useRef(null),
     image: useRef(null),
@@ -27,11 +31,24 @@ function ChatFooter() {
     fileInputRefs[type].current.click()
   }
 
+  const handleChangeInput = (e) => {
+    setInput(e.target.value)
+  }
+  const handleKeyPress = (e) => {
+    if (e.keyCode == 13) {
+      dispatch(sendMessage(input))
+      console.log(input)
+      setInput('') // Clear input field after dispatch
+    }
+  }
   return (
     <div className='relative flex items-center rounded-lg bg-white p-4'>
+      
       <input
         type='text'
         placeholder='Type your message...'
+        onChange={handleChangeInput}
+        onKeyDown={handleKeyPress}
         className='flex-1 rounded-full border px-4 py-2 focus:outline-none'
       />
       <div className='mr-4 hidden overflow-x-hidden font-semibold md:flex md:items-center'>
