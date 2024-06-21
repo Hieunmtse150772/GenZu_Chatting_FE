@@ -19,9 +19,6 @@ export default function Home() {
           <SignInPage />
         </SignedOut>
         <SignedIn>
-          {/* <p>Welcome, {user?.fullName}!</p>
-        <p>Email: {user?.primaryEmailAddress?.emailAddress}</p>
-        <UserButton /> */}
           <main className='flex'>
             <Sidebar />
             <ChatBody toggleInfo={toggleInfo} />
@@ -31,6 +28,7 @@ export default function Home() {
               </div>
             )}
           </main>
+          <UserButton afterSignOutUrl='/sign-in' />
         </SignedIn>
       </div>
     </div>

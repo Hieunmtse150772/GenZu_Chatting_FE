@@ -2,18 +2,21 @@
 
 import messageSlice from './messageSlice'
 import createSagaMiddleware from 'redux-saga'
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import saMessage from './saga'
 
 // disalbe thunk and add redux-saga middleware
 const sagaMiddleware = createSagaMiddleware()
-const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware]
 
 const store = configureStore({
   reducer: {
-    counter: messageSlice,
+    message: messageSlice,
   },
-  middleware,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: false,
+      serializableCheck: false,
+    }).concat(sagaMiddleware),
 })
 sagaMiddleware.run(saMessage)
 
