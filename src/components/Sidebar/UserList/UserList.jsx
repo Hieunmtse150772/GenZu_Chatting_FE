@@ -1,98 +1,45 @@
-import { useState } from "react";
-import UserCard from "../UserCard/UserCard";
-import userIcon from "../../../assets/user_icon.jpg";
+import { useState } from 'react'
+import UserCard from '../UserCard/UserCard'
+import { useSelector } from 'react-redux'
 
 const UserList = () => {
-  const [activeTab, setActiveTab] = useState("personal");
-  const [activeUserID, setActiveUserID] = useState(null);
+  const [activeTab, setActiveTab] = useState('personal')
+  const [activeUserID, setActiveUserID] = useState(null)
 
-  const personalChats = [
-    {
-      id: "1",
-      name: "Huy Nguyen",
-      image: userIcon,
-      message: "Let's go",
-    },
-    {
-      id: "2",
-      name: "Ba Thien",
-      image: userIcon,
-      message:
-        "Elephants have the largest brains among land animals and demonstrate remarkable intelligence.",
-    },
-    {
-      id: "3",
-      name: "Helena Hills",
-      image: userIcon,
-      message: "Will head to the Help Center...",
-    },
-    {
-      id: "4",
-      name: "Oscar Davis",
-      image: userIcon,
-      message: "Trueeeeee",
-    },
-    {
-      id: "5",
-      name: "Daniel Jay Park",
-      image: userIcon,
-      message: "lol yeah, are you coming to the lunc...",
-    },
-    {
-      id: "6",
-      name: "Daniel Jay Park",
-      image: userIcon,
-      message: "lol yeah, are you coming to the lunc...",
-    },
-  ];
+  const personalChats = useSelector((state) => state.user.lsPersonalChats)
 
-  const groupChats = [
-    {
-      id: "3",
-      name: "Ngan Tran",
-      image: userIcon,
-      message:
-        "Cheetahs are the fastest land animals, capable of reaching speeds up",
-    },
-    {
-      id: "4",
-      name: "Minh Hieu",
-      image: userIcon,
-      message:
-        "Koalas sleep around 20 hours a day and are known for their eucalyptus diet.",
-    },
-  ];
+  const groupChats = useSelector((state) => state.user.lsGroupChats)
 
   const handleUserClick = (id) => {
-    setActiveUserID(id);
-  };
+    setActiveUserID(id)
+  }
 
   return (
-    <section className="w-full h-full">
-      <div className="flex mt-4">
+    <section className='h-full w-full'>
+      <div className='mt-4 flex'>
         <button
-          onClick={() => setActiveTab("personal")}
-          className={`flex-1 text-center p-2 rounded-tl-xl rounded-bl-xl border  ${
-            activeTab === "personal"
-              ? "bg-blue-300 text-black border-blue-300 shadow-lg dark:text-white"
-              : "bg-white text-black border-gray-300"
+          onClick={() => setActiveTab('personal')}
+          className={`flex-1 rounded-bl-xl rounded-tl-xl border p-2 text-center ${
+            activeTab === 'personal'
+              ? 'border-blue-300 bg-blue-300 text-black shadow-lg dark:text-white'
+              : 'border-gray-300 bg-white text-black'
           }`}
         >
           Cá Nhân
         </button>
         <button
-          onClick={() => setActiveTab("group")}
-          className={`flex-1 text-center p-2 rounded-tr-xl rounded-br-xl border ${
-            activeTab === "group"
-              ? "bg-blue-300 text-black border-blue-300 shadow-lg dark:text-white"
-              : "bg-white text-black border-gray-300"
+          onClick={() => setActiveTab('group')}
+          className={`flex-1 rounded-br-xl rounded-tr-xl border p-2 text-center ${
+            activeTab === 'group'
+              ? 'border-blue-300 bg-blue-300 text-black shadow-lg dark:text-white'
+              : 'border-gray-300 bg-white text-black'
           }`}
         >
           Nhóm
         </button>
       </div>
-      <div className="mt-4 h-full overflow-y-auto">
-        {activeTab === "personal" &&
+      <div className='mt-4 h-full overflow-y-auto'>
+        {activeTab === 'personal' &&
           personalChats.map((item) => (
             <UserCard
               user={item}
@@ -101,7 +48,7 @@ const UserList = () => {
               onClick={() => handleUserClick(item.id)}
             />
           ))}
-        {activeTab === "group" &&
+        {activeTab === 'group' &&
           groupChats.map((item) => (
             <UserCard
               user={item}
@@ -112,7 +59,7 @@ const UserList = () => {
           ))}
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default UserList;
+export default UserList
