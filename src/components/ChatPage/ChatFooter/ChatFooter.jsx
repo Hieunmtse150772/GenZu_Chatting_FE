@@ -1,12 +1,12 @@
 import { useState, useRef } from 'react'
-import { MdOutlineKeyboardVoice } from 'react-icons/md'
+import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { LuSend } from 'react-icons/lu'
-import { MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { FaFile, FaImage, FaVideo, FaHeadphones } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { sendMessage } from '../../../redux/Slice/messageSlice'
+import AttachmentButton from '../../Button/AttachmentButton'
 
-function ChatFooter() {
+const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
   const [input, setInput] = useState('')
   const dispatch = useDispatch()
@@ -34,13 +34,14 @@ function ChatFooter() {
   const handleChangeInput = (e) => {
     setInput(e.target.value)
   }
+
   const handleKeyPress = (e) => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       dispatch(sendMessage(input))
-      console.log(input)
       setInput('') // Clear input field after dispatch
     }
   }
+
   return (
     <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
       <input
@@ -71,36 +72,32 @@ function ChatFooter() {
         </div>
       </div>
       <div
-        className={`absolute bottom-20 right-24 flex flex-col space-y-2 transition-transform duration-300 ease-in-out ${
+        className={`absolute bottom-20 right-20 flex flex-col space-y-2 transition-transform duration-300 ease-in-out ${
           showAttachments
             ? 'translate-y-0 opacity-100'
             : 'pointer-events-none translate-y-4 opacity-0'
         }`}
       >
-        <button
-          className='transform rounded-full bg-blue-500 p-4 shadow-xl transition-transform duration-300 hover:scale-110 hover:bg-blue-600'
+        <AttachmentButton
+          icon={FaFile}
+          color='blue'
           onClick={() => handleFileButtonClick('file')}
-        >
-          <FaFile className='text-white' size={16} />
-        </button>
-        <button
-          className='transform rounded-full bg-green-500 p-4 shadow-xl transition-transform duration-300 hover:scale-110 hover:bg-green-600'
+        />
+        <AttachmentButton
+          icon={FaImage}
+          color='green'
           onClick={() => handleFileButtonClick('image')}
-        >
-          <FaImage className='text-white' size={16} />
-        </button>
-        <button
-          className='transform rounded-full bg-purple-500 p-4 shadow-xl transition-transform duration-300 hover:scale-110 hover:bg-purple-600'
+        />
+        <AttachmentButton
+          icon={FaVideo}
+          color='purple'
           onClick={() => handleFileButtonClick('video')}
-        >
-          <FaVideo className='text-white' size={16} />
-        </button>
-        <button
-          className='transform rounded-full bg-red-500 p-4 shadow-xl transition-transform duration-300 hover:scale-110 hover:bg-red-600'
+        />
+        <AttachmentButton
+          icon={FaHeadphones}
+          color='red'
           onClick={() => handleFileButtonClick('audio')}
-        >
-          <FaHeadphones className='text-white' size={16} />
-        </button>
+        />
       </div>
       <input
         type='file'
