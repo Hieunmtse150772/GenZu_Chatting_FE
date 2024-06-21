@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+import FeatureAI from '../FeatureAI/FeatureAI'
+
 export default function DetailMessage(props) {
   return (
     <div className='mx-2'>
