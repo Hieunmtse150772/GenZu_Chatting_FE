@@ -37,7 +37,6 @@ const Sidebar = () => {
       <div className='no-scrollbar relative hidden h-screen w-80 overflow-x-hidden overflow-y-scroll border-slate-500 bg-lightTheme p-4 shadow-2xl dark:bg-darkTheme sm:max-w-[12rem] md:block md:w-[22rem] lg:max-w-[20rem]'>
         <div className='mb-4 flex items-center justify-between'>
           <p className='text-xl font-bold dark:text-white'>App</p>
-          <IoIosLogOut className='h-8 w-8 cursor-pointer text-black dark:text-white' />
           <UserButton afterSignOutUrl='/login' />
         </div>
         <div className='flex items-center justify-between'>
