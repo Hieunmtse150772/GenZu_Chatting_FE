@@ -1,7 +1,17 @@
-/* eslint-disable react/prop-types */
+import { useRef, useState, useEffect } from "react";
 import FeatureAI from '../FeatureAI/FeatureAI'
-
+/* eslint-disable react/prop-types */
 export default function DetailMessage(props) {
+  const [isOptionBtnClick, setIsOptionBtnClick] =
+    useState(false);
+
+  const dropdownRef = useRef(null);
+
+  // const handleMoreClick = (e) => {
+  //   e.preventDefault();
+  //   setIsOptionBtnClick(!isOptionBtnClick);
+  // };
+
   return (
     <div className='mx-2'>
       {props.inforMessage.map((item, index) =>
@@ -13,8 +23,21 @@ export default function DetailMessage(props) {
           </div>
         ) : (
           <div key={index} className='flex'>
-            <div className='max-w-xs rounded-lg bg-gray-300 p-2 text-black'>{item.message}</div>
-            <FeatureAI />
+            <div className='max-w-xs rounded-lg bg-gray-300 p-2 text-black' 
+                onMouseEnter={() => setIsOptionBtnClick(true)}
+                onMouseLeave={() => setIsOptionBtnClick(false)}>
+                    {item.message}
+            </div>
+            <div
+                className={`${
+                  isOptionBtnClick
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-100"
+                }`}
+                
+              >
+              <FeatureAI />
+            </div>
           </div>
         ),
       )}

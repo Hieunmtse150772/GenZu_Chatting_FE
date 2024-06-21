@@ -1,9 +1,11 @@
 import { RiTranslate } from "react-icons/ri";
 import { MdOutlineQuickreply } from "react-icons/md";
 import { SlOptions } from 'react-icons/sl'
+import DropdownItem from "../../../Sidebar/DropdownItem/DropdownItem";
 
 
 export default function FeatureAI(){
+    
     return <div>
                 <ul className='hidden md:flex md:items-center overflow-x-hidden mr-4 font-semibold'>
                     <li className='mr-1 p-1'>
