@@ -1,4 +1,3 @@
-import { RxAvatar } from 'react-icons/rx'
 import { SlOptions } from 'react-icons/sl'
 import { MdPhone, MdVideocam } from 'react-icons/md'
 
