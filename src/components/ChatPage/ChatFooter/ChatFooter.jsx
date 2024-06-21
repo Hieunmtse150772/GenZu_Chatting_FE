@@ -32,7 +32,7 @@ function ChatFooter() {
       <input
         type='text'
         placeholder='Type your message...'
-        className='flex-1 rounded-full border px-4 py-2 focus:outline-none'
+        className='flex-1 border rounded-full px-4 py-2 focus:outline outline-blue-600'
       />
       <div className='mr-4 hidden overflow-x-hidden font-semibold md:flex md:items-center'>
         <div className='flex justify-between'>
