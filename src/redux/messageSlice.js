@@ -72,7 +72,7 @@ const messageSlice = createSlice({
       console.log(action.payload)
       return {
         ...state,
-        message: [...state.message, action.payload],
+        message: [...state.message, { id: 1, message: action.payload, time: '' }],
       }
     },
     setMessage: (state) => {
