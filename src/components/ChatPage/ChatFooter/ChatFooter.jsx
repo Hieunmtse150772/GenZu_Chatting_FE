@@ -1,20 +1,49 @@
 import { useState, useRef } from 'react'
+import { Editor, EditorState, RichUtils } from 'draft-js'
+import 'draft-js/dist/Draft.css'
 import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { LuSend } from 'react-icons/lu'
 import { FaFile, FaImage, FaVideo, FaHeadphones } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { sendMessage } from '../../../redux/Slice/messageSlice'
 import AttachmentButton from '../../Button/AttachmentButton'
+import { VscBold } from 'react-icons/vsc'
+import { GoItalic } from 'react-icons/go'
+import { BsTypeUnderline } from 'react-icons/bs'
 
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
   const [input, setInput] = useState('')
+  const [isTextSelected, setIsTextSelected] = useState(false)
+  const [selectedText, setSelectedInput] = useState('')
+  const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const dispatch = useDispatch()
+  const inputRef = useRef(null)
   const fileInputRefs = {
     file: useRef(null),
     image: useRef(null),
     video: useRef(null),
     audio: useRef(null),
+  }
+
+  const handleFocus = () => {
+    document.addEventListener('selectionchange', checkSelection)
+  }
+
+  // const handleBlur = () => {
+  //   document.removeEventListener('selectionchange', checkSelection)
+  //   // setIsTextSelected(false)
+  // }
+
+  const checkSelection = () => {
+    const selection = window.getSelection()
+    if (selection && selection.toString()) {
+      setIsTextSelected(true)
+      setSelectedInput(selection.toString())
+    } else {
+      setIsTextSelected(false)
+      setSelectedInput('')
+    }
   }
 
   const toggleAttachments = () => {
@@ -23,8 +52,6 @@ const ChatFooter = () => {
 
   const handleFileChange = (event, type) => {
     const files = event.target.files
-    console.log(type, files)
-    // handle the file upload logic here
   }
 
   const handleFileButtonClick = (type) => {
@@ -36,9 +63,21 @@ const ChatFooter = () => {
   }
 
   const handleKeyPress = (e) => {
-    if (e.keyCode === 13 && input !='') {
+    if (e.keyCode === 13 && input != '') {
       dispatch(sendMessage(input))
       setInput('') // Clear input field after dispatch
+    }
+  }
+
+  const handleBoldClick = () => {
+    if (inputRef.current && isTextSelected) {
+      const { selectionStart, selectionEnd } = inputRef.current
+      const start = selectionStart
+      const end = selectionEnd
+      const boldText = `<b>${input.substring(start, end)}</b>`
+      const newInput = input.substring(0, start) + boldText + input.substring(end)
+      setInput(newInput)
+      setIsTextSelected(false) // Reset selection
     }
   }
 
@@ -50,8 +89,34 @@ const ChatFooter = () => {
         placeholder='Type your message...'
         onChange={handleChangeInput}
         onKeyDown={handleKeyPress}
-        className='flex-1 rounded-full border px-4 py-2 focus:outline outline-blue-600'
+        onFocus={handleFocus}
+        ref={inputRef}
+        className='flex-1 rounded-full border px-4 py-2 focus:outline-none'
       />
+      {isTextSelected && (
+        <div className='absolute -top-4 mx-auto flex cursor-pointer items-center justify-between rounded-full bg-slate-300 p-2'>
+          <button onClick={handleBoldClick}>
+            <VscBold size={22} className='mx-1' />
+          </button>
+          <button
+            onClick={() => {
+              console.log('Italic clicked')
+              // Thực hiện logic in nghiêng ở đây
+            }}
+          >
+            <GoItalic size={22} className='mx-1' />
+          </button>
+          <button
+            onClick={() => {
+              console.log('Underline clicked')
+              // Thực hiện logic gạch chân ở đây
+            }}
+          >
+            <BsTypeUnderline size={22} className='mx-1' />
+          </button>
+        </div>
+      )}
+
       <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
         <div className='flex justify-between'>
           <button className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'>
