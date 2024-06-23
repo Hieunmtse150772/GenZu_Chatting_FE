@@ -5,9 +5,9 @@ import { MdPhone, MdVideocam, MdBlock, MdOutlineDelete } from 'react-icons/md'
 import { CgProfile } from 'react-icons/cg'
 import DropdownItem from '../DropdownItem/DropdownItem'
 
-const UserCard = ({ user, isActive, onClick }) => {
+const UserCard = ({ user, isActive, onUserCardClick }) => {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
-
+  const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
 
   const handleMoreClick = (e) => {
@@ -16,7 +16,12 @@ const UserCard = ({ user, isActive, onClick }) => {
   }
 
   const handleClickOutside = (e) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(e.target)
+    ) {
       setIsOptionBtnClick(false)
     }
   }
@@ -30,7 +35,7 @@ const UserCard = ({ user, isActive, onClick }) => {
 
   return (
     <div
-      onClick={onClick}
+      onClick={onUserCardClick}
       className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
         isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
       } mb-1 rounded-lg`}
@@ -48,6 +53,7 @@ const UserCard = ({ user, isActive, onClick }) => {
         className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${
           isOptionBtnClick ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
         }`}
+        ref={buttonRef}
         onClick={handleMoreClick}
       >
         <CgMoreO className='h-5 w-5 text-gray-500 hover:text-gray-800 dark:text-white' />
