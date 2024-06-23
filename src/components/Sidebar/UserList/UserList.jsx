@@ -45,7 +45,7 @@ const UserList = () => {
               user={item}
               key={item.id}
               isActive={activeUserID === item.id}
-              onClick={() => handleUserClick(item.id)}
+              onUserCardClick={() => handleUserClick(item.id)}
             />
           ))}
         {activeTab === 'group' &&
@@ -54,7 +54,7 @@ const UserList = () => {
               user={item}
               key={item.id}
               isActive={activeUserID === item.id}
-              onClick={() => handleUserClick(item.id)}
+              onUserCardClick={() => handleUserClick(item.id)}
             />
           ))}
       </div>
