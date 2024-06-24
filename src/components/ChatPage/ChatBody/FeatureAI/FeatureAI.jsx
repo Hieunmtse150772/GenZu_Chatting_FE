@@ -8,6 +8,8 @@ import { useRef, useState, useEffect} from "react";
 export default function FeatureAI(props){
 
     const buttonRef = useRef(null)
+    const dropdownRef = useRef(null)
+
 
     const [isOptionBtnClick, setIsOptionBtnClick] =
             useState(false);
@@ -19,17 +21,14 @@ export default function FeatureAI(props){
     };
 
     const handleClickOutside = (e) => {
-        // if (
-        //   dropdownRef.current &&
-        //   !dropdownRef.current.contains(e.target) &&
-        //   buttonRef.current &&
-        //   !buttonRef.current.contains(e.target)
-        // ) {
-        // }
-        if(buttonRef.current &&
-            !buttonRef.current.contains(e.target)){
-                setIsOptionBtnClick(false)
-            }
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(e.target) &&
+          buttonRef.current &&
+          !buttonRef.current.contains(e.target)
+        ) {
+            setIsOptionBtnClick(false)
+        }
       }
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside)
@@ -60,6 +59,9 @@ export default function FeatureAI(props){
                     </li>
                     
                 </ul>
-                {isOptionBtnClick && <DropdownOption /> }
+                <div className="" ref={dropdownRef}>
+                        {isOptionBtnClick && <DropdownOption /> }
+
+                </div>
             </div>
 }
