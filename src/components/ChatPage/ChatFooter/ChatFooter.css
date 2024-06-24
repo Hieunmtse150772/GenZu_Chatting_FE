@@ -1,0 +1,24 @@
+.audio-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.delete-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 20px;
+}
+
+.audio-wrapper:hover .delete-button {
+  display: block;
+}
