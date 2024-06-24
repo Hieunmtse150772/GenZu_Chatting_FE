@@ -69,14 +69,39 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
               icon={CgProfile}
               label={'Xem trang cá nhân'}
               onClick={() => {}}
-              dropdownType={'mt-[7px]'}
+              dropdownStyle={'mt-[7px] p-2'}
+              iconStyle={'h-9 w-9 p-2'}
             />
             <hr />
-            <DropdownItem icon={MdPhone} label={'Gọi thoại'} onClick={() => {}} />
-            <DropdownItem icon={MdVideocam} label={'Chat video'} onClick={() => {}} />
+            <DropdownItem
+              icon={MdPhone}
+              label={'Gọi thoại'}
+              dropdownStyle={'p-2'}
+              iconStyle={'h-9 w-9 p-2'}
+              onClick={() => {}}
+            />
+            <DropdownItem
+              icon={MdVideocam}
+              label={'Chat video'}
+              dropdownStyle={'p-2'}
+              iconStyle={'h-9 w-9 p-2'}
+              onClick={() => {}}
+            />
             <hr />
-            <DropdownItem icon={MdBlock} label={'Chặn'} onClick={() => {}} />
-            <DropdownItem icon={MdOutlineDelete} label={'Delete chat'} onClick={() => {}} />
+            <DropdownItem
+              icon={MdBlock}
+              label={'Chặn'}
+              dropdownStyle={'p-2'}
+              iconStyle={'h-9 w-9 p-2'}
+              onClick={() => {}}
+            />
+            <DropdownItem
+              icon={MdOutlineDelete}
+              label={'Delete chat'}
+              dropdownStyle={'p-2'}
+              iconStyle={'h-9 w-9 p-2'}
+              onClick={() => {}}
+            />
           </ul>
         </div>
       )}
