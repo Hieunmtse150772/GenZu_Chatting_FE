@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Editor, EditorState, RichUtils, getVisibleSelectionRect } from 'draft-js'
+import React, { useState, useRef, useEffect } from 'react'
+import { Editor, EditorState, RichUtils } from 'draft-js'
 import 'draft-js/dist/Draft.css'
 import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { LuSend } from 'react-icons/lu'
@@ -10,20 +10,23 @@ import AttachmentButton from '../../Button/AttachmentButton'
 import { VscBold } from 'react-icons/vsc'
 import { GoItalic } from 'react-icons/go'
 import { BsTypeUnderline } from 'react-icons/bs'
-import FeatureEmoji from '../../FeatureEmoji/FeatureEmoji'
 import { AudioRecorder } from 'react-audio-voice-recorder'
+import FeatureEmoji from '../../FeatureEmoji/FeatureEmoji'
 import { stateFromHTML } from 'draft-js-import-html'
 import { stateToHTML } from 'draft-js-export-html'
-import './ChatFooter.css' // Đảm bảo rằng bạn đã thêm file CSS vào đây
+import './ChatFooter.css'
+import useSpeechRecognition from '../../../hooks/useSpeechRecognition'
 
 const ChatFooter = () => {
-  let contentState = stateFromHTML('<img src="https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png" alt="smiley" class="epr-emoji-img epr_-a3ewa5 epr_-tul3d0 epr_xfdx0l epr_-u8wwnq epr_dkrjwv __EmojiPicker__ epr_-dyxviy epr_-w2g3k2 epr_-8yncdp epr_szp4ut" loading="eager">');
-  
+  let contentState = stateFromHTML(
+    '<img src="https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png" alt="smiley" class="epr-emoji-img epr_-a3ewa5 epr_-tul3d0 epr_xfdx0l epr_-u8wwnq epr_dkrjwv __EmojiPicker__ epr_-dyxviy epr_-w2g3k2 epr_-8yncdp epr_szp4ut" loading="eager">',
+  )
+
   let options = {
     entityStyleFn: (entity) => {
-      const entityType = entity.get('type').toLowerCase();
+      const entityType = entity.get('type').toLowerCase()
       if (entityType === 'image') {
-        const data = entity.getData();
+        const data = entity.getData()
         return {
           element: 'img',
           attributes: {
@@ -32,20 +35,13 @@ const ChatFooter = () => {
           style: {
             // Put styles here...
           },
-        };
+        }
       }
     },
-  };
-  let html = stateToHTML(contentState, options);
-
+  }
+  let html = stateToHTML(contentState, options)
   const [showAttachments, setShowAttachments] = useState(false)
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
-
-  // <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png" 
-  //      alt="smiley"
-  //      class="epr-emoji-img epr_-a3ewa5 epr_-tul3d0 epr_xfdx0l epr_-u8wwnq epr_dkrjwv __EmojiPicker__ epr_-dyxviy epr_-w2g3k2 epr_-8yncdp epr_szp4ut" 
-  //      loading="eager">
-  const [isTextSelected, setIsTextSelected] = useState(false)
   const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
 
   const [isRecording, setIsRecording] = useState(false) // Trạng thái ghi âm
@@ -53,8 +49,9 @@ const ChatFooter = () => {
 
   const buttonRef = useRef(null)
   const emoteRef = useRef(null)
-
-
+  const [isTextSelected, setIsTextSelected] = useState(false)
+  const { text, startListening, stopListening, isListening, hasRecognitionSupport } =
+    useSpeechRecognition()
   const dispatch = useDispatch()
   const fileInputRefs = {
     file: useRef(null),
@@ -62,7 +59,6 @@ const ChatFooter = () => {
     video: useRef(null),
     audio: useRef(null),
   }
-
   const audioContainerRef = useRef(null)
 
   const addAudioElement = (blob) => {
@@ -120,7 +116,7 @@ const ChatFooter = () => {
 
   const handleFileChange = (event, type) => {
     const files = event.target.files
-// Xử lý khi người dùng chọn file
+    // Xử lý khi người dùng chọn file
   }
 
   const handleFileButtonClick = (type) => {
@@ -143,11 +139,9 @@ const ChatFooter = () => {
     setAudioBlob(data.blob) // Lưu trữ blob audio
   }
 
-  // emote
-  const handleEmoteClick = (e) =>{
-    e.preventDefault();
-    setEmoteBtnClick(!isEmoteBtnClick);
-
+  const handleEmoteClick = (e) => {
+    e.preventDefault()
+    setEmoteBtnClick(!isEmoteBtnClick)
   }
 
   // const handleEmoteChoose = (pointerId) =>{
@@ -163,60 +157,60 @@ const ChatFooter = () => {
     //   !buttonRef.current.contains(e.target)
     // ) {
     // }
-    if( emoteRef.current &&
-        !emoteRef.current.contains(e.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(e.target)){
-          setEmoteBtnClick(false)
-        }
+    if (
+      emoteRef.current &&
+      !emoteRef.current.contains(e.target) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(e.target)
+    ) {
+      setEmoteBtnClick(false)
+    }
   }
 
   useEffect(() => {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside)
-      }
-    }, [])
-
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
   return (
-    <>
-      <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
-        <div className='flex-1'>
-          <Editor
-            editorState={editorState}
-            onChange={handleEditorChange}
-            placeholder='Type your message...'
-            handleReturn={(e) => {
-              handleKeyPress(e)
-              return 'handled'
-            }}
-            spellCheck={true}
-          />
-          
+    <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
+      <div className='flex-1'>
+        <Editor
+          editorState={editorState}
+          onChange={handleEditorChange}
+          placeholder='Type your message...'
+          handleReturn={(e) => {
+            handleKeyPress(e)
+            return 'handled'
+          }}
+          spellCheck={true}
+        />
+      </div>
+      {isTextSelected && (
+        <div className='absolute -top-4 mx-auto flex cursor-pointer items-center justify-between rounded-full bg-slate-300 p-2'>
+          <button onClick={() => toggleInlineStyle('BOLD')}>
+            <VscBold size={22} className='mx-1' />
+          </button>
+          <button onClick={() => toggleInlineStyle('ITALIC')}>
+            <GoItalic size={22} className='mx-1' />
+          </button>
+          <button onClick={() => toggleInlineStyle('UNDERLINE')}>
+            <BsTypeUnderline size={22} className='mx-1' />
+          </button>
         </div>
-        {isTextSelected && (
-          <div className='absolute -top-4 mx-auto flex cursor-pointer items-center justify-between rounded-full bg-slate-300 p-2'>
-            <button onClick={() => toggleInlineStyle('BOLD')}>
-              <VscBold size={22} className='mx-1' />
-            </button>
-            <button onClick={() => toggleInlineStyle('ITALIC')}>
-              <GoItalic size={22} className='mx-1' />
-            </button>
-            <button onClick={() => toggleInlineStyle('UNDERLINE')}>
-              <BsTypeUnderline size={22} className='mx-1' />
-            </button>
-          </div>
+      )}
+      <div
+        className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
+        ref={emoteRef}
+      >
+        {isEmoteBtnClick && (
+          // <FeatureEmoji callBackEmote={handleEmoteChoose}/>
+          <FeatureEmoji />
         )}
-        <div className='absolute right-12  bottom-12 mx-auto flex cursor-pointer 
-                        items-center justify-between rounded-full p-2'
-              ref={emoteRef}>
-                  {isEmoteBtnClick && 
-                          // <FeatureEmoji callBackEmote={handleEmoteChoose}/>
-                          <FeatureEmoji />}
-
-        </div>
-        <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
-          <div className='flex  items-center justify-between'>
+      </div>
+      <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
+        <div className='flex items-center justify-between'>
           <AudioRecorder
             onRecordingComplete={addAudioElement}
             record={isRecording}
@@ -228,92 +222,83 @@ const ChatFooter = () => {
             ref={audioContainerRef}
             className={audioContainerRef === null ? 'hidden' : 'mx-1 flex items-center'}
           ></div>
-
-            <button className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'>
-              <MdOutlineKeyboardVoice size={24} />
-            </button>
-            <button
-              className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
-              onClick={toggleAttachments}
-            >
-              <MdAttachFile size={24} />
-            </button>
-            {/* emote */}
-            
-            <button className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
-                    ref={buttonRef}
-                    onClick={handleEmoteClick}>
-
-              
-              <MdInsertEmoticon size={24} />
-            </button>
-
-            <button
-              className='rounded-full bg-blue-500 p-3 hover:bg-blue-600 focus:outline-none dark:text-white'
-              onClick={() => handleKeyPress({ keyCode: 13 })}
-            >
-              <LuSend size={16} />
-            </button>
-          </div>
+          <button
+            className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
+            onClick={toggleAttachments}
+          >
+            <MdAttachFile size={24} />
+          </button>
+          <button
+            className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
+            ref={buttonRef}
+            onClick={handleEmoteClick}
+          >
+            <MdInsertEmoticon size={24} />
+          </button>
+          <button
+            className='rounded-full bg-blue-500 p-3 hover:bg-blue-600 focus:outline-none dark:text-white'
+            onClick={() => handleKeyPress({ keyCode: 13 })}
+          >
+            <LuSend size={16} />
+          </button>
         </div>
-        <div
-          className={`absolute bottom-20 right-20 flex flex-col space-y-2 transition-transform duration-300 ease-in-out ${
-            showAttachments
-              ? 'translate-y-0 opacity-100'
-              : 'pointer-events-none translate-y-4 opacity-0'
-          }`}
-        >
-          <AttachmentButton
-            icon={FaFile}
-            color={'blue'}
-            onAttachBtnClick={() => handleFileButtonClick('file')}
-          />
-          <AttachmentButton
-            icon={FaImage}
-            color={'blue'}
-            onAttachBtnClick={() => handleFileButtonClick('image')}
-          />
-          <AttachmentButton
-            icon={FaVideo}
-            color={'blue'}
-            onAttachBtnClick={() => handleFileButtonClick('video')}
-          />
-          <AttachmentButton
-            icon={FaHeadphones}
-            color={'blue'}
-            onAttachBtnClick={() => handleFileButtonClick('audio')}
-          />
-        </div>
-        <input
-          type='file'
-          ref={fileInputRefs.file}
-          className='hidden'
-          onChange={(e) => handleFileChange(e, 'file')}
+      </div>
+      <div
+        className={`absolute bottom-20 right-20 flex flex-col space-y-2 transition-transform duration-300 ease-in-out ${
+          showAttachments
+            ? 'translate-y-0 opacity-100'
+            : 'pointer-events-none translate-y-4 opacity-0'
+        }`}
+      >
+        <AttachmentButton
+          icon={FaFile}
+          color={'blue'}
+          onAttachBtnClick={() => handleFileButtonClick('file')}
         />
-        <input
-          type='file'
-          accept='image/*'
-          ref={fileInputRefs.image}
-          className='hidden'
-          onChange={(e) => handleFileChange(e, 'image')}
+        <AttachmentButton
+          icon={FaImage}
+          color={'blue'}
+          onAttachBtnClick={() => handleFileButtonClick('image')}
         />
-        <input
-          type='file'
-          accept='video/*'
-          ref={fileInputRefs.video}
-          className='hidden'
-          onChange={(e) => handleFileChange(e, 'video')}
+        <AttachmentButton
+          icon={FaVideo}
+          color={'blue'}
+          onAttachBtnClick={() => handleFileButtonClick('video')}
         />
-        <input
-          type='file'
-          accept='audio/*'
-          ref={fileInputRefs.audio}
-          className='hidden'
-          onChange={(e) => handleFileChange(e, 'audio')}
+        <AttachmentButton
+          icon={FaHeadphones}
+          color={'blue'}
+          onAttachBtnClick={() => handleFileButtonClick('audio')}
         />
       </div>
-      
-    </>
+      <input
+        type='file'
+        ref={fileInputRefs.file}
+        className='hidden'
+        onChange={(e) => handleFileChange(e, 'file')}
+      />
+      <input
+        type='file'
+        accept='image/*'
+        ref={fileInputRefs.image}
+        className='hidden'
+        onChange={(e) => handleFileChange(e, 'image')}
+      />
+      <input
+        type='file'
+        accept='video/*'
+        ref={fileInputRefs.video}
+        className='hidden'
+        onChange={(e) => handleFileChange(e, 'video')}
+      />
+      <input
+        type='file'
+        accept='audio/*'
+        ref={fileInputRefs.audio}
+        className='hidden'
+        onChange={(e) => handleFileChange(e, 'audio')}
+      />
+    </div>
   )
 }
 
