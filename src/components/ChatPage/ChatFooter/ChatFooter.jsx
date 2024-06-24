@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { Editor, EditorState, RichUtils } from 'draft-js'
+import React, { useState, useRef } from 'react'
+import { Editor, EditorState, RichUtils, getVisibleSelectionRect } from 'draft-js'
 import 'draft-js/dist/Draft.css'
 import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { LuSend } from 'react-icons/lu'
@@ -13,12 +13,9 @@ import { BsTypeUnderline } from 'react-icons/bs'
 
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
-  const [input, setInput] = useState('')
-  const [isTextSelected, setIsTextSelected] = useState(false)
-  const [selectedText, setSelectedInput] = useState('')
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
+  const [isTextSelected, setIsTextSelected] = useState(false)
   const dispatch = useDispatch()
-  const inputRef = useRef(null)
   const fileInputRefs = {
     file: useRef(null),
     image: useRef(null),
@@ -26,28 +23,29 @@ const ChatFooter = () => {
     audio: useRef(null),
   }
 
-  const handleFocus = () => {
-    document.addEventListener('selectionchange', checkSelection)
-  }
-
-  // const handleBlur = () => {
-  //   document.removeEventListener('selectionchange', checkSelection)
-  //   // setIsTextSelected(false)
-  // }
-
-  const checkSelection = () => {
-    const selection = window.getSelection()
-    if (selection && selection.toString()) {
+  const handleEditorChange = (state) => {
+    setEditorState(state)
+    const selectionState = state.getSelection()
+    if (!selectionState.isCollapsed()) {
       setIsTextSelected(true)
-      setSelectedInput(selection.toString())
     } else {
       setIsTextSelected(false)
-      setSelectedInput('')
     }
   }
 
-  const toggleAttachments = () => {
-    setShowAttachments(!showAttachments)
+  const handleKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      const contentState = editorState.getCurrentContent()
+      const plainText = contentState.getPlainText()
+      if (plainText.trim() !== '') {
+        dispatch(sendMessage(plainText))
+        setEditorState(EditorState.createEmpty()) // Clear editor state after dispatch
+      }
+    }
+  }
+
+  const toggleInlineStyle = (style) => {
+    setEditorState(RichUtils.toggleInlineStyle(editorState, style))
   }
 
   const handleFileChange = (event, type) => {
@@ -58,65 +56,36 @@ const ChatFooter = () => {
     fileInputRefs[type].current.click()
   }
 
-  const handleChangeInput = (e) => {
-    setInput(e.target.value)
-  }
-
-  const handleKeyPress = (e) => {
-    if (e.keyCode === 13 && input != '') {
-      dispatch(sendMessage(input))
-      setInput('') // Clear input field after dispatch
-    }
-  }
-
-  const handleBoldClick = () => {
-    if (inputRef.current && isTextSelected) {
-      const { selectionStart, selectionEnd } = inputRef.current
-      const start = selectionStart
-      const end = selectionEnd
-      const boldText = `<b>${input.substring(start, end)}</b>`
-      const newInput = input.substring(0, start) + boldText + input.substring(end)
-      setInput(newInput)
-      setIsTextSelected(false) // Reset selection
-    }
+  const toggleAttachments = () => {
+    setShowAttachments(!showAttachments)
   }
 
   return (
     <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
-      <input
-        type='text'
-        value={input}
-        placeholder='Type your message...'
-        onChange={handleChangeInput}
-        onKeyDown={handleKeyPress}
-        onFocus={handleFocus}
-        ref={inputRef}
-        className='flex-1 rounded-full border px-4 py-2 focus:outline-none'
-      />
+      <div className='flex-1'>
+        <Editor
+          editorState={editorState}
+          onChange={handleEditorChange}
+          placeholder='Type your message...'
+          handleReturn={(e) => {
+            handleKeyPress(e)
+            return 'handled'
+          }}
+        />
+      </div>
       {isTextSelected && (
         <div className='absolute -top-4 mx-auto flex cursor-pointer items-center justify-between rounded-full bg-slate-300 p-2'>
-          <button onClick={handleBoldClick}>
+          <button onClick={() => toggleInlineStyle('BOLD')}>
             <VscBold size={22} className='mx-1' />
           </button>
-          <button
-            onClick={() => {
-              console.log('Italic clicked')
-              // Thực hiện logic in nghiêng ở đây
-            }}
-          >
+          <button onClick={() => toggleInlineStyle('ITALIC')}>
             <GoItalic size={22} className='mx-1' />
           </button>
-          <button
-            onClick={() => {
-              console.log('Underline clicked')
-              // Thực hiện logic gạch chân ở đây
-            }}
-          >
+          <button onClick={() => toggleInlineStyle('UNDERLINE')}>
             <BsTypeUnderline size={22} className='mx-1' />
           </button>
         </div>
       )}
-
       <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
         <div className='flex justify-between'>
           <button className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'>
@@ -131,7 +100,10 @@ const ChatFooter = () => {
           <button className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'>
             <MdInsertEmoticon size={24} />
           </button>
-          <button className='rounded-full bg-blue-500 p-2 hover:bg-blue-600 focus:outline-none dark:text-white'>
+          <button
+            className='rounded-full bg-blue-500 p-2 hover:bg-blue-600 focus:outline-none dark:text-white'
+            onClick={() => handleKeyPress({ keyCode: 13 })}
+          >
             <LuSend size={16} />
           </button>
         </div>
