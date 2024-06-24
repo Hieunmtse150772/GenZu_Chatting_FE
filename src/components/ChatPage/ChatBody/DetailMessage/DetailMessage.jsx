@@ -1,9 +1,12 @@
 import { useRef, useState, useEffect } from 'react'
 import FeatureAI from '../FeatureAI/FeatureAI'
 import { useSelector } from 'react-redux'
+import { MdOutlineEmojiEmotions } from "react-icons/md";
 /* eslint-disable react/prop-types */
 export default function DetailMessage(props) {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
+
+  const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
 
   const [activeMessageID, setActiveMessageID] = useState(null)
 
@@ -22,6 +25,12 @@ export default function DetailMessage(props) {
   const handleMoreClick = (id_message) => {
     setIsOptionBtnClick(true)
     handleUserClick(id_message)
+  }
+
+  const handleEmoteClick = (e) =>{
+    e.preventDefault();
+    setEmoteBtnClick(!isEmoteBtnClick);
+
   }
 
   return (
@@ -43,8 +52,17 @@ export default function DetailMessage(props) {
             >
               <FeatureAI />
             </div>
-            <div className='my-1 max-w-xs rounded-lg bg-blue-200 p-2 text-black'>
+            <div className='relative my-1 max-w-xs rounded-lg bg-blue-200 p-3.5 text-black'>
               {item.message}
+              {/* Emote */}
+              <div className= {`absolute right-px bottom-px  hover:bg-blue-400 rounded-md p-1 ${
+                                  isOptionBtnClick && activeMessageID == item.id_message
+                                    ? "opacity-100"
+                                    : "opacity-0 group-hover:opacity-100"
+                                    }`}
+                    onClick={handleEmoteClick}>
+                <MdOutlineEmojiEmotions  size={14}/>
+              </div>
             </div>
           </div>
         ) : (
@@ -57,8 +75,17 @@ export default function DetailMessage(props) {
             }}
             onMouseLeave={() => setIsOptionBtnClick(false)}
           >
-            <div className='my-1 max-w-xs rounded-lg bg-gray-300 p-2 text-black'>
+            <div className='relative my-1 max-w-xs rounded-lg bg-gray-300 p-3.5 text-black'>
               {item.message}
+              {/* emote */}
+              <div className= {`absolute right-px bottom-px  hover:bg-blue-400 rounded-md p-1 ${
+                                  isOptionBtnClick && activeMessageID == item.id_message
+                                    ? "opacity-100"
+                                    : "opacity-0 group-hover:opacity-100"
+                                    }`}
+                    onClick={handleEmoteClick}>
+                <MdOutlineEmojiEmotions  size={14}/>
+              </div>
             </div>
             <div
               className={`${
