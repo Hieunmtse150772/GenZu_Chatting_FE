@@ -117,23 +117,23 @@ const ChatFooter = () => {
       >
         <AttachmentButton
           icon={FaFile}
-          color='blue'
-          onClick={() => handleFileButtonClick('file')}
+          color={'blue'}
+          onAttachBtnClick={() => handleFileButtonClick('file')}
         />
         <AttachmentButton
           icon={FaImage}
-          color='green'
-          onClick={() => handleFileButtonClick('image')}
+          color={'blue'}
+          onAttachBtnClick={() => handleFileButtonClick('image')}
         />
         <AttachmentButton
           icon={FaVideo}
-          color='purple'
-          onClick={() => handleFileButtonClick('video')}
+          color={'blue'}
+          onAttachBtnClick={() => handleFileButtonClick('video')}
         />
         <AttachmentButton
           icon={FaHeadphones}
-          color='red'
-          onClick={() => handleFileButtonClick('audio')}
+          color={'blue'}
+          onAttachBtnClick={() => handleFileButtonClick('audio')}
         />
       </div>
       <input
