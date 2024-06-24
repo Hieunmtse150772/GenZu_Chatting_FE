@@ -144,7 +144,7 @@ const ChatFooter = () => {
           />
           <div
             ref={audioContainerRef}
-            className={audioContainerRef === null ? 'hidden' : 'mx-1 block'}
+            className={audioContainerRef === null ? 'hidden' : 'mx-1 flex items-center'}
           ></div>
           <button
             className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
