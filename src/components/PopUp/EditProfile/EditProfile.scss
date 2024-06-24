@@ -1,0 +1,79 @@
+.EditProfile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    >div {
+        background-image: url('https://img-cdn.pixlr.com/image-generator/history/6677e446f603be37682a1f38/68b5836e-1569-4e39-89fa-1011a8c9cb94/preview.webp');
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 60%;
+        border: 1px solid lightgrey;
+        border-radius: 1.2rem;
+        padding: 1rem;
+
+        >div {
+            width: 45%;
+        }
+
+        .EditInfor {
+            padding: 0.5rem;
+            border-radius: 1rem;
+            background-color: #e1f1ffde;
+
+            >img {
+                height: 7rem;
+                width: 7rem;
+                margin: auto;
+                border-radius: 50%;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+                text-align: center;
+                margin: 0.3rem;
+            }
+
+            >div {
+                >h3 {
+                    margin-top: 0.5rem;
+                    margin-bottom: 0.1rem;
+                }
+
+                >div {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    >div {
+                        width: 90%;
+
+                        >input {
+                            border: 0.5px solid rgb(189, 189, 189);
+                            border-radius: 0.5rem;
+                            padding: 0.3rem 0.4rem;
+                            width: 100%;
+                        }
+                    }
+                }
+
+            }
+
+            .buttonSave {
+                margin-top: 1rem;
+                color: white;
+
+                >button {
+                    background-color: rgb(84, 84, 255);
+                    padding: 0.3rem;
+                    width: 30%;
+                    border-radius: 0.5rem;
+                    margin: auto;
+                    text-align: center;
+                }
+            }
+
+        }
+    }
+}

@@ -35,8 +35,12 @@ export default function PopUpFindFriends() {
         </div>
         <div>
           {lsSearchUser.map((item, index) => (
-            <div key={index} className='flex items-center justify-around'>
-              <p className=''>{item.name}</p>
+            <div key={index} className='flex items-center justify-between'>
+              <div className='inforUserFindFriends'>
+                <h3 className=''>{item.name}</h3>
+                <h5>{item.email}</h5>
+                <h5>{item.phoneNumber}</h5>
+              </div>
               <FaUserPlus size={24} />
             </div>
           ))}
