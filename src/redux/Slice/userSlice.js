@@ -14,7 +14,7 @@ const initialState = {
     },
     {
       id: 12345,
-      name: 'Thien Hoang Ba',
+      name: 'Thien Hoang Minh',
       email: 'Thienhoangba99@gmail.com',
       phoneNumber: '0987654321',
       avatarLink: '',
@@ -23,7 +23,7 @@ const initialState = {
     },
     {
       id: 12345,
-      name: 'Thien Hoang Ba',
+      name: 'Thien Tran Ba',
       email: 'Thienhoangba99@gmail.com',
       phoneNumber: '0987654321',
       avatarLink: '',
@@ -32,7 +32,7 @@ const initialState = {
     },
     {
       id: 12345,
-      name: 'Thien Hoang Ba',
+      name: 'Nguyen Hoang Ba',
       email: 'Thienhoangba99@gmail.com',
       phoneNumber: '0987654321',
       avatarLink: '',
@@ -41,7 +41,7 @@ const initialState = {
     },
     {
       id: 12345,
-      name: 'Thien Hoang Ba',
+      name: 'Thien Minh Ba',
       email: 'Thienhoangba99@gmail.com',
       phoneNumber: '0987654321',
       avatarLink: '',
@@ -50,7 +50,7 @@ const initialState = {
     },
     {
       id: 12345,
-      name: 'Thien Hoang Ba',
+      name: 'Tran Hoang Ba',
       email: 'Thienhoangba99@gmail.com',
       phoneNumber: '0987654321',
       avatarLink: '',
@@ -59,7 +59,7 @@ const initialState = {
     },
     {
       id: 12345,
-      name: 'Thien Hoang Ba',
+      name: 'Thien Hoang Ngoc',
       email: 'Thienhoangba99@gmail.com',
       phoneNumber: '0987654321',
       avatarLink: '',

@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux'
-import './PopUpFindFriends.scss'
+import './PopUpAddMember.scss'
 import { useState } from 'react'
 import { searchUser } from '../../../redux/Slice/userSlice'
 import { MdOutlineSavedSearch } from 'react-icons/md'
-import { FaUserPlus } from 'react-icons/fa'
+import { FaUsers } from 'react-icons/fa'
 export default function PopUpFindFriends() {
   let lsSearchUser = useSelector((state) => state.user.lsSearchUser)
   const [input, setInput] = useState('')
@@ -19,7 +19,7 @@ export default function PopUpFindFriends() {
     }
   }
   return (
-    <div className='FindFriend flex items-center justify-center'>
+    <div className='AddMember flex items-center justify-center'>
       <div className='bg-mainBlue p-4'>
         <h1>Find Your Friend</h1>
         <div className='flex justify-around'>
@@ -37,7 +37,7 @@ export default function PopUpFindFriends() {
           {lsSearchUser.map((item, index) => (
             <div key={index} className='flex items-center justify-around'>
               <p className=''>{item.name}</p>
-              <FaUserPlus size={24} />
+              <FaUsers size={24} /
             </div>
           ))}
         </div>
