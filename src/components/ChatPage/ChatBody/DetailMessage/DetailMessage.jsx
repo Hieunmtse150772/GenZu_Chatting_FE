@@ -2,11 +2,16 @@ import { useRef, useState, useEffect } from 'react'
 import FeatureAI from '../FeatureAI/FeatureAI'
 import { useSelector } from 'react-redux'
 import { MdOutlineEmojiEmotions } from "react-icons/md";
+// import FeatureEmoji from '../../../FeatureEmoji/FeatureEmoji';
+
 /* eslint-disable react/prop-types */
 export default function DetailMessage(props) {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
+  
+  const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
 
   const [activeMessageID, setActiveMessageID] = useState(null)
+
 
   const handleUserClick = (id) => {
     setActiveMessageID(id)
@@ -23,6 +28,12 @@ export default function DetailMessage(props) {
   const handleMoreClick = (id_message) => {
     setIsOptionBtnClick(true)
     handleUserClick(id_message)
+  }
+
+  const handleEmoteClick = (e) =>{
+    e.preventDefault();
+    setEmoteBtnClick(!isEmoteBtnClick);
+
   }
 
   return (
@@ -73,10 +84,14 @@ export default function DetailMessage(props) {
                                   isOptionBtnClick && activeMessageID == item.id_message
                                     ? "opacity-100"
                                     : "opacity-0 group-hover:opacity-100"
-                                    }`}>
+                                    }`}
+                    onClick={handleEmoteClick}>
                 <MdOutlineEmojiEmotions  size={14}/>
               </div>
             </div>
+            {/* open dropdown emoji */}
+              {/* {isEmoteBtnClick && activeMessageID == item.id_message ? <FeatureEmoji /> : <></>} */}
+
             <div
               className={`${
                 isOptionBtnClick && activeMessageID == item.id_message
