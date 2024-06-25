@@ -4,13 +4,14 @@ import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
 import SearchInput from '../Sidebar/SearchInput/SearchInput'
 import UserList from '../Sidebar/UserList/UserList'
 import Switcher from '../Sidebar/Switcher/Switcher'
-import { UserButton } from '@clerk/clerk-react'
 import { useRef, useState, useEffect } from 'react'
-
+import { PiSignOutBold } from 'react-icons/pi'
+import { removeCookie } from '../../services/Cookies'
+import { useNavigate } from 'react-router-dom'
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef(null)
-
+  const navigate = useNavigate()
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
@@ -50,7 +51,7 @@ const Sidebar = () => {
         <div className='no-scrollbar relative h-full w-80 overflow-x-hidden overflow-y-scroll border-slate-500 bg-lightTheme p-4 shadow-2xl dark:bg-darkTheme sm:max-w-[12rem] md:w-[22rem] lg:max-w-[20rem]'>
           <div className='mb-4 flex items-center justify-between'>
             <p className='text-xl font-bold dark:text-white'>App</p>
-            <UserButton afterSignOutUrl='/login' />
+            <CiSettings className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
           </div>
           <div className='flex items-center justify-between'>
             <SearchInput />
@@ -64,7 +65,13 @@ const Sidebar = () => {
           </div>
           <div className='absolute bottom-4 left-4 flex w-full items-center justify-between pr-8'>
             <Switcher />
-            <CiSettings className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
+            <PiSignOutBold
+              onClick={() => {
+                removeCookie('userLogin')
+                navigate('/login')
+              }}
+              className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white'
+            />
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import axios from 'axios'
 import { setCookie } from '../../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
 
-const LoginForm = () => {
+const LoginForm = (props) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -49,6 +49,7 @@ const LoginForm = () => {
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>
         <div>
+          {console.log(props.linkGoogle)}
           <img className='mx-auto h-12 w-auto' src='/your-logo.svg' alt='Workflow' />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
             Sign in to your account
@@ -141,6 +142,9 @@ const LoginForm = () => {
           </div>
           <div className='mt-6'>
             <button
+              onClick={() => {
+                window.location.href = props.linkGoogle
+              }}
               type='button'
               className='group relative flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
             >
