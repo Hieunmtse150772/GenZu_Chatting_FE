@@ -8,10 +8,17 @@ import { useRef, useState, useEffect } from 'react'
 import { PiSignOutBold } from 'react-icons/pi'
 import { removeCookie } from '../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
+import EditProfile from '../PopUp/EditProfile/EditProfile'
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef(null)
   const navigate = useNavigate()
+
+  const [isPopupVisible, setIsPopupVisible] = useState(false)
+  const togglePopup = () => {
+    setIsPopupVisible(!isPopupVisible)
+  }
+
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
@@ -51,7 +58,10 @@ const Sidebar = () => {
         <div className='no-scrollbar relative h-full w-80 overflow-x-hidden overflow-y-scroll border-slate-500 bg-lightTheme p-4 shadow-2xl dark:bg-darkTheme sm:max-w-[12rem] md:w-[22rem] lg:max-w-[20rem]'>
           <div className='mb-4 flex items-center justify-between'>
             <p className='text-xl font-bold dark:text-white'>App</p>
-            <CiSettings className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
+            <CiSettings
+              onClick={togglePopup}
+              className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white'
+            />
           </div>
           <div className='flex items-center justify-between'>
             <SearchInput />
@@ -83,6 +93,7 @@ const Sidebar = () => {
           onClick={handleClickOutside}
         />
       )}
+      <EditProfile isVisible={isPopupVisible} onClose={togglePopup} />
     </>
   )
 }

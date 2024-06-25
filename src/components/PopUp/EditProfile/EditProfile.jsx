@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './EditProfile.scss'
 import { FiEdit } from 'react-icons/fi'
 import { MdSaveAlt } from 'react-icons/md'
 
-export default function EditProfile() {
+export default function EditProfile({ isVisible, onClose }) {
   const [user, setUser] = useState({
     name: { value: 'Hoang Ba Thien', isDisable: true },
     email: { value: 'thienhoang241299@gmail.com', isDisable: true },
@@ -11,6 +11,29 @@ export default function EditProfile() {
     phoneNumber: { value: '0345678912', isDisable: true },
     dob: { value: '24/12/1999', isDisable: true },
   })
+  /// create popup
+  const popupRef = useRef()
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        onClose()
+      }
+    }
+
+    if (isVisible) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isVisible, onClose])
+  if (!isVisible) {
+    return null
+  }
   const handelEdit = (value) => {
     setUser({
       ...user,
@@ -21,8 +44,14 @@ export default function EditProfile() {
     })
   }
   return (
-    <div className='EditProfile'>
-      <div className='flex justify-around'>
+    <div className='EditProfile fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+      <div className='relative flex justify-around rounded-lg bg-white p-6 shadow-lg'>
+        <button
+          className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
+          onClick={onClose}
+        >
+          &times;
+        </button>
         <div className='EditInfor'>
           <h1>Edit user</h1>
           <img
