@@ -35,7 +35,7 @@ const LoginForm = (props) => {
         refreshToken: response.data.refreshToken,
         user: response.data.user,
       }
-      rememberme
+      !rememberme
         ? sessionStorage.setItem('userLogin', JSON.stringify(user))
         : setCookie('userLogin', JSON.stringify(user), 7)
 
