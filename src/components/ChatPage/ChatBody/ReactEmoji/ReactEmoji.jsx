@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import Picker from 'emoji-picker-react';
 
-function FeatureEmoji(props){
+import EmojiPicker from 'emoji-picker-react';
+export default function ReactEmoji(){
     const [chosenEmoji, setChosenEmoji] = useState(null);
     console.log(chosenEmoji);
   
@@ -28,9 +27,7 @@ function FeatureEmoji(props){
           // <span>No emoji Chosen</span>
           <></>
         )} */}
-        <Picker reactionsDefaultOpen={props.isActive} onEmojiClick={onEmojiClick} />
+        <EmojiPicker onEmojiClick={onEmojiClick} />
       </div>
     );
 }
-
-export default FeatureEmoji;

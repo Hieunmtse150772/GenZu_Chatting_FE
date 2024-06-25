@@ -190,7 +190,7 @@ const ChatFooter = () => {
         className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
         ref={emoteRef}
       >
-        {isEmoteBtnClick && <FeatureEmoji />}
+        {isEmoteBtnClick && <FeatureEmoji isActive={false}/>}
       </div>
       <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
         <div className='flex items-center justify-between'>
