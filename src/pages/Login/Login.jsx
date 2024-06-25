@@ -11,19 +11,20 @@ export default function Login() {
   const navigate = useNavigate()
   const [linkLoginGoogle, SetLinkLoginGoogle] = useState('')
   useLayoutEffect(() => {
-    checkCookie() ? navigate('/') : console.log('chua dang nhap')
-    axios
-      .get('https://genzu-chatting-be.onrender.com/auth/sign-in-google', {
-        headers: {
-          Accept: 'application/json',
-        },
-      })
-      .then((response) => {
-        SetLinkLoginGoogle(response.data.link)
-      })
-      .catch((error) => {
-        console.error('Google sign in failed:', error)
-      })
+    checkCookie()
+      ? navigate('/')
+      : axios
+          .get('https://genzu-chatting-be.onrender.com/auth/sign-in-google', {
+            headers: {
+              Accept: 'application/json',
+            },
+          })
+          .then((response) => {
+            SetLinkLoginGoogle(response.data.link)
+          })
+          .catch((error) => {
+            console.error('Google sign in failed:', error)
+          })
   }, [navigate])
   return (
     <div className='LoginPage mx-auto my-auto flex h-screen w-screen items-center justify-center'>

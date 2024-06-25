@@ -8,6 +8,7 @@ const LoginForm = (props) => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [rememberme, SetRememberme] = useState(false)
   const navigate = useNavigate()
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -34,7 +35,10 @@ const LoginForm = (props) => {
         refreshToken: response.data.refreshToken,
         user: response.data.user,
       }
-      setCookie('userLogin', JSON.stringify(user), 7)
+      rememberme
+        ? sessionStorage.setItem('userLogin', JSON.stringify(user))
+        : setCookie('userLogin', JSON.stringify(user), 7)
+
       navigate('/')
       // Handle successful login here (e.g., save token, redirect)
     } catch (err) {
@@ -49,7 +53,7 @@ const LoginForm = (props) => {
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>
         <div>
-          {console.log(props.linkGoogle)}
+          {console.log(rememberme)}
           <img className='mx-auto h-12 w-auto' src='/your-logo.svg' alt='Workflow' />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
             Sign in to your account
@@ -111,6 +115,8 @@ const LoginForm = (props) => {
                 id='remember_me'
                 name='remember_me'
                 type='checkbox'
+                checked={rememberme}
+                onChange={() => SetRememberme(!rememberme)}
                 className='h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500'
               />
               <label htmlFor='remember_me' className='ml-2 block text-sm text-gray-900'>

@@ -6,7 +6,7 @@ import { setCookie } from '../../../services/Cookies'
 const SignUpComponent = () => {
   const [fullName, setFullName] = useState('')
   const [address, setAddress] = useState('')
-  const [gender, setGender] = useState('')
+  const [gender, setGender] = useState('male')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [picture, setPicture] = useState('')
@@ -102,17 +102,17 @@ const SignUpComponent = () => {
               <label htmlFor='gender' className='sr-only'>
                 Gender
               </label>
-              <input
+              <select
                 id='gender'
                 name='gender'
-                type='text'
-                autoComplete='gender'
                 required
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
                 className='relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                placeholder='Gender'
-              />
+              >
+                <option value='male'>Male</option>
+                <option value='female'>Female</option>
+              </select>
             </div>
             <div>
               <label htmlFor='email-address' className='sr-only'>

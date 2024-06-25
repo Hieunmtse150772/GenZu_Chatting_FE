@@ -13,7 +13,7 @@ function removeCookie(name) {
 }
 
 function checkCookie() {
-  if (getCookie('userLogin')) {
+  if (getCookie('userLogin') || sessionStorage.getItem('userLogin')) {
     return true
   } else {
     return false
