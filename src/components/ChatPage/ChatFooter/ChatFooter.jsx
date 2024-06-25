@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Editor, EditorState, RichUtils } from 'draft-js'
+import { Editor, EditorState, RichUtils, ContentState } from 'draft-js'
 import 'draft-js/dist/Draft.css'
+import 'regenerator-runtime'
 import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { LuSend } from 'react-icons/lu'
 import { FaFile, FaImage, FaVideo, FaHeadphones } from 'react-icons/fa'
@@ -15,43 +16,19 @@ import FeatureEmoji from '../../FeatureEmoji/FeatureEmoji'
 import { stateFromHTML } from 'draft-js-import-html'
 import { stateToHTML } from 'draft-js-export-html'
 import './ChatFooter.css'
-import useSpeechRecognition from '../../../hooks/useSpeechRecognition'
+import Dictaphone from '../../Dictaphone/Dictaphone'
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 
 const ChatFooter = () => {
-  let contentState = stateFromHTML(
-    '<img src="https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png" alt="smiley" class="epr-emoji-img epr_-a3ewa5 epr_-tul3d0 epr_xfdx0l epr_-u8wwnq epr_dkrjwv __EmojiPicker__ epr_-dyxviy epr_-w2g3k2 epr_-8yncdp epr_szp4ut" loading="eager">',
-  )
-
-  let options = {
-    entityStyleFn: (entity) => {
-      const entityType = entity.get('type').toLowerCase()
-      if (entityType === 'image') {
-        const data = entity.getData()
-        return {
-          element: 'img',
-          attributes: {
-            src: data.src,
-          },
-          style: {
-            // Put styles here...
-          },
-        }
-      }
-    },
-  }
-  let html = stateToHTML(contentState, options)
   const [showAttachments, setShowAttachments] = useState(false)
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
-
-  const [isRecording, setIsRecording] = useState(false) // Trạng thái ghi âm
-  const [audioBlob, setAudioBlob] = useState(null) // Blob audio ghi âm
-
+  const [isRecording, setIsRecording] = useState(false)
+  const [audioBlob, setAudioBlob] = useState(null)
   const buttonRef = useRef(null)
   const emoteRef = useRef(null)
   const [isTextSelected, setIsTextSelected] = useState(false)
-  const { text, startListening, stopListening, isListening, hasRecognitionSupport } =
-    useSpeechRecognition()
+
   const dispatch = useDispatch()
   const fileInputRefs = {
     file: useRef(null),
@@ -60,6 +37,20 @@ const ChatFooter = () => {
     audio: useRef(null),
   }
   const audioContainerRef = useRef(null)
+
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition()
+
+  useEffect(() => {
+    if (transcript && !listening) {
+      const contentState = editorState.getCurrentContent()
+      const updatedContentState = ContentState.createFromText(
+        contentState.getPlainText() + ' ' + transcript,
+      )
+      setEditorState(EditorState.createWithContent(updatedContentState))
+      resetTranscript()
+    }
+  }, [transcript, listening, editorState, resetTranscript])
 
   const addAudioElement = (blob) => {
     const url = URL.createObjectURL(blob)
@@ -104,7 +95,7 @@ const ChatFooter = () => {
       const plainText = contentState.getPlainText()
       if (plainText.trim() !== '') {
         dispatch(sendMessage(plainText))
-        setEditorState(EditorState.createEmpty()) // Xóa nội dung editor sau khi gửi tin nhắn
+        setEditorState(EditorState.createEmpty())
         clearAudioElements()
       }
     }
@@ -128,15 +119,17 @@ const ChatFooter = () => {
   }
 
   const startRecording = () => {
-    setIsRecording(true) // Bắt đầu ghi âm khi nhấn nút
+    if (!browserSupportsSpeechRecognition) {
+      console.error('Browser does not support speech recognition.')
+      return
+    }
+    setIsRecording(true)
+    SpeechRecognition.startListening({ continuous: true })
   }
 
   const stopRecording = () => {
-    setIsRecording(false) // Dừng ghi âm khi nhấn nút
-  }
-
-  const onDataRecorded = (data) => {
-    setAudioBlob(data.blob) // Lưu trữ blob audio
+    setIsRecording(false)
+    SpeechRecognition.stopListening()
   }
 
   const handleEmoteClick = (e) => {
@@ -144,19 +137,11 @@ const ChatFooter = () => {
     setEmoteBtnClick(!isEmoteBtnClick)
   }
 
-  // const handleEmoteChoose = (pointerId) =>{
-  //   console.log('pointerId: ', pointerId);
+  const onDataRecorded = (data) => {
+    setAudioBlob(data.blob)
+  }
 
-  //   setEditorState(pointerId)
-  // }
   const handleClickOutside = (e) => {
-    // if (
-    //   emoteRef.current &&
-    //   !emoteRef.current.contains(e.target) &&
-    //   buttonRef.current &&
-    //   !buttonRef.current.contains(e.target)
-    // ) {
-    // }
     if (
       emoteRef.current &&
       !emoteRef.current.contains(e.target) &&
@@ -173,6 +158,7 @@ const ChatFooter = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
   return (
     <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
       <div className='flex-1'>
@@ -204,10 +190,7 @@ const ChatFooter = () => {
         className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
         ref={emoteRef}
       >
-        {isEmoteBtnClick && (
-          // <FeatureEmoji callBackEmote={handleEmoteChoose}/>
-          <FeatureEmoji />
-        )}
+        {isEmoteBtnClick && <FeatureEmoji />}
       </div>
       <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
         <div className='flex items-center justify-between'>
@@ -262,14 +245,20 @@ const ChatFooter = () => {
         />
         <AttachmentButton
           icon={FaVideo}
-          color={'blue'}
+          color={'red'}
           onAttachBtnClick={() => handleFileButtonClick('video')}
         />
-        <AttachmentButton
-          icon={FaHeadphones}
-          color={'blue'}
-          onAttachBtnClick={() => handleFileButtonClick('audio')}
-        />
+        <button
+          className={`mx-auto rounded-full p-3 focus:outline-none dark:text-white ${
+            listening ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'
+          }`}
+          onMouseDown={startRecording}
+          onMouseUp={stopRecording}
+          onTouchStart={startRecording}
+          onTouchEnd={stopRecording}
+        >
+          <MdOutlineKeyboardVoice size={22} />
+        </button>
       </div>
       <input
         type='file'
@@ -291,13 +280,13 @@ const ChatFooter = () => {
         className='hidden'
         onChange={(e) => handleFileChange(e, 'video')}
       />
-      <input
+      {/* <input
         type='file'
         accept='audio/*'
         ref={fileInputRefs.audio}
         className='hidden'
         onChange={(e) => handleFileChange(e, 'audio')}
-      />
+      /> */}
     </div>
   )
 }
