@@ -12,10 +12,7 @@ import { VscBold } from 'react-icons/vsc'
 import { GoItalic } from 'react-icons/go'
 import { BsTypeUnderline } from 'react-icons/bs'
 import { AudioRecorder } from 'react-audio-voice-recorder'
-import FeatureEmoji from '../../FeatureEmoji/FeatureEmoji'
 import EmojiMessage from '../../FeatureEmoji/EmojiMessage'
-import { stateFromHTML } from 'draft-js-import-html'
-import { stateToHTML } from 'draft-js-export-html'
 import { useSelector } from 'react-redux'
 import './ChatFooter.css'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
@@ -148,10 +145,10 @@ const ChatFooter = () => {
     SpeechRecognition.stopListening()
   }
 
-  const handleEmoteClick = (e) => {
-    e.preventDefault()
-    setEmoteBtnClick(!isEmoteBtnClick)
-  }
+  // const handleEmoteClick = (e) => {
+  //   e.preventDefault()
+  //   setEmoteBtnClick(!isEmoteBtnClick)
+  // }
 
   const handleEmojiMsgClick = (e) => {
     e.preventDefault()
@@ -169,7 +166,7 @@ const ChatFooter = () => {
       buttonRef.current &&
       !buttonRef.current.contains(e.target)
     ) {
-      setEmoteBtnClick(false)
+      setIsEmojiMsgClick(false)
     }
   }
 
@@ -211,7 +208,7 @@ const ChatFooter = () => {
         className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
         ref={emoteRef}
       >
-        {isEmoteBtnClick && <FeatureEmoji isActive={false} />}
+        {/* {isEmoteBtnClick && <FeatureEmoji isActive={false} />} */}
         {isEmojiMsgClick && <EmojiMessage />}
       </div>
       <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
