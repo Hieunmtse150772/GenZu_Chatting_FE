@@ -34,7 +34,7 @@ export default function DetailMessage(props) {
     e.preventDefault();
     setEmoteBtnClick(!isEmoteBtnClick);
 
-    
+
 
   }
 
@@ -59,51 +59,47 @@ export default function DetailMessage(props) {
     <div className='mx-2'>
       {message.map((item, index) =>
         item.id_user == 1 ? (
-          <>
-            <div
+          <div
             key={index}
             className='flex justify-end'
             onMouseEnter={() => handleMoreClick(item.id_message)}
             onMouseLeave={() => setIsOptionBtnClick(false)}
+          >
+            <div
+              className={`${
+                isOptionBtnClick && activeMessageID == item.id_message
+                  ? 'opacity-100'
+                  : 'opacity-0 group-hover:opacity-100'
+              }`}
             >
-              <div
-                className={`${
-                  isOptionBtnClick && activeMessageID == item.id_message
-                    ? 'opacity-100'
-                    : 'opacity-0 group-hover:opacity-100'
-                }`}
-              >
-                <FeatureAI />
-              </div>
-
-              <div className='relative'>
-                <div className='my-4 max-w-xs rounded-lg bg-blue-200 p-2 text-black'>
-                  {item.message}
-                </div>
-                {/* Emote */}
-                { isEmoteBtnClick && activeMessageID == item.id_message ?
-                    (<div className= "absolute right-px" ref={emoteRef}
-                    >
-                      <FeatureEmoji isActive={isEmoteBtnClick} />
-                    </div>) : <></>
-                }
-
-                <div className= {`absolute right-px bottom-px  hover:bg-blue-400 p-0.5 rounded-md ${
-                                    isOptionBtnClick && activeMessageID == item.id_message
-                                      ? "opacity-100"
-                                      : "opacity-0 group-hover:opacity-100"
-                                      }`}
-                      ref={buttonRef}
-                      onClick={handleEmoteClick}
-                      >
-                  <MdOutlineEmojiEmotions  size={14}/>
-                </div>
-                
-              </div>
+              <FeatureAI />
             </div>
-            
-          </>
-          
+
+            <div className='relative'>
+              <div className='my-4 max-w-xs rounded-lg bg-blue-200 p-2 text-black'>
+                {item.message}
+              </div>
+              {/* Emote */}
+              { isEmoteBtnClick && activeMessageID == item.id_message ?
+                  (<div className= "absolute right-px" ref={emoteRef}
+                  >
+                    <FeatureEmoji isActive={isEmoteBtnClick} />
+                  </div>) : <></>
+              }
+
+              <div className= {`absolute right-px bottom-px  hover:bg-blue-400 p-0.5 rounded-md ${
+                                  isOptionBtnClick && activeMessageID == item.id_message
+                                    ? "opacity-100"
+                                    : "opacity-0 group-hover:opacity-100"
+                                    }`}
+                    ref={buttonRef}
+                    onClick={handleEmoteClick}
+                    >
+                <MdOutlineEmojiEmotions  size={14}/>
+              </div>
+              
+            </div>
+          </div>
         ) : (
           <div
             key={index}
