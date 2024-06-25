@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Editor, EditorState, RichUtils, ContentState } from 'draft-js'
+import { Editor, EditorState, RichUtils, ContentState, Modifier } from 'draft-js'
 import 'draft-js/dist/Draft.css'
 import 'regenerator-runtime'
 import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
@@ -13,16 +13,18 @@ import { GoItalic } from 'react-icons/go'
 import { BsTypeUnderline } from 'react-icons/bs'
 import { AudioRecorder } from 'react-audio-voice-recorder'
 import FeatureEmoji from '../../FeatureEmoji/FeatureEmoji'
+import EmojiMessage from '../../FeatureEmoji/EmojiMessage'
 import { stateFromHTML } from 'draft-js-import-html'
 import { stateToHTML } from 'draft-js-export-html'
+import { useSelector } from 'react-redux'
 import './ChatFooter.css'
-import Dictaphone from '../../Dictaphone/Dictaphone'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
+  const [isEmojiMsgClick, setIsEmojiMsgClick] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [audioBlob, setAudioBlob] = useState(null)
   const buttonRef = useRef(null)
@@ -30,6 +32,7 @@ const ChatFooter = () => {
   const [isTextSelected, setIsTextSelected] = useState(false)
 
   const dispatch = useDispatch()
+  const selectedEmoji = useSelector((state) => state.message.selectedEmoji)
   const fileInputRefs = {
     file: useRef(null),
     image: useRef(null),
@@ -51,6 +54,19 @@ const ChatFooter = () => {
       resetTranscript()
     }
   }, [transcript, listening, editorState, resetTranscript])
+
+  useEffect(() => {
+    if (selectedEmoji) {
+      const contentState = editorState.getCurrentContent()
+      const newContentState = Modifier.replaceText(
+        contentState,
+        editorState.getSelection(),
+        selectedEmoji + ' ',
+      )
+      const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters')
+      setEditorState(newEditorState)
+    }
+  }, [selectedEmoji])
 
   const addAudioElement = (blob) => {
     const url = URL.createObjectURL(blob)
@@ -137,6 +153,11 @@ const ChatFooter = () => {
     setEmoteBtnClick(!isEmoteBtnClick)
   }
 
+  const handleEmojiMsgClick = (e) => {
+    e.preventDefault()
+    setIsEmojiMsgClick(!isEmojiMsgClick)
+  }
+
   const onDataRecorded = (data) => {
     setAudioBlob(data.blob)
   }
@@ -190,7 +211,8 @@ const ChatFooter = () => {
         className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
         ref={emoteRef}
       >
-        {isEmoteBtnClick && <FeatureEmoji isActive={false}/>}
+        {isEmoteBtnClick && <FeatureEmoji isActive={false} />}
+        {isEmojiMsgClick && <EmojiMessage />}
       </div>
       <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
         <div className='flex items-center justify-between'>
@@ -214,7 +236,7 @@ const ChatFooter = () => {
           <button
             className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
             ref={buttonRef}
-            onClick={handleEmoteClick}
+            onClick={handleEmojiMsgClick}
           >
             <MdInsertEmoticon size={24} />
           </button>
