@@ -1,51 +1,71 @@
-import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 import './PopUpFindFriends.scss'
 import { useState } from 'react'
-import { searchUser } from '../../../redux/Slice/userSlice'
-import { MdOutlineSavedSearch } from 'react-icons/md'
-import { FaUserPlus } from 'react-icons/fa'
+import { getCookie } from '../../../services/Cookies'
+import { MdPersonSearch } from 'react-icons/md'
+import { IoPersonAdd } from 'react-icons/io5'
 export default function PopUpFindFriends() {
-  let lsSearchUser = useSelector((state) => state.user.lsSearchUser)
-  const [input, setInput] = useState('')
-  const dispatch = useDispatch()
-  const handleChangeInput = (e) => {
-    setInput(e.target.value)
-  }
-  const handleKeyPress = (e) => {
-    if (e.keyCode == 13) {
-      dispatch(searchUser(input))
-      console.log(input)
-      setInput('') // Clear input field after dispatch
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResult, setSearchResult] = useState([])
+  const [error, setError] = useState('')
+
+  const handleSearch = async () => {
+    try {
+      const token = getCookie('userLogin').accessToken // Thay thế bằng access token của bạn
+      const response = await axios.get(
+        `https://genzu-chatting-be.onrender.com/users/searchUsers?search=${searchTerm}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: 'application/json',
+          },
+        },
+      )
+      setSearchResult(response.data)
+    } catch (error) {
+      setError(error.message)
     }
   }
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      handleSearch()
+    }
+  }
+
   return (
-    <div className='FindFriend flex items-center justify-center'>
-      <div className='bg-mainBlue p-4'>
-        <h1>Find Your Friend</h1>
-        <div className='flex justify-around'>
-          <input
-            onChange={handleChangeInput}
-            onKeyDown={handleKeyPress}
-            type='text'
-            placeholder='Enter email or number phone'
-          />
-          <button>
-            <MdOutlineSavedSearch size={35} />
-          </button>
-        </div>
-        <div>
-          {lsSearchUser.map((item, index) => (
-            <div key={index} className='flex items-center justify-between'>
-              <div className='inforUserFindFriends'>
-                <h3 className=''>{item.name}</h3>
-                <h5>{item.email}</h5>
-                <h5>{item.phoneNumber}</h5>
+    <div className='mx-auto mt-10 max-w-md rounded-lg bg-white p-6 shadow-xl'>
+      <div className='flex justify-between'>
+        <input
+          type='text'
+          className='w-5/6 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder='Enter search term'
+        />
+        <MdPersonSearch onClick={handleSearch} size={40} />
+      </div>
+
+      {error && <p className='mt-2 text-red-500'>{error}</p>}
+
+      {searchResult.user && (
+        <ul className='mt-4'>
+          {searchResult.user.map((user) => (
+            <div
+              key={user.id}
+              className='flex items-center justify-between border-b border-gray-200'
+            >
+              <div>
+                <li>{user.fullName}</li>
+                <li className='py-2'>{user.email}</li>
               </div>
-              <FaUserPlus size={24} />
+              <div>
+                <IoPersonAdd size={28} />
+              </div>
             </div>
           ))}
-        </div>
-      </div>
+        </ul>
+      )}
     </div>
   )
 }

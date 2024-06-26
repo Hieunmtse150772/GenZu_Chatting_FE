@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import './EditProfile.scss'
+import './EditAndSetting.scss'
 import { FiEdit } from 'react-icons/fi'
 import { MdSaveAlt } from 'react-icons/md'
 
-export default function EditProfile({ isVisible, onClose }) {
+export default function EditAndSetting({ isVisible, onClose }) {
   const [user, setUser] = useState({
     name: { value: 'Hoang Ba Thien', isDisable: true },
     email: { value: 'thienhoang241299@gmail.com', isDisable: true },
@@ -44,7 +44,7 @@ export default function EditProfile({ isVisible, onClose }) {
     })
   }
   return (
-    <div className='EditProfile fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+    <div className='EditAndSetting fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
       <div className='relative flex justify-around rounded-lg bg-white p-6 shadow-lg'>
         <button
           className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'

@@ -8,7 +8,8 @@ import { useRef, useState, useEffect } from 'react'
 import { PiSignOutBold } from 'react-icons/pi'
 import { removeCookie } from '../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
-import EditProfile from '../PopUp/EditProfile/EditProfile'
+import EditAndSetting from '../PopUp/EditAndSetting/EditAndSetting'
+
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef(null)
@@ -93,7 +94,7 @@ const Sidebar = () => {
           onClick={handleClickOutside}
         />
       )}
-      <EditProfile isVisible={isPopupVisible} onClose={togglePopup} />
+      <EditAndSetting isVisible={isPopupVisible} onClose={togglePopup} />
     </>
   )
 }

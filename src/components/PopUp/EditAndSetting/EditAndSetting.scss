@@ -1,17 +1,18 @@
-.EditProfile {
+.EditAndSetting {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 
     >div {
-        background-image: url('https://static.vecteezy.com/system/resources/previews/024/484/857/large_2x/environment-earth-day-in-natural-green-leaves-and-plants-used-as-spring-background-cover-page-greenery-environment-ecology-wallpaper-concept-eco-earth-day-saving-the-environment-generate-ai-free-photo.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
+        // background-image: url('https://static.vecteezy.com/system/resources/previews/024/484/857/large_2x/environment-earth-day-in-natural-green-leaves-and-plants-used-as-spring-background-cover-page-greenery-environment-ecology-wallpaper-concept-eco-earth-day-saving-the-environment-generate-ai-free-photo.jpg');
+        // background-repeat: no-repeat;
+        // background-size: cover;
         width: 60%;
         border: 1px solid lightgrey;
         border-radius: 1.2rem;
         padding: 1rem;
+        background-color: #e1f1ff;
 
         >div {
             width: 45%;
@@ -20,7 +21,6 @@
         .EditInfor {
             padding: 0.5rem;
             border-radius: 1rem;
-            background-color: #e1f1ffde;
 
             >img {
                 height: 7rem;
