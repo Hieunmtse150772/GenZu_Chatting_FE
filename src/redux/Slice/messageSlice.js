@@ -116,6 +116,7 @@ const { message, styles } = action.payload
         message,
         time: '',
         styles: styles || {},
+        emoji_user: [],
       }
             return {
         ...state,
