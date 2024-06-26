@@ -101,7 +101,7 @@ export default function DetailMessage(props) {
                       ref={buttonRef}
                       onClick={handleEmoteClick}
                       >
-                        {/*  */}
+                        {/* show react emote  */}
                   { item.emoji_user.length != 0 ? 
                       item.emoji_user.map((emoji, index) =>
                             emoji.url_emoji !='' ?
@@ -111,10 +111,6 @@ export default function DetailMessage(props) {
                           )
                       : 
                       <MdOutlineEmojiEmotions size={14}/>
-                        // <img src={`${chosenEmoji.srcElement.currentSrc}`} 
-                        //       alt="smiley" 
-                        //       className={`${chosenEmoji.srcElement.className}`}
-                        //       loading="eager" />
                   }
                   
                 </div>

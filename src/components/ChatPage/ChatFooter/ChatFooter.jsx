@@ -172,7 +172,7 @@ const ChatFooter = () => {
       buttonRef.current &&
       !buttonRef.current.contains(e.target)
     ) {
-      setEmoteBtnClick(false)
+      setIsEmojiMsgClick(false)
     }
   }
 
@@ -244,7 +244,6 @@ const ChatFooter = () => {
         className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
         ref={emoteRef}
       >
-        {isEmoteBtnClick && <FeatureEmoji isActive={false} />}
         {isEmojiMsgClick && <EmojiMessage />}
       </div>
       <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>

@@ -8,7 +8,6 @@ function FeatureEmoji(props) {
   const dispatch = useDispatch();
 
   const onEmojiClick = (event) => {
-    // setChosenEmoji(emojiObject)
     console.log('emoji:', event.emoji)
     const itemMessage = {
       id_user: props.item.id_user,
@@ -19,24 +18,8 @@ function FeatureEmoji(props) {
     props.handleCallBack()
   }
 
-  // const handleEmote = (Id) =>{
-  //   console.log(Id);
-    
-  // }
   return (
     <div>
-      {/* {chosenEmoji ? (
-          
-          // <>
-            // <img src={`${chosenEmoji.srcElement.currentSrc}`} 
-            //     alt="smiley" 
-            //     className={`${chosenEmoji.srcElement.className}`}
-            //     loading="eager" />
-          // </>
-        ) : (
-          // <span>No emoji Chosen</span>
-          <></>
-        )} */}
       <Picker reactionsDefaultOpen={props.isActive} onEmojiClick={onEmojiClick} />
     </div>
   )
