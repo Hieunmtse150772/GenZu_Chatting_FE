@@ -18,13 +18,7 @@ export default function DetailMessage(props) {
   const emoteRef = useRef(null)
 
   const message = useSelector((state) => state.message.message)
-  // const handleMoreClick = (id) => {
-  //   e.preventDefault();
-  //   setIsOptionBtnClick(!isOptionBtnClick);
-  //   if(setIsOptionBtnClick){
-  //     handleUserClick(id)
-  //   }
-  // };
+
   const handleMoreClick = (id_message) => {
     setIsOptionBtnClick(true)
     handleUserClick(id_message)
@@ -73,7 +67,14 @@ export default function DetailMessage(props) {
             </div>
 
             <div className='relative'>
-              <div className='my-4 max-w-xs rounded-lg bg-blue-200 p-2 text-black'>
+              <div
+                className='my-4 max-w-xs rounded-lg bg-blue-200 p-2 text-black'
+                style={{
+                  fontWeight: item.styles.bold ? 'bold' : 'normal',
+                  fontStyle: item.styles.italic ? 'italic' : 'normal',
+                  textDecoration: item.styles.underline ? 'underline' : 'none',
+                }}
+              >
                 {item.message}
               </div>
               {/* Emote */}
