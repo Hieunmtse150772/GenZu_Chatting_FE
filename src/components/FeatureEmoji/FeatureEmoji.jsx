@@ -8,7 +8,6 @@ function FeatureEmoji(props) {
   const dispatch = useDispatch();
 
   const onEmojiClick = (event) => {
-    console.log('emoji:', event.emoji)
     const itemMessage = {
       id_user: props.item.id_user,
       id_message: props.item.id_message,

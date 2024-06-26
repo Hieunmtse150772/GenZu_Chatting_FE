@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
 import 'regenerator-runtime'
-import 'draft-js/dist/Draft.css'
 import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { LuSend } from 'react-icons/lu'
 import { FaFile, FaImage, FaVideo } from 'react-icons/fa'

@@ -22,6 +22,7 @@ export default function DetailMessage(props) {
   
   const handleMoreClick = (id_message) => {
     setIsOptionBtnClick(true)
+    setEmoteBtnClick(false)
     handleUserClick(id_message)
   }
 

@@ -8,9 +8,10 @@ const initialState = {
       message: "Hey, how's your day going?",
       time: '',
       styles: {},
-      emoji_user:[
-        
-      ]
+      emoji_user:[{
+        id_user:1,
+        url_emoji:"😡",
+      }]
     },
     {
       id_user: 2,
@@ -75,7 +76,8 @@ const initialState = {
       message: 'Hiking sounds fun. Hope the weather cooperates for you!',
       time: '',
       styles: {},
-      emoji_user: [],
+      emoji_user: [
+      ],
     },
     {
       id_user: 2,
