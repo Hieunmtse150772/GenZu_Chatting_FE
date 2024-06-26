@@ -91,12 +91,20 @@ const ChatFooter = () => {
 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
-      dispatch(sendMessage(inputStr))
+      const messageData = {
+        message: inputStr,
+        styles: {
+          bold: boldActive,
+          italic: italicActive,
+          underline: underlineActive,
+        },
+      }
+      dispatch(sendMessage(messageData))
       dispatch(deleteEmoji())
       setInputStr('') // Clear input field after dispatch
-      setBoldActive(!boldActive)
-      setItalicActive(!italicActive)
-      setUnderlineActive(!underlineActive)
+      setBoldActive(false)
+      setItalicActive(false)
+      setUnderlineActive(false)
     }
   }
 

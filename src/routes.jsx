@@ -2,9 +2,6 @@ import { Routes, Route, useNavigate } from 'react-router-dom'
 import Login from './pages/Login/Login'
 import Home from './pages/Home'
 import PopUpFindFriends from './components/PopUp/PopUpFindFriends/PopUpFindFriends'
-import EditProfile from './components/PopUp/EditProfile/EditProfile'
-import { useLayoutEffect } from 'react'
-import { checkCookie } from './services/Cookies'
 
 function AppRoutes() {
   // const navigate = useNavigate()
