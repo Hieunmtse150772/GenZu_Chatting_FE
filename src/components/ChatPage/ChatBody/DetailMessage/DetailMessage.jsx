@@ -25,16 +25,16 @@ export default function DetailMessage(props) {
     handleUserClick(id_message)
   }
 
-  const handleEmoteClick = (e) => {
-    e.preventDefault()
+  const handleEmoteClick = () => {
+    // e.preventDefault()
     setEmoteBtnClick(!isEmoteBtnClick)
   }
 
   // 
-  const handleEmoteSelected = () =>{
-    console.log('chosenEmoji', )
-      setisEmoteSelected(!isEmoteSelected);
-  }
+  // const handleEmoteSelected = () =>{
+  //   console.log('chosenEmoji', )
+  //   setEmoteBtnClick(!isEmoteBtnClick);
+  // }
   // 
   const handleClickOutside = (e) => {
     if (
@@ -86,14 +86,11 @@ export default function DetailMessage(props) {
                 </div>
                 {/* Emote */}
                 {isEmoteBtnClick && activeMessageID == item.id_message ? (
-                <div className='absolute right-px' ref={emoteRef}>
-                      <FeatureEmoji isActive={isEmoteBtnClick} item={item} handleCallBack={handleEmoteSelected}/>
-                    </div>
-              ) : (
-                <></>
-                )}
+                    <div className='absolute right-px' ref={emoteRef}>
+                          <FeatureEmoji isActive={isEmoteBtnClick} item={item} handleCallBack={handleEmoteClick}/>
+                        </div> ) : ( <></>)}
   
-                <div className= {`absolute right-px bottom-px  hover:bg-blue-400 p-0.5 rounded-md${
+                <div className= {`absolute right-px bottom-px hover:bg-blue-400 p-0.5 rounded-md${
                                     isOptionBtnClick && activeMessageID == item.id_message
                                       ? "opacity-100"
                                       : "opacity-0 group-hover:opacity-100"
@@ -102,16 +99,16 @@ export default function DetailMessage(props) {
                       onClick={handleEmoteClick}
                       >
                         {/* show react emote  */}
-                  { item.emoji_user.length != 0 ? 
-                      item.emoji_user.map((emoji, index) =>
-                            emoji.url_emoji !='' ?
-                              emoji.url_emoji
-                              :
-                              <></>
-                          )
-                      : 
-                      <MdOutlineEmojiEmotions size={14}/>
-                  }
+                      { item.emoji_user.length != 0 ? 
+                          item.emoji_user.map((emoji, index) =>
+                                emoji.url_emoji !='' ?
+                                  emoji.url_emoji
+                                  :
+                                  <></>
+                              )
+                          : 
+                          <MdOutlineEmojiEmotions size={14}/>
+                      }
                   
                 </div>
               </div>
@@ -130,23 +127,36 @@ export default function DetailMessage(props) {
                   {item.message}
                 </div>
                 {/* emote */}
-                <div className= {`absolute right-px bottom-px  hover:bg-blue-400 p-0.5 rounded-md ${
+                <div className= {`absolute right-px bottom-px hover:bg-blue-400 p-0.5 rounded-md${
                                     isOptionBtnClick && activeMessageID == item.id_message
                                       ? "opacity-100"
                                       : "opacity-0 group-hover:opacity-100"
                                       }`}
                       ref={buttonRef}
-                      onClick={handleEmoteClick}>
-                  <MdOutlineEmojiEmotions  size={14}/>
+                      onClick={handleEmoteClick}
+                      >
+                        {/* show react emote  */}
+                      { item.emoji_user.length != 0 ? 
+                          item.emoji_user.map((emoji, index) =>
+                                emoji.url_emoji !='' ?
+                                  emoji.url_emoji
+                                  :
+                                  <></>
+                              )
+                          : 
+                          <MdOutlineEmojiEmotions size={14}/>
+                      }
+                  
                 </div>
                   { isEmoteBtnClick && activeMessageID == item.id_message ?
                       (<div className= "absolute" ref={emoteRef}
                         >
-                          <FeatureEmoji isActive={isEmoteBtnClick} />
+                          <FeatureEmoji isActive={isEmoteBtnClick} item={item} handleCallBack={handleEmoteClick}/>
                         </div>) : <></>
                   }
                 
               </div>
+
               <div
                 className={`${
                   isOptionBtnClick && activeMessageID == item.id_message

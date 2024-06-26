@@ -143,7 +143,17 @@ const { message, styles } = action.payload
       ]
       state.message.map((item, index) =>{
         if(item.id_message == action.payload.id_message){
-          state.message[index].emoji_user = [ 
+          state.message[index].emoji_user.map((emoji, i) =>{
+            
+            if(emoji.id_user == action.payload.id_user){
+              
+              state.message[index].emoji_user[i] = [
+                { id_user: action.payload.id_user, url_emoji: action.payload.emoji},
+              ]
+            }
+          }
+          ) 
+          state.message[index].emoji_user = [
             ...state.message[index].emoji_user,
             { id_user: action.payload.id_user, url_emoji: action.payload.emoji},
           ]
