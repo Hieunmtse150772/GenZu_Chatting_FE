@@ -8,16 +8,9 @@ const initialState = {
       message: "Hey, how's your day going?",
       time: '',
       styles: {},
-      emoji_user: [
-        {
-          id_user: 1,
-          url_emoji: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png',
-        },
-        {
-          id_user: 2,
-          url_emoji: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png',
-        },
-      ],
+      emoji_user:[
+        
+      ]
     },
     {
       id_user: 2,
@@ -33,8 +26,8 @@ const initialState = {
       message: "I'm good, thanks. Anything exciting happening?",
       time: '',
       styles: {},
-
-      emoji_user: [],
+        
+       emoji_user: [],
     },
     {
       id_user: 2,
@@ -116,7 +109,7 @@ const messageSlice = createSlice({
   initialState,
   reducers: {
     sendMessage: (state, action) => {
-      const { message, styles } = action.payload
+const { message, styles } = action.payload
       const newMessage = {
         id_user: 1,
         id_message: state.message.length + 1,
@@ -124,7 +117,7 @@ const messageSlice = createSlice({
         time: '',
         styles: styles || {},
       }
-      return {
+            return {
         ...state,
         message: [...state.message, newMessage],
       }
@@ -142,22 +135,24 @@ const messageSlice = createSlice({
       return { ...state, selectedEmojis: [] }
     },
     selectedEmjiOnMessage: (state, action) => {
-      console.log('emoji_payload:', action.payload)
+      console.log('emoji_payload:', action.payload);
 
-      state.message = [...state.message]
-      state.message.map((item, index) => {
-        if (item.id_message == action.payload.id_message) {
-          state.message[index].emoji_user = [
+      state.message = [
+        ...state.message,
+      ]
+      state.message.map((item, index) =>{
+        if(item.id_message == action.payload.id_message){
+          state.message[index].emoji_user = [ 
             ...state.message[index].emoji_user,
-            { id_user: action.payload.id_user, url_emoji: action.payload.url },
+            { id_user: action.payload.id_user, url_emoji: action.payload.emoji},
           ]
         }
-      })
+      }
+      )
       console.log('state:', state.message)
-    },
+  },
   },
 })
 
-export const { sendMessage, setMessage, selectEmoji, deleteEmoji, selectedEmjiOnMessage } =
-  messageSlice.actions
+export const { sendMessage, setMessage, selectEmoji, deleteEmoji, selectedEmjiOnMessage } = messageSlice.actions
 export default messageSlice.reducer
