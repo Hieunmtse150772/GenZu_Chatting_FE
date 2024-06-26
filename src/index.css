@@ -13,3 +13,11 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+
+.divider {
+  @apply mx-2 h-6 border-l border-gray-300;
+}
+
+.tool-btn {
+  @apply mx-2 cursor-pointer rounded-lg text-lg transition-all duration-200;
+}

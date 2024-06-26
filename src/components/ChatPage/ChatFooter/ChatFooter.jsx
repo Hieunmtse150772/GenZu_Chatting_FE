@@ -12,10 +12,12 @@ import { GoItalic } from 'react-icons/go'
 import { BsTypeUnderline } from 'react-icons/bs'
 import { AudioRecorder } from 'react-audio-voice-recorder'
 import FeatureEmoji from '../../FeatureEmoji/FeatureEmoji'
+import { BiHide } from 'react-icons/bi'
 import { useSelector } from 'react-redux'
 import EmojiMessage from '../../FeatureEmoji/EmojiMessage'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import './ChatFooter.css'
+import { Spoiler } from 'spoiled'
 
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
@@ -28,6 +30,7 @@ const ChatFooter = () => {
   const [isTextSelected, setIsTextSelected] = useState(false)
   const [selectedText, setSelectedInput] = useState('')
   const [inputStr, setInputStr] = useState('')
+  const [isSpoiled, setIsSpoiled] = useState(false)
   const [boldActive, setBoldActive] = useState(false)
   const [italicActive, setItalicActive] = useState(false)
   const [underlineActive, setUnderlineActive] = useState(false)
@@ -51,6 +54,12 @@ const ChatFooter = () => {
       resetTranscript()
     }
   }, [transcript, listening, resetTranscript])
+
+  useEffect(() => {
+    if (isSpoiled) {
+      setInputStr(<Spoiler></Spoiler>)
+    }
+  }, [isSpoiled])
 
   useEffect(() => {
     if (selectedEmojis) {
@@ -108,6 +117,23 @@ const ChatFooter = () => {
     }
   }
 
+  const handleSendMsg = () => {
+    const messageData = {
+      message: inputStr,
+      styles: {
+        bold: boldActive,
+        italic: italicActive,
+        underline: underlineActive,
+      },
+    }
+    dispatch(sendMessage(messageData))
+    dispatch(deleteEmoji())
+    setInputStr('') // Clear input field after dispatch
+    setBoldActive(false)
+    setItalicActive(false)
+    setUnderlineActive(false)
+  }
+
   const toggleInlineStyle = (style) => {
     switch (style) {
       case 'bold':
@@ -135,6 +161,30 @@ const ChatFooter = () => {
 
   const toggleAttachments = () => {
     setShowAttachments(!showAttachments)
+  }
+
+  const handleSpoiledClick = () => {
+    // if (isTextSelected) {
+    //   setIsSpoiled((prev) => !prev) // Đảo ngược giá trị của isSpoiled
+    //   // Xử lý nội dung khi bật/tắt chế độ Spoiled
+    //   if (isSpoiled) {
+    //     // Nếu isSpoiled là true, xử lý nội dung khi tắt chế độ Spoiled
+    //     setInputStr((prev) => {
+    //       if (typeof prev === 'string') {
+    //         return prev.replace('<Spoiler>', '').replace('</Spoiler>', '')
+    //       }
+    //       return prev // Trả về prev nếu prev không phải là chuỗi
+    //     })
+    //   } else {
+    //     // Nếu isSpoiled là false, xử lý nội dung khi bật chế độ Spoiled
+    //     setInputStr((prev) => {
+    //       if (typeof prev === 'string') {
+    //         return `<Spoiler>${prev}</Spoiler>`
+    //       }
+    //       return prev // Trả về prev nếu prev không phải là chuỗi
+    //     })
+    //   }
+    // }
   }
 
   const startRecording = () => {
@@ -220,22 +270,29 @@ const ChatFooter = () => {
       />
       {isTextSelected && (
         <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
+          <button
+            className={`tool-btn ${isSpoiled ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+            onClick={handleSpoiledClick}
+          >
+            <BiHide size={22} />
+          </button>
+          <div className='divider'></div>
           <button onClick={() => toggleInlineStyle('bold')}>
             <VscBold
               size={22}
-              className={`mx-2 cursor-pointer rounded-lg text-lg ${boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+              className={`tool-btn ${boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
             />
           </button>
           <button onClick={() => toggleInlineStyle('italic')}>
             <GoItalic
               size={22}
-              className={`mx-2 cursor-pointer rounded-lg text-lg ${italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+              className={`tool-btn ${italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
             />
           </button>
           <button onClick={() => toggleInlineStyle('underline')}>
             <BsTypeUnderline
               size={22}
-              className={`mx-2 cursor-pointer rounded-lg text-lg ${underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+              className={`tool-btn ${underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
             />
           </button>
         </div>
@@ -272,7 +329,10 @@ const ChatFooter = () => {
           >
             <MdInsertEmoticon size={24} />
           </button>
-          <button className='mx-auto rounded-full bg-slate-200 p-4 text-sky-500 hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'>
+          <button
+            className='mx-auto rounded-full bg-slate-200 p-4 text-sky-500 hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'
+            onClick={handleSendMsg}
+          >
             <LuSend size={18} />
           </button>
         </div>
