@@ -48,14 +48,10 @@ const ChatFooter = () => {
 
   useEffect(() => {
     if (transcript && !listening) {
-      const contentState = editorState.getCurrentContent()
-      const updatedContentState = ContentState.createFromText(
-        contentState.getPlainText() + ' ' + transcript,
-      )
-      setEditorState(EditorState.createWithContent(updatedContentState))
+      setInputStr((prevInput) => prevInput.trim() + ' ' + transcript.trim())
       resetTranscript()
     }
-  }, [transcript, listening, editorState, resetTranscript])
+  }, [transcript, listening, resetTranscript])
 
   useEffect(() => {
     if (selectedEmojis) {
