@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', 'node_modules/preline/dist/*.js'],
   theme: {
     extend: {
       fontFamily: {
@@ -20,5 +20,6 @@ export default {
       },
     },
   },
-  plugins: [],
+  // eslint-disable-next-line no-undef
+  plugins: [require('preline/plugin')],
 }

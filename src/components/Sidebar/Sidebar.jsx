@@ -79,6 +79,7 @@ const Sidebar = () => {
             <PiSignOutBold
               onClick={() => {
                 removeCookie('userLogin')
+                sessionStorage.removeItem('userLogin')
                 navigate('/login')
               }}
               className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white'

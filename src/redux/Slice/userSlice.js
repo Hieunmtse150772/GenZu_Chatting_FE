@@ -121,6 +121,7 @@ const initialState = {
       message: 'Koalas sleep around 20 hours a day and are known for their eucalyptus diet.',
     },
   ],
+  editUser: false,
 }
 
 const userSlice = createSlice({
@@ -141,8 +142,15 @@ const userSlice = createSlice({
         lsSearchUser: result.map((res) => res.item),
       }
     },
+    updateUser: (state, action) => {
+     
+      return {
+        ...state,
+        editUser: action.payload,
+      }
+    },
   },
 })
 
-export const { setUser, searchUser } = userSlice.actions
+export const { setUser, searchUser, updateUser } = userSlice.actions
 export default userSlice.reducer

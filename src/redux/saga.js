@@ -1,7 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
 import { setMessage } from './Slice/messageSlice'
 
-
 async function CallMessage() {
   let res = await fetch('API_DOMAIN', {
     headers: {
@@ -19,4 +18,5 @@ function* GetMessage() {
 function* saMessage() {
   yield takeEvery(setMessage, GetMessage)
 }
+
 export default saMessage

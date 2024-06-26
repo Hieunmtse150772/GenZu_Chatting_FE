@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import './EditAndSetting.scss'
-import { FiEdit } from 'react-icons/fi'
-import { MdSaveAlt } from 'react-icons/md'
+
+import EditProfile from './EditProfile/EditProfile'
+import SettingGenerate from './SettingGenerate/SettingGenerate'
+import { checkCookie, getCookie } from '../../../services/Cookies'
+
+import ToastSuccesful from '../Toast/ToastSuccesful/ToastSuccesful'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateUser } from '../../../redux/Slice/userSlice'
 
 export default function EditAndSetting({ isVisible, onClose }) {
   const [user, setUser] = useState({
@@ -11,9 +17,11 @@ export default function EditAndSetting({ isVisible, onClose }) {
     phoneNumber: { value: '0345678912', isDisable: true },
     dob: { value: '24/12/1999', isDisable: true },
   })
+  const [token, SetToken] = useState('')
+  const dispatch = useDispatch()
   /// create popup
   const popupRef = useRef()
-
+  const isUpdate = useSelector((state) => state.user.editUser)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -31,63 +39,50 @@ export default function EditAndSetting({ isVisible, onClose }) {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isVisible, onClose])
+  useLayoutEffect(() => {
+    if (checkCookie) {
+      if (getCookie('userLogin')) {
+        const userLogin = JSON.parse(getCookie('userLogin'))
+        SetToken(userLogin.accessToken)
+        setUser(userLogin.user)
+        console.log(userLogin)
+      } else {
+        const userLogin = JSON.parse(sessionStorage.getItem('userLogin'))
+        SetToken(userLogin.accessToken)
+        setUser(userLogin.user)
+        console.log(userLogin)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isUpdate) {
+      setTimeout(() => {
+        dispatch(updateUser(false))
+      }, 3000)
+    }
+  })
+
+  ////
   if (!isVisible) {
     return null
   }
-  const handelEdit = (value) => {
-    setUser({
-      ...user,
-      [value]: {
-        ...user[value],
-        isDisable: !user[value].isDisable,
-      },
-    })
-  }
+
   return (
-    <div className='EditAndSetting fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-      <div className='relative flex justify-around rounded-lg bg-white p-6 shadow-lg'>
-        <button
-          className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
-          onClick={onClose}
-        >
-          &times;
-        </button>
-        <div className='EditInfor'>
-          <h1>Edit user</h1>
-          <img
-            src='https://img-cdn.pixlr.com/image-generator/history/66785ce3e45ea92fdd9b83f1/e8fdab45-8787-4f42-94bd-a15807dba09d/medium.webp'
-            alt='avatar'
-          />
-          {Object.keys(user).map((field) => (
-            <div key={field} className='input-infor-group'>
-              <h3>{field.charAt(0).toUpperCase() + field.slice(1)}</h3>
-              <div>
-                <div
-                  onClick={() => {
-                    user[field].isDisable ? alert('Please enter edit button') : ' '
-                  }}
-                >
-                  <input
-                    type='text'
-                    value={user[field].value}
-                    disabled={user[field].isDisable}
-                    style={{ pointerEvents: user[field].isDisable ? 'none' : 'auto' }}
-                  />
-                </div>
-                <button onClick={() => handelEdit(field)}>
-                  {user[field].isDisable ? <FiEdit /> : <MdSaveAlt />}
-                </button>
-              </div>
-            </div>
-          ))}
-          <div className='buttonSave'>
-            <button className='flex justify-around'>
-              Save <MdSaveAlt />
-            </button>
-          </div>
+    <>
+      {isUpdate && <ToastSuccesful message={'Thay đổi thông tin user thành công'} />}
+      <div className='EditAndSetting fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+        <div className='relative flex justify-around rounded-lg bg-white p-6 shadow-lg'>
+          <button
+            className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
+            onClick={onClose}
+          >
+            &times;
+          </button>
+          <EditProfile user={user} token={token} />
+          <SettingGenerate />
         </div>
-        <div>Setting</div>
       </div>
-    </div>
+    </>
   )
 }
