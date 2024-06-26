@@ -61,10 +61,11 @@ const ChatFooter = () => {
   }, [isSpoiled])
 
   useEffect(() => {
-    if (selectedEmojis) {
-      setInputStr(selectedEmojis.join(''))
+    if (selectedEmojis.length > 0) {
+      setInputStr((prev) => prev + selectedEmojis.join(''))
+      dispatch(deleteEmoji())
     }
-  }, [selectedEmojis])
+  }, [selectedEmojis, dispatch])
 
   const addAudioElement = (blob) => {
     const url = URL.createObjectURL(blob)
