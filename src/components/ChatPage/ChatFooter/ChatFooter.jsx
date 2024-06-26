@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Editor, EditorState, RichUtils, ContentState, Modifier, AtomicBlockUtils } from 'draft-js'
 import 'regenerator-runtime'
 import 'draft-js/dist/Draft.css'
 import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
@@ -15,12 +14,11 @@ import { AudioRecorder } from 'react-audio-voice-recorder'
 import FeatureEmoji from '../../FeatureEmoji/FeatureEmoji'
 import { useSelector } from 'react-redux'
 import EmojiMessage from '../../FeatureEmoji/EmojiMessage'
-import './ChatFooter.css'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
+import './ChatFooter.css'
 
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
-  const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
   const [isEmojiMsgClick, setIsEmojiMsgClick] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
@@ -30,8 +28,9 @@ const ChatFooter = () => {
   const [isTextSelected, setIsTextSelected] = useState(false)
   const [selectedText, setSelectedInput] = useState('')
   const [inputStr, setInputStr] = useState('')
-  const [imageSrc, setImageSrc] = useState(null) // State to hold Base64 image string
-
+  const [boldActive, setBoldActive] = useState(false)
+  const [italicActive, setItalicActive] = useState(false)
+  const [underlineActive, setUnderlineActive] = useState(false)
   const dispatch = useDispatch()
   const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
   const inputRef = useRef(null)
@@ -90,22 +89,31 @@ const ChatFooter = () => {
     }
   }
 
-  const handleEditorChange = (state) => {
-    setEditorState(state)
-    const selectionState = state.getSelection()
-    setIsTextSelected(!selectionState.isCollapsed())
-  }
-
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
       dispatch(sendMessage(inputStr))
       dispatch(deleteEmoji())
       setInputStr('') // Clear input field after dispatch
+      setBoldActive(!boldActive)
+      setItalicActive(!italicActive)
+      setUnderlineActive(!underlineActive)
     }
   }
 
   const toggleInlineStyle = (style) => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, style))
+    switch (style) {
+      case 'bold':
+        setBoldActive(!boldActive)
+        break
+      case 'italic':
+        setItalicActive(!italicActive)
+        break
+      case 'underline':
+        setUnderlineActive(!underlineActive)
+        break
+      default:
+        break
+    }
   }
 
   const handleFileChange = (event, type) => {
@@ -135,10 +143,10 @@ const ChatFooter = () => {
     SpeechRecognition.stopListening()
   }
 
-  const handleEmoteClick = (e) => {
-    e.preventDefault()
-    setEmoteBtnClick(!isEmoteBtnClick)
-  }
+  // const handleEmoteClick = (e) => {
+  //   e.preventDefault()
+  //   setEmoteBtnClick(!isEmoteBtnClick)
+  // }
 
   const handleEmojiMsgClick = (e) => {
     e.preventDefault()
@@ -196,17 +204,31 @@ const ChatFooter = () => {
         ref={inputRef}
         value={inputStr}
         className='flex-1 rounded-full border px-4 py-2 focus:outline-none'
+        style={{
+          fontWeight: boldActive ? 'bold' : 'normal',
+          fontStyle: italicActive ? 'italic' : 'normal',
+          textDecoration: underlineActive ? 'underline' : 'none',
+        }}
       />
       {isTextSelected && (
-        <div className='absolute -top-4 mx-auto flex cursor-pointer items-center justify-between rounded-full bg-slate-300 p-2'>
-          <button onClick={() => toggleInlineStyle('BOLD')}>
-            <VscBold size={22} className='mx-1' />
+        <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
+          <button onClick={() => toggleInlineStyle('bold')}>
+            <VscBold
+              size={22}
+              className={`mx-2 cursor-pointer rounded-lg text-lg ${boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+            />
           </button>
-          <button onClick={() => toggleInlineStyle('ITALIC')}>
-            <GoItalic size={22} className='mx-1' />
+          <button onClick={() => toggleInlineStyle('italic')}>
+            <GoItalic
+              size={22}
+              className={`mx-2 cursor-pointer rounded-lg text-lg ${italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+            />
           </button>
-          <button onClick={() => toggleInlineStyle('UNDERLINE')}>
-            <BsTypeUnderline size={22} className='mx-1' />
+          <button onClick={() => toggleInlineStyle('underline')}>
+            <BsTypeUnderline
+              size={22}
+              className={`mx-2 cursor-pointer rounded-lg text-lg ${underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+            />
           </button>
         </div>
       )}
@@ -243,11 +265,8 @@ const ChatFooter = () => {
           >
             <MdInsertEmoticon size={24} />
           </button>
-          <button
-            className='rounded-full bg-blue-500 p-3 hover:bg-blue-600 focus:outline-none dark:text-white'
-            onClick={() => handleKeyPress({ keyCode: 13 })}
-          >
-            <LuSend size={16} />
+          <button className='mx-auto rounded-full bg-slate-200 p-4 text-sky-500 hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'>
+            <LuSend size={18} />
           </button>
         </div>
       </div>
@@ -285,14 +304,6 @@ const ChatFooter = () => {
           <MdOutlineKeyboardVoice size={22} />
         </button>
       </div>
-      {/* Render selected image */}
-      {imageSrc && (
-        <img
-          src={imageSrc}
-          alt='Selected'
-          style={{ maxWidth: '100%', maxHeight: '200px', display: 'none' }} // Hidden image
-        />
-      )}
       {/* Input fields for file selection */}
       <input
         type='file'
