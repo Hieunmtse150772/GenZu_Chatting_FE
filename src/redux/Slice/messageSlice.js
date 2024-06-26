@@ -75,14 +75,13 @@ const initialState = {
       time: '',
     },
   ],
-  selectedEmoji: '',
+  selectedEmojis: '',
 }
 const messageSlice = createSlice({
   name: 'message',
   initialState,
   reducers: {
     sendMessage: (state, action) => {
-      console.log(action.payload)
       return {
         ...state,
         message: [
@@ -95,10 +94,30 @@ const messageSlice = createSlice({
       return { ...state }
     },
     selectEmoji: (state, action) => {
-      state.selectedEmoji = action.payload
+      const emoji = action.payload
+
+      // Check if the emoji is already selected
+      const isSelected = state.selectedEmojis.includes(emoji)
+
+      if (!isSelected) {
+        // If emoji is not selected, add it to the selectedEmojis array
+        return {
+          ...state,
+          selectedEmojis: [...state.selectedEmojis, emoji],
+        }
+      } else {
+        // If emoji is already selected, remove it from the selectedEmojis array
+        return {
+          ...state,
+          selectedEmojis: state.selectedEmojis.filter((e) => e !== emoji),
+        }
+      }
+    },
+    deleteEmoji: (state) => {
+      return { ...state, selectedEmojis: '' }
     },
   },
 })
 
-export const { sendMessage, setMessage, selectEmoji } = messageSlice.actions
+export const { sendMessage, setMessage, selectEmoji, deleteEmoji } = messageSlice.actions
 export default messageSlice.reducer

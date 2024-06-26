@@ -7,7 +7,8 @@ const EmojiMessage = () => {
   const dispatch = useDispatch()
 
   const handleEmojiClick = (event, emojiObject) => {
-    dispatch(selectEmoji(emojiObject.target.currentSrc))
+    console.log(event.emoji)
+    dispatch(selectEmoji(event.emoji))
   }
 
   return (
