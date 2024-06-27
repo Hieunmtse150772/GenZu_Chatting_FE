@@ -55,20 +55,9 @@ const ChatFooter = () => {
   }, [transcript, listening, resetTranscript])
 
   useEffect(() => {
-<<<<<<< HEAD
-    if (selectedEmojis) {
-      setInputStr(selectedEmojis.join(''))
-=======
-    if (isSpoiled) {
-      setInputStr(<Spoiler></Spoiler>)
-    }
-  }, [isSpoiled])
-
-  useEffect(() => {
     if (selectedEmojis.length > 0) {
       setInputStr((prev) => prev + selectedEmojis.join(''))
       dispatch(deleteEmoji())
->>>>>>> origin
     }
   }, [selectedEmojis, dispatch])
 
