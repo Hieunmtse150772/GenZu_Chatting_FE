@@ -45,12 +45,10 @@ export default function EditAndSetting({ isVisible, onClose }) {
         const userLogin = JSON.parse(getCookie('userLogin'))
         SetToken(userLogin.accessToken)
         setUser(userLogin.user)
-        console.log(userLogin)
       } else {
         const userLogin = JSON.parse(sessionStorage.getItem('userLogin'))
         SetToken(userLogin.accessToken)
         setUser(userLogin.user)
-        console.log(userLogin)
       }
     }
   }, [])
