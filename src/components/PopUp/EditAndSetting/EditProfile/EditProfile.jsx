@@ -68,7 +68,7 @@ const EditProfile = ({ user, token }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='w-5/12 rounded-lg bg-white p-4 shadow-md'>
+    <form onSubmit={handleSubmit} className='w-6/12 rounded-lg bg-white p-4 shadow-md'>
       <h2 className='mb-4 text-2xl font-semibold'>Edit Profile</h2>
       {Object.keys(profile).map((key) => (
         <div key={key} className='mb-4'>
