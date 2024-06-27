@@ -29,7 +29,7 @@ const ChatFooter = () => {
   const [isTextSelected, setIsTextSelected] = useState(false)
   const [selectedText, setSelectedInput] = useState('')
   const [inputStr, setInputStr] = useState('')
-  const [isSpoiled, setIsSpoiled] = useState(false)
+  const [isSpoiled, setIsSpoiled] = useState(true)
   const [boldActive, setBoldActive] = useState(false)
   const [italicActive, setItalicActive] = useState(false)
   const [underlineActive, setUnderlineActive] = useState(false)
@@ -53,12 +53,6 @@ const ChatFooter = () => {
       resetTranscript()
     }
   }, [transcript, listening, resetTranscript])
-
-  useEffect(() => {
-    if (isSpoiled) {
-      setInputStr(<Spoiler></Spoiler>)
-    }
-  }, [isSpoiled])
 
   useEffect(() => {
     if (selectedEmojis.length > 0) {
@@ -107,6 +101,7 @@ const ChatFooter = () => {
           italic: italicActive,
           underline: underlineActive,
         },
+        isSpoiled,
       }
       dispatch(sendMessage(messageData))
       dispatch(deleteEmoji())
@@ -114,6 +109,7 @@ const ChatFooter = () => {
       setBoldActive(false)
       setItalicActive(false)
       setUnderlineActive(false)
+      setIsSpoiled(true)
     }
   }
 
@@ -132,6 +128,7 @@ const ChatFooter = () => {
     setBoldActive(false)
     setItalicActive(false)
     setUnderlineActive(false)
+    setIsSpoiled(false)
   }
 
   const toggleInlineStyle = (style) => {
@@ -164,27 +161,7 @@ const ChatFooter = () => {
   }
 
   const handleSpoiledClick = () => {
-    // if (isTextSelected) {
-    //   setIsSpoiled((prev) => !prev) // Đảo ngược giá trị của isSpoiled
-    //   // Xử lý nội dung khi bật/tắt chế độ Spoiled
-    //   if (isSpoiled) {
-    //     // Nếu isSpoiled là true, xử lý nội dung khi tắt chế độ Spoiled
-    //     setInputStr((prev) => {
-    //       if (typeof prev === 'string') {
-    //         return prev.replace('<Spoiler>', '').replace('</Spoiler>', '')
-    //       }
-    //       return prev // Trả về prev nếu prev không phải là chuỗi
-    //     })
-    //   } else {
-    //     // Nếu isSpoiled là false, xử lý nội dung khi bật chế độ Spoiled
-    //     setInputStr((prev) => {
-    //       if (typeof prev === 'string') {
-    //         return `<Spoiler>${prev}</Spoiler>`
-    //       }
-    //       return prev // Trả về prev nếu prev không phải là chuỗi
-    //     })
-    //   }
-    // }
+    setIsSpoiled(!isSpoiled)
   }
 
   const startRecording = () => {
@@ -261,7 +238,7 @@ const ChatFooter = () => {
         onFocus={handleFocus}
         ref={inputRef}
         value={inputStr}
-        className='flex-1 rounded-full border px-4 py-2 focus:outline-none'
+        className={`flex-1 rounded-full border px-4 py-2 focus:outline-none ${isSpoiled ? 'show' : 'hide'}`}
         style={{
           fontWeight: boldActive ? 'bold' : 'normal',
           fontStyle: italicActive ? 'italic' : 'normal',
@@ -271,7 +248,7 @@ const ChatFooter = () => {
       {isTextSelected && (
         <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
           <button
-            className={`tool-btn ${isSpoiled ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+            className={`tool-btn ${isSpoiled ? 'hover:bg-neutral-300' : 'bg-blue-500 text-white'}`}
             onClick={handleSpoiledClick}
           >
             <BiHide size={22} />

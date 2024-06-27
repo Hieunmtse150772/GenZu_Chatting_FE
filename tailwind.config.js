@@ -18,6 +18,10 @@ export default {
       width: {
         '22rem': '22rem',
       },
+      textShadow: {
+        md: '0 0 8px rgba(0, 0, 0, 0.5)',
+        none: 'none',
+      },
     },
   },
   // eslint-disable-next-line no-undef

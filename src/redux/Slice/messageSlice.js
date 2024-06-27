@@ -8,10 +8,13 @@ const initialState = {
       message: "Hey, how's your day going?",
       time: '',
       styles: {},
-      emoji_user:[{
-        id_user:1,
-        url_emoji:"😡",
-      }]
+      isSpoiled: true,
+      emoji_user: [
+        {
+          id_user: 1,
+          url_emoji: '😡',
+        },
+      ],
     },
     {
       id_user: 2,
@@ -19,6 +22,7 @@ const initialState = {
       message: 'Not too bad, just a bit busy. How about you?',
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -27,8 +31,8 @@ const initialState = {
       message: "I'm good, thanks. Anything exciting happening?",
       time: '',
       styles: {},
-        
-       emoji_user: [],
+      isSpoiled: true,
+      emoji_user: [],
     },
     {
       id_user: 2,
@@ -36,6 +40,7 @@ const initialState = {
       message: "I'm good, thanks. Anything exciting happening?",
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -44,6 +49,7 @@ const initialState = {
       message: 'Not really, just the usual. Work and errands.',
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -52,6 +58,7 @@ const initialState = {
       message: 'Sounds like a typical day. Got any plans for the weekend?',
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -60,6 +67,7 @@ const initialState = {
       message: "Not yet, I'm hoping to relax and maybe catch up on some reading. How about you?",
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -68,6 +76,7 @@ const initialState = {
       message: "I might go hiking if the weather's nice. Otherwise, just taking it easy",
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -76,8 +85,8 @@ const initialState = {
       message: 'Hiking sounds fun. Hope the weather cooperates for you!',
       time: '',
       styles: {},
-      emoji_user: [
-      ],
+      isSpoiled: true,
+      emoji_user: [],
     },
     {
       id_user: 2,
@@ -85,6 +94,7 @@ const initialState = {
       message: 'You too, take care!',
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -93,6 +103,7 @@ const initialState = {
       message: ' Sure',
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -101,6 +112,7 @@ const initialState = {
       message: 'Thanks',
       time: '',
       styles: {},
+      isSpoiled: true,
       emoji_user: [],
     },
   ],
@@ -111,22 +123,30 @@ const messageSlice = createSlice({
   initialState,
   reducers: {
     sendMessage: (state, action) => {
-const { message, styles } = action.payload
+      const { message, styles, isSpoiled } = action.payload
       const newMessage = {
         id_user: 1,
         id_message: state.message.length + 1,
         message,
         time: '',
         styles: styles || {},
+        isSpoiled: isSpoiled || false,
         emoji_user: [],
       }
-            return {
+      return {
         ...state,
         message: [...state.message, newMessage],
       }
     },
     setMessage: (state) => {
       return { ...state }
+    },
+    setMessageSpoiled: (state, action) => {
+      const { id_message } = action.payload
+      const message = state.message.find((msg) => msg.id_message === id_message)
+      if (message) {
+        message.isSpoiled = !message.isSpoiled
+      }
     },
     selectEmoji: (state, action) => {
       const emojiToAdd = action.payload
@@ -138,34 +158,35 @@ const { message, styles } = action.payload
       return { ...state, selectedEmojis: [] }
     },
     selectedEmjiOnMessage: (state, action) => {
-      console.log('emoji_payload:', action.payload);
+      console.log('emoji_payload:', action.payload)
 
-      state.message = [
-        ...state.message,
-      ]
-      state.message.map((item, index) =>{
-        if(item.id_message == action.payload.id_message){
-          state.message[index].emoji_user.map((emoji, i) =>{
-            
-            if(emoji.id_user == action.payload.id_user){
-              
+      state.message = [...state.message]
+      state.message.map((item, index) => {
+        if (item.id_message == action.payload.id_message) {
+          state.message[index].emoji_user.map((emoji, i) => {
+            if (emoji.id_user == action.payload.id_user) {
               state.message[index].emoji_user[i] = [
-                { id_user: action.payload.id_user, url_emoji: action.payload.emoji},
+                { id_user: action.payload.id_user, url_emoji: action.payload.emoji },
               ]
             }
-          }
-          ) 
+          })
           state.message[index].emoji_user = [
             ...state.message[index].emoji_user,
-            { id_user: action.payload.id_user, url_emoji: action.payload.emoji},
+            { id_user: action.payload.id_user, url_emoji: action.payload.emoji },
           ]
         }
-      }
-      )
+      })
       console.log('state:', state.message)
-  },
+    },
   },
 })
 
-export const { sendMessage, setMessage, selectEmoji, deleteEmoji, selectedEmjiOnMessage } = messageSlice.actions
+export const {
+  sendMessage,
+  setMessage,
+  selectEmoji,
+  deleteEmoji,
+  selectedEmjiOnMessage,
+  setMessageSpoiled,
+} = messageSlice.actions
 export default messageSlice.reducer
