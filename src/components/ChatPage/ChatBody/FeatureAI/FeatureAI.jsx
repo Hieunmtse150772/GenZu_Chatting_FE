@@ -17,6 +17,7 @@ export default function FeatureAI(props){
     const handleMoreClick = (e) => {
         e.preventDefault();
         setIsOptionBtnClick(!isOptionBtnClick);
+        props.callBackOptionClick();
         // props.isActiveOption(!isOptionBtnClick);
     };
 
@@ -28,6 +29,7 @@ export default function FeatureAI(props){
           !buttonRef.current.contains(e.target)
         ) {
             setIsOptionBtnClick(false)
+
         }
       }
     useEffect(() => {
