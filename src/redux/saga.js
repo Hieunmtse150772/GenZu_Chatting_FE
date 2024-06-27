@@ -1,22 +1,33 @@
-import { call, put, takeEvery } from 'redux-saga/effects'
-import { setMessage } from './Slice/messageSlice'
+import { call, put, takeLatest } from 'redux-saga/effects'
+import { getConversations, getMessages } from '../utils/api'
+import { setIdConversation } from './Slice/userSlice'
 
-async function CallMessage() {
-  let res = await fetch('API_DOMAIN', {
-    headers: {
-      accept: 'application/json',
-    },
-  })
-  let data = await res.json()
-  return data
+// Export hàm `fetchIdConversation`
+function* fetchIdConversation() {
+  try {
+    const response = yield call(getConversations)
+    const firstConversationId = response.data[0]._id
+    console.log(firstConversationId)
+    yield put(setIdConversation(firstConversationId)) // Sử dụng put
+  } catch (error) {
+    console.error('Lỗi khi lấy idConversation:', error)
+  }
 }
-function* GetMessage() {
-  let data = yield call(CallMessage)
-  yield put({ type: setMessage, payload: data })
+function* fetchMessageById(action) {
+  console.log(action.payload)
+  try {
+    const response = yield call(() => {
+      return getMessages(action.payload.idConversation)
+    })
+    const lsMessage = response.data.data
+    console.log(lsMessage)
+  } catch (error) {
+    console.error('Lỗi khi lấy lsMessages:', error)
+  }
+}
+function* authSaga() {
+  yield takeLatest('user/getIdConversation', fetchIdConversation)
+  yield takeLatest('message/getMessagesById', fetchMessageById)
 }
 
-function* saMessage() {
-  yield takeEvery(setMessage, GetMessage)
-}
-
-export default saMessage
+export default authSaga

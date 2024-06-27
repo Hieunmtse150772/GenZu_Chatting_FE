@@ -122,6 +122,7 @@ const initialState = {
     },
   ],
   editUser: false,
+  idConversation: null,
 }
 
 const userSlice = createSlice({
@@ -143,14 +144,21 @@ const userSlice = createSlice({
       }
     },
     updateUser: (state, action) => {
-     
       return {
         ...state,
         editUser: action.payload,
       }
     },
+    setIdConversation: (state, action) => {
+      return {
+        ...state,
+        idConversation: action.payload,
+      }
+    },
+    getIdConversation: (state, action) => {},
   },
 })
 
-export const { setUser, searchUser, updateUser } = userSlice.actions
+export const { setUser, searchUser, updateUser, setIdConversation, getIdConversation } =
+  userSlice.actions
 export default userSlice.reducer

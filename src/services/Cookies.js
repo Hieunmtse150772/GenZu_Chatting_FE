@@ -5,11 +5,19 @@ function setCookie(name, value, days) {
 }
 
 function getCookie(name) {
-  return Cookies.get(name)
+  if (Cookies.get(name)) {
+    return Cookies.get(name)
+  } else {
+    return sessionStorage.getItem(name)
+  }
 }
 
 function removeCookie(name) {
-  Cookies.remove(name, { path: '/' })
+  if (Cookies.get(name)) {
+    Cookies.remove(name, { path: '/' })
+  } else {
+    sessionStorage.removeItem(name)
+  }
 }
 
 function checkCookie() {
