@@ -117,6 +117,7 @@ const initialState = {
     },
   ],
   selectedEmojis: [],
+  answerAI: '',
 }
 const messageSlice = createSlice({
   name: 'message',
@@ -154,6 +155,10 @@ const messageSlice = createSlice({
       // Thêm emoji vào selectedEmojis nếu chưa tồn tại
       state.selectedEmojis.push(emojiToAdd)
     },
+    setAnswerSuggestion: (state, action) => {
+      const answerSuggestion = action.payload
+      return { ...state, answerAI: answerSuggestion }
+    },
     deleteEmoji: (state) => {
       return { ...state, selectedEmojis: [] }
     },
@@ -188,5 +193,6 @@ export const {
   deleteEmoji,
   selectedEmjiOnMessage,
   setMessageSpoiled,
+  setAnswerSuggestion,
 } = messageSlice.actions
 export default messageSlice.reducer

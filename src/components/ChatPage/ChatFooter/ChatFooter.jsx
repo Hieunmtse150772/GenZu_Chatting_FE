@@ -35,6 +35,7 @@ const ChatFooter = () => {
   const [underlineActive, setUnderlineActive] = useState(false)
   const dispatch = useDispatch()
   const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
+  const answerSuggestionAI = useSelector((state) => state.message.answerAI)
   const inputRef = useRef(null)
   const fileInputRefs = {
     file: useRef(null),
@@ -53,6 +54,15 @@ const ChatFooter = () => {
       resetTranscript()
     }
   }, [transcript, listening, resetTranscript])
+
+  useEffect(() => {
+    if (answerSuggestionAI) {
+      let checkMutiAnswer = answerSuggestionAI.startsWith('*')
+        ? answerSuggestionAI.split(/(?<=[.?!])\s+/)
+        : answerSuggestionAI
+      setInputStr(checkMutiAnswer)
+    }
+  }, [answerSuggestionAI])
 
   useEffect(() => {
     if (selectedEmojis.length > 0) {
