@@ -17,6 +17,7 @@ export default function Home() {
     // !checkCookie() ?: navigate('/chat/123456')
   }, [dispatch, navigate])
   useEffect(() => {
+    console.log(idConversation)
     if (idConversation !== null) {
       navigate(`/chat/${idConversation}`)
     }

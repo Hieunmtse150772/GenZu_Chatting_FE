@@ -184,14 +184,14 @@ const messageSlice = createSlice({
       })
       console.log('state:', state.message)
     },
+    setTestMessage: (state, action) => {
+      return {
+        ...state,
+        testMessage: action.payload,
+      }
+    },
+    getMessagesById: (state, action) => {},
   },
-  setTestMessage: (state, action) => {
-    return {
-      ...state,
-      testMessage: action.payload,
-    }
-  },
-  getMessagesById: (state) => {},
 })
 
 export const {
@@ -202,5 +202,6 @@ export const {
   selectedEmjiOnMessage,
   setMessageSpoiled,
   setAnswerSuggestion,
+  getMessagesById,
 } = messageSlice.actions
 export default messageSlice.reducer
