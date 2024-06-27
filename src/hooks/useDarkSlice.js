@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react'
 
-export default function useDarkSide() {
-  const [theme, setTheme] = useState(localStorage.theme);
-  const colorTheme = theme === "dark" ? "light" : "dark";
-  localStorage.setItem("theme", theme);
+const useDarkMode = () => {
+  const [isDarkMode, setDarkMode] = useState(() => localStorage.theme === 'light')
+  const toggleDarkMode = () => {
+    setDarkMode(!isDarkMode)
+  }
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove(colorTheme);
-    root.classList.add(theme);
-    if (localStorage.theme == "dark")
-      localStorage.removeItem("theme");
-    else localStorage.setItem("theme", theme);
-  }, [theme, colorTheme]);
-
-  return [colorTheme, setTheme];
+    const html = window.document.documentElement
+    const prev = isDarkMode ? 'dark' : 'light'
+    html.classList.remove(prev)
+    const next = isDarkMode ? 'light' : 'dark'
+    html.classList.add(next)
+    localStorage.setItem('theme', next)
+  }, [isDarkMode])
+  return [isDarkMode, toggleDarkMode]
 }
+
+export default useDarkMode
