@@ -11,7 +11,9 @@ export default function PopUpFindFriends() {
 
   const handleSearch = async () => {
     try {
-      const token = getCookie('userLogin').accessToken // Thay thế bằng access token của bạn
+      const token = getCookie('userLogin')
+        ? JSON.parse(getCookie('userLogin').accessToken)
+        : JSON.parse(sessionStorage.getItem('userLogin'))
       const response = await axios.get(
         `https://genzu-chatting-be.onrender.com/users/searchUsers?search=${searchTerm}`,
         {
@@ -50,11 +52,8 @@ export default function PopUpFindFriends() {
 
       {searchResult.user && (
         <ul className='mt-4'>
-          {searchResult.user.map((user) => (
-            <div
-              key={user.id}
-              className='flex items-center justify-between border-b border-gray-200'
-            >
+          {searchResult.user.map((user, index) => (
+            <div key={index} className='flex items-center justify-between border-b border-gray-200'>
               <div>
                 <li>{user.fullName}</li>
                 <li className='py-2'>{user.email}</li>

@@ -2,6 +2,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom'
 import Login from './pages/Login/Login'
 import Home from './pages/Home'
 import PopUpFindFriends from './components/PopUp/PopUpFindFriends/PopUpFindFriends'
+import Chat from './pages/Chat/Chat'
 
 function AppRoutes() {
   // const navigate = useNavigate()
@@ -13,6 +14,7 @@ function AppRoutes() {
     <Routes>
       <Route path='/' element={<Home />} />
       <Route path='/login/*' element={<Login />} />
+      <Route path='/chat/:idConversation' element={<Chat />} />
       {/* <Route path='/test' element={<EditProfile />} /> */}
       <Route path='/test' element={<PopUpFindFriends />} />
 
