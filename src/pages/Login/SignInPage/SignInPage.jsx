@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import axios from 'axios'
 import { setCookie } from '../../../services/Cookies'
+import userService from '@/services/userService'
 import { useNavigate } from 'react-router-dom'
 
 const LoginForm = (props) => {
@@ -16,30 +17,10 @@ const LoginForm = (props) => {
     setError('')
 
     try {
-      const response = await axios.post(
-        'https://genzu-chatting-be.onrender.com/auth/sign-in',
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-
-      const user = {
-        accessToken: response.data.accessToken,
-        refreshToken: response.data.refreshToken,
-        user: response.data.user,
+      const user = await userService.signIn(email, password, rememberme)
+      if (user) {
+        navigate(`chat/${user?.user?._id}`)
       }
-      !rememberme
-        ? sessionStorage.setItem('userLogin', JSON.stringify(user))
-        : setCookie('userLogin', JSON.stringify(user), 7)
-
-      navigate('/')
       // Handle successful login here (e.g., save token, redirect)
     } catch (err) {
       console.error('Login failed:', err)
@@ -53,7 +34,6 @@ const LoginForm = (props) => {
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>
         <div>
-          {console.log(rememberme)}
           <img className='mx-auto h-12 w-auto' src='/your-logo.svg' alt='Workflow' />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
             Sign in to your account

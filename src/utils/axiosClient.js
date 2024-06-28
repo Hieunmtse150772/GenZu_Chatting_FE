@@ -12,7 +12,6 @@ axiosClient.interceptors.request.use(
   (config) => {
     const userLogin = JSON.parse(getCookie('userLogin'))
     const accessToken = userLogin ? userLogin?.accessToken : null
-    console.log(accessToken)
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`
     }

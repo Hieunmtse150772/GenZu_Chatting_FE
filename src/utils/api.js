@@ -77,6 +77,5 @@ export const getConversations = () => {
 }
 
 export const getMessages = (messageId) => {
-  console.log(messageId)
   return api.get(`/messages/${messageId}`)
 }
