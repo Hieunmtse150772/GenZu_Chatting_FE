@@ -3,7 +3,7 @@ import { MdOutlineQuickreply } from 'react-icons/md'
 import { SlOptions } from 'react-icons/sl'
 import DropdownOption from './DropdownOption/DropdownOption'
 import { setAnswerSuggestion } from '../../../../redux/Slice/messageSlice'
-
+import { setAnswerClick } from '../../../../redux/Slice/messageSlice' 
 import { answerSuggestion } from '@/utils/answerSuggestion'
 import { useDispatch } from 'react-redux'
 import { useRef, useState, useEffect } from 'react'
@@ -13,6 +13,8 @@ export default function FeatureAI(props) {
   const dropdownRef = useRef(null)
   const dispatch = useDispatch()
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
+  const [isAnswerSuggClick, setIsAnswerSuggClick] = useState(true)
+
   const handleMoreClick = (e) => {
     e.preventDefault()
     setIsOptionBtnClick(!isOptionBtnClick)
@@ -31,9 +33,19 @@ export default function FeatureAI(props) {
     }
   }
 
+  const handleClickAnswer = () =>{
+    dispatch(setAnswerClick(false))
+  }
   const handleAnswerQuestion = async (message) => {
     const answer = await answerSuggestion(message)
-    dispatch(setAnswerSuggestion(answer))
+    const itemAnswer = {
+      message: answer,
+      isAIClick: true }
+      console.log('itemAnswer', itemAnswer);
+
+    setIsAnswerSuggClick(true)
+    console.log('isAnswerSuggClick1', isAnswerSuggClick)
+    dispatch(setAnswerSuggestion(itemAnswer))
   }
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -54,7 +66,13 @@ export default function FeatureAI(props) {
           <button
             id='setting'
             className='rounded-md p-1 hover:bg-blue-400'
-            onClick={() => handleAnswerQuestion(props.message)}
+            onClick={() => { if(isAnswerSuggClick) 
+                                {
+                                  handleClickAnswer()
+                                }
+                              handleAnswerQuestion(props.message)
+                            }
+                    }
           >
             <MdOutlineQuickreply size={14} />
           </button>

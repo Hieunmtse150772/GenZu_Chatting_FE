@@ -186,10 +186,10 @@ export default function DetailMessage(props) {
                 {/* show react emote  */}
                 {item.emoji_user.length != 0 ? (
                   item.emoji_user.map((emoji, index) =>
-                    emoji.url_emoji != '' ? emoji.url_emoji : <></>,
+                      emoji.url_emoji != '' ? emoji.url_emoji : <MdOutlineEmojiEmotions key={index} size={14} />
                   )
                 ) : (
-                  <MdOutlineEmojiEmotions size={14} />
+                  <MdOutlineEmojiEmotions key={index} size={14} />
                 )}
               </div>
               {isEmoteBtnClick && activeMessageEmoteID == item.id_message ? (

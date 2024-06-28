@@ -10,17 +10,14 @@ import { VscBold } from 'react-icons/vsc'
 import { GoItalic } from 'react-icons/go'
 import { BsTypeUnderline } from 'react-icons/bs'
 import { AudioRecorder } from 'react-audio-voice-recorder'
-import FeatureEmoji from '../../FeatureEmoji/FeatureEmoji'
 import { BiHide } from 'react-icons/bi'
 import { useSelector } from 'react-redux'
 import EmojiMessage from '../../FeatureEmoji/EmojiMessage'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import './ChatFooter.css'
-import { Spoiler } from 'spoiled'
 
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
-  const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
   const [isEmojiMsgClick, setIsEmojiMsgClick] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [audioBlob, setAudioBlob] = useState(null)
@@ -33,9 +30,12 @@ const ChatFooter = () => {
   const [boldActive, setBoldActive] = useState(false)
   const [italicActive, setItalicActive] = useState(false)
   const [underlineActive, setUnderlineActive] = useState(false)
+  const [isAiSuggestionClick, setIsAiSuggestionClick] = useState(true)
+
   const dispatch = useDispatch()
   const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
   const answerSuggestionAI = useSelector((state) => state.message.answerAI)
+  console.log('answerSuggestionAI', answerSuggestionAI)
   const inputRef = useRef(null)
   const fileInputRefs = {
     file: useRef(null),
@@ -56,12 +56,18 @@ const ChatFooter = () => {
   }, [transcript, listening, resetTranscript])
 
   useEffect(() => {
-    if (answerSuggestionAI) {
-      let checkMutiAnswer = answerSuggestionAI.startsWith('*')
-        ? answerSuggestionAI.split(/(?<=[.?!])\s+/)
-        : answerSuggestionAI
-      setInputStr(checkMutiAnswer)
-    }
+    answerSuggestionAI.map((answer, index) =>
+      {
+        if(answer.answerSuggestion){
+          let checkMutiAnswer = answer.answerSuggestion.startsWith('*')
+                                ? answer.answerSuggestion.split(/(?<=[.?!])\s+/)
+                                : answer.answerSuggestion
+                                setInputStr(checkMutiAnswer)
+                              }
+        console.log('answer.isAnswerAI', answer.isAnswerAI)
+        setIsAiSuggestionClick(answer.isAnswerAI)
+     }
+    )
   }, [answerSuggestionAI])
 
   useEffect(() => {
@@ -241,20 +247,35 @@ const ChatFooter = () => {
 
   return (
     <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
-      <input
-        placeholder='Type your message...'
-        onChange={handleChangeInput}
-        onKeyDown={handleKeyPress}
-        onFocus={handleFocus}
-        ref={inputRef}
-        value={inputStr}
-        className={`flex-1 rounded-full border px-4 py-2 focus:outline-none ${isSpoiled ? 'show' : 'hide'}`}
-        style={{
-          fontWeight: boldActive ? 'bold' : 'normal',
-          fontStyle: italicActive ? 'italic' : 'normal',
-          textDecoration: underlineActive ? 'underline' : 'none',
-        }}
-      />
+      {/*  */}
+      {!isAiSuggestionClick ?(
+        <div className="bg-[#cbd5dd] border py-2 px-5 flex items-center flex-col z-50 w-screen justify-center" >
+          <div className="loader-dots block relative w-20 h-5 mt-2">
+            <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
+            <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
+            <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
+            <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
+          </div>
+      </div>
+      ) : 
+      (
+        <input
+          placeholder='Type your message...'
+          onChange={handleChangeInput}
+          onKeyDown={handleKeyPress}
+          onFocus={handleFocus}
+          ref={inputRef}
+          value={inputStr}
+          className={`flex-1 rounded-full border px-4 py-2 focus:outline-none ${isSpoiled ? 'show' : 'hide'}`}
+          style={{
+            fontWeight: boldActive ? 'bold' : 'normal',
+            fontStyle: italicActive ? 'italic' : 'normal',
+            textDecoration: underlineActive ? 'underline' : 'none',
+          }}
+        />
+      )
+       }
+      
       {isTextSelected && (
         <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
           <button
