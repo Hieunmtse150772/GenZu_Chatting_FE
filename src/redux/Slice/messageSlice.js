@@ -8,7 +8,6 @@ const initialState = {
       message: "Hey, how's your day going?",
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [
         {
           id_user: 1,
@@ -22,7 +21,6 @@ const initialState = {
       message: 'Not too bad, just a bit busy. How about you?',
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -31,7 +29,6 @@ const initialState = {
       message: "I'm good, thanks. Anything exciting happening?",
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -40,7 +37,6 @@ const initialState = {
       message: "I'm good, thanks. Anything exciting happening?",
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -49,7 +45,6 @@ const initialState = {
       message: 'Not really, just the usual. Work and errands.',
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -58,7 +53,6 @@ const initialState = {
       message: 'Sounds like a typical day. Got any plans for the weekend?',
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -67,7 +61,6 @@ const initialState = {
       message: "Not yet, I'm hoping to relax and maybe catch up on some reading. How about you?",
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -76,7 +69,6 @@ const initialState = {
       message: "I might go hiking if the weather's nice. Otherwise, just taking it easy",
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -85,7 +77,6 @@ const initialState = {
       message: 'Hiking sounds fun. Hope the weather cooperates for you!',
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -94,7 +85,6 @@ const initialState = {
       message: 'You too, take care!',
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -103,7 +93,6 @@ const initialState = {
       message: ' Sure',
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
     {
@@ -112,7 +101,6 @@ const initialState = {
       message: 'Thanks',
       time: '',
       styles: {},
-      isSpoiled: true,
       emoji_user: [],
     },
   ],
