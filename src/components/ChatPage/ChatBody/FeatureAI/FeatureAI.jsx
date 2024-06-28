@@ -3,7 +3,8 @@ import { MdOutlineQuickreply } from 'react-icons/md'
 import { SlOptions } from 'react-icons/sl'
 import DropdownOption from './DropdownOption/DropdownOption'
 import { setAnswerSuggestion } from '../../../../redux/Slice/messageSlice'
-import { answerSuggestion } from '../../../../utils/answerSuggestion'
+
+import { answerSuggestion } from '@/utils/answerSuggestion'
 import { useDispatch } from 'react-redux'
 import { useRef, useState, useEffect } from 'react'
 
@@ -11,9 +12,7 @@ export default function FeatureAI(props) {
   const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
   const dispatch = useDispatch()
-
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
-
   const handleMoreClick = (e) => {
     e.preventDefault()
     setIsOptionBtnClick(!isOptionBtnClick)

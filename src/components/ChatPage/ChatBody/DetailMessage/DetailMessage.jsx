@@ -18,6 +18,7 @@ export default function DetailMessage(props) {
   const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
 
   const dispatch = useDispatch()
+  const messages = useSelector((state) => state.message.message)
 
   const handleUserClick = (id_message) => {
     setActiveMessageID(id_message)
@@ -76,7 +77,11 @@ export default function DetailMessage(props) {
   }
 
   const handleSpoiledClick = (id_message) => {
-    dispatch(setMessageSpoiled({ id_message }))
+    const message = messages.find((msg) => msg.id_message === id_message)
+
+    if (message && message.isSpoiled) {
+      dispatch(setMessageSpoiled({ id_message }))
+    }
   }
 
   useEffect(() => {
@@ -113,7 +118,7 @@ export default function DetailMessage(props) {
 
             <div className='relative'>
               <div
-                className={`my-4 max-w-xs rounded-lg bg-blue-200 p-2 ${item.isSpoiled ? 'show' : 'hide'}`}
+                className={`my-4 max-w-xs rounded-lg bg-blue-200 p-2 ${item.isSpoiled || item.isSpoiled === undefined ? 'show' : 'hide'}`}
                 style={{
                   fontWeight: item.styles.bold ? 'bold' : 'normal',
                   fontStyle: item.styles.italic ? 'italic' : 'normal',
