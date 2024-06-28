@@ -1,7 +1,4 @@
-// src/EditProfile.js
-
 import { useState } from 'react'
-import axios from 'axios'
 import { getCookie, setCookie } from '../../../../services/Cookies'
 import { useDispatch } from 'react-redux'
 import userService from '@/services/userService'
@@ -10,13 +7,15 @@ import { updateUser } from '../../../../redux/Slice/userSlice'
 const EditProfile = ({ user, token }) => {
   const dispatch = useDispatch()
   const [profile, setProfile] = useState({
-    fullName: user.fullName,
-    address: user.address,
-    gender: user.gender,
-    email: user.email,
-    phoneNumber: user.phoneNumber ?? '',
-    picture: user.picture,
+    fullName: user?.fullName || '',
+    address: user?.address || '',
+    gender: user?.gender || '',
+    email: user?.email || '',
+    phoneNumber: user?.phoneNumber,
+    picture: user?.picture || '',
   })
+  console.log(profile)
+  console.log(user.phoneNumber)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -24,15 +23,27 @@ const EditProfile = ({ user, token }) => {
       ...profile,
       [name]: value,
     })
+    console.log(profile)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     const userId = user?._id
-    console.log(userId)
     try {
       const updatedUser = await userService.updateUser(userId, profile)
-      dispatch(updateUser(updatedUser))
+      dispatch(updateUser(true))
+      if (getCookie('userLogin')) {
+        let jsonUser = JSON.parse(getCookie('userLogin'))
+        setCookie(
+          'userLogin',
+          JSON.stringify({
+            accessToken: jsonUser.accessToken,
+            refreshToken: jsonUser.refreshToken,
+            user: updatedUser.user,
+          }),
+          7,
+        )
+      }
     } catch (error) {
       console.error('Failed to update user', error)
     }
