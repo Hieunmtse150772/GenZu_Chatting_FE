@@ -17,6 +17,7 @@ export default function EditAndSetting({ isVisible, onClose }) {
     phoneNumber: { value: '0345678912', isDisable: true },
     dob: { value: '24/12/1999', isDisable: true },
   })
+  const cookie = getCookie('userLogin')
   const [token, SetToken] = useState('')
   const dispatch = useDispatch()
   /// create popup
@@ -51,7 +52,7 @@ export default function EditAndSetting({ isVisible, onClose }) {
         setUser(userLogin.user)
       }
     }
-  }, [])
+  }, [cookie])
 
   useEffect(() => {
     if (isUpdate) {

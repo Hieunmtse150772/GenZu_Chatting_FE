@@ -159,6 +159,12 @@ const userSlice = createSlice({
   },
 })
 
-export const { setUser, searchUser, updateUser, setIdConversation, getIdConversation } =
-  userSlice.actions
+export const {
+  setUser,
+  setUserInfo,
+  searchUser,
+  updateUser,
+  setIdConversation,
+  getIdConversation,
+} = userSlice.actions
 export default userSlice.reducer
