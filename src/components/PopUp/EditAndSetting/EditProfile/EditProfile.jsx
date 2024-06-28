@@ -4,6 +4,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { getCookie, setCookie } from '../../../../services/Cookies'
 import { useDispatch } from 'react-redux'
+import userService from '@/services/userService'
 import { updateUser } from '../../../../redux/Slice/userSlice'
 
 const EditProfile = ({ user, token }) => {
@@ -13,7 +14,7 @@ const EditProfile = ({ user, token }) => {
     address: user.address,
     gender: user.gender,
     email: user.email,
-    phoneNumber: user.phoneNumber,
+    phoneNumber: user.phoneNumber ?? '',
     picture: user.picture,
   })
 
@@ -27,43 +28,13 @@ const EditProfile = ({ user, token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    const userId = user?._id
+    console.log(userId)
     try {
-      const response = await axios.patch(
-        `https://genzu-chatting-be.onrender.com/users/update/${user._id}`,
-        profile,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-            accept: 'application/json',
-          },
-        },
-      )
-      dispatch(updateUser(true))
-      if (getCookie('userLogin')) {
-        let jsonUser = JSON.parse(getCookie('userLogin'))
-        setCookie(
-          'userLogin',
-          JSON.stringify({
-            accessToken: jsonUser.accessToken,
-            refreshToken: jsonUser.refreshToken,
-            user: response.data.user,
-          }),
-          7,
-        )
-      } else {
-        let jsonUser = JSON.parse(sessionStorage.getItem('userLogin'))
-        sessionStorage.setItem(
-          'userLogin',
-          JSON.stringify({
-            accessToken: jsonUser.accessToken,
-            refreshToken: jsonUser.refreshToken,
-            user: response.data.user,
-          }),
-        )
-      }
+      const updatedUser = await userService.updateUser(userId, profile)
+      dispatch(updateUser(updatedUser))
     } catch (error) {
-      console.error('Error updating profile:', error)
+      console.error('Failed to update user', error)
     }
   }
 
