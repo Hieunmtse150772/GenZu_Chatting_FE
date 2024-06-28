@@ -79,7 +79,7 @@ export default function DetailMessage(props) {
   const handleSpoiledClick = (id_message) => {
     const message = messages.find((msg) => msg.id_message === id_message)
 
-    if (message && message.isSpoiled) {
+    if (message && !message.isSpoiled) {
       dispatch(setMessageSpoiled({ id_message }))
     }
   }
