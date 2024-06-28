@@ -7,6 +7,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 })
+
 api.interceptors.request.use(
   (config) => {
     const accessToken = JSON.parse(getCookie('userLogin')).accessToken // Lấy accessToken từ Cookies
