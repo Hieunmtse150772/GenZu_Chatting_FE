@@ -249,14 +249,15 @@ const ChatFooter = () => {
     <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
       {/*  */}
       {!isAiSuggestionClick ?(
-        <div className="bg-[#cbd5dd] border py-2 px-5 flex items-center flex-col z-50 w-screen justify-center" >
-          <div className="loader-dots block relative w-20 h-5 mt-2">
+        // <div>Loading</div>
+        // <div className="bg-[#cbd5dd] border py-2 px-5 flex items-center flex-col z-50 w-screen justify-center" >
+        // </div>
+          <div className="w-10/12 loader-dots relative h-5 mt-2">
             <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
             <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
             <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
             <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
           </div>
-      </div>
       ) : 
       (
         <input
