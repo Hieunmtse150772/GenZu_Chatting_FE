@@ -56,7 +56,7 @@ const messageSlice = createSlice({
           readBy: value.readBy,
           emoji_user: [
             {
-              id_user: 1,
+              id_user: '66799c2cd1395cf4636fab74',
               url_emoji: '😡',
             },
           ],
@@ -105,16 +105,19 @@ const messageSlice = createSlice({
     },
     selectedEmjiOnMessage: (state, action) => {
       console.log('emoji_payload:', action.payload)
-
+      let isDiffUserId;
+      
       state.message = [...state.message]
+
       state.message.map((item, index) => {
-        if (item.id_message == action.payload.id_message) {
+        if (item._id == action.payload.id_message) {
           state.message[index].emoji_user.map((emoji, i) => {
-            if (emoji.id_user == action.payload.id_user) {
-              state.message[index].emoji_user[i] =
-                emoji.url_emoji == action.payload.emoji
-                  ? { url_emoji: '' }
-                  : { id_user: action.payload.id_user, url_emoji: action.payload.emoji }
+            console.log('emoji:', emoji)
+            isDiffUserId = emoji.id_user == action.payload.id_user
+            // neu cung user id
+            if (isDiffUserId) {
+              state.message[index].emoji_user[i] = emoji.url_emoji == action.payload.emoji 
+                                                  ? state.message[index].emoji_user.splice(i, 1) : { id_user: action.payload.id_user, url_emoji: action.payload.emoji }
             } else if (state.message[index].emoji_user[0].url_emoji == '') {
               state.message[index].emoji_user[i] = {
                 id_user: action.payload.id_user,
@@ -122,13 +125,18 @@ const messageSlice = createSlice({
               }
             }
           })
-          if (state.message[index].emoji_user[0] != null) {
-            state.message[index].emoji_user = [...state.message[index].emoji_user]
-          } else {
+          // neu emoji da ton tai va cung user Id=> click  emoji khac se bi ghi de
+          
+          if ((state.message[index].emoji_user[0] == null) || !isDiffUserId) {
             state.message[index].emoji_user = [
               ...state.message[index].emoji_user,
               { id_user: action.payload.id_user, url_emoji: action.payload.emoji },
             ]
+
+          } else if(state.message[index].emoji_user[0] != null){
+            
+            state.message[index].emoji_user = [...state.message[index].emoji_user]
+            
           }
         }
       })

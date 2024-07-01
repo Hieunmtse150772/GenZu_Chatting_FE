@@ -9,8 +9,8 @@ function FeatureEmoji(props) {
 
   const onEmojiClick = (event) => {
     const itemMessage = {
-      id_user: props.item.id_user,
-      id_message: props.item.id_message,
+      id_user: props.id_user,
+      id_message: props.id_message,
       emoji: event.emoji,
     }
     dispatch(selectedEmjiOnMessage(itemMessage))
