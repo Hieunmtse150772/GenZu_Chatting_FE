@@ -35,9 +35,9 @@ const updateUser = async (id_user, formData) => {
   }
 }
 
-const searchUser = async (emailUser) => {
+const searchUser = async (search) => {
   try {
-    const response = await axiosClient.get('/users/searchUsers', { params: { emailUser } })
+    const response = await axiosClient.get('/users/searchUsers', { params: { search } })
     return response.data
   } catch (error) {
     console.error('Failed to search user', error)
