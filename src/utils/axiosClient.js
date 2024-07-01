@@ -9,7 +9,7 @@ const axiosClient = axios.create({
 
 // Request interceptor to add access token to headers
 axiosClient.interceptors.request.use(
-  (config) => {
+  async (config) => {
     const userLogin = JSON.parse(getCookie('userLogin') || '{}')
     const accessToken = userLogin?.accessToken
     if (accessToken) {
@@ -20,74 +20,50 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
-// Response interceptor to handle 401 or 403 errors and retry the original request
+// Response interceptor to handle 401 errors and retry the original request
 axiosClient.interceptors.response.use(
   (response) => {
-    const userLogin = JSON.parse(getCookie('userLogin') || '{}')
-
-    if (response.data.accessToken) {
-      setCookie(
-        'userLogin',
-        JSON.stringify({
-          ...userLogin,
-          accessToken: response.data.accessToken,
-        }),
-      )
-    }
-
-    if (response.data.refreshToken) {
-      setCookie(
-        'userLogin',
-        JSON.stringify({
-          ...userLogin,
-          refreshToken: response.data.refreshToken,
-        }),
-      )
-    }
-
     return response
   },
   async (error) => {
     const originalRequest = error.config
 
-    if (
-      error?.response?.status === 401 ||
-      (error?.response?.status === 403 && !originalRequest._retry)
-    ) {
+    // If the error is 401 Unauthorized and it's not a retry request
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
 
-      const userLogin = JSON.parse(getCookie('userLogin') || '{}')
-      const refreshToken = userLogin?.refreshToken
-
-      if (!refreshToken) {
-        return Promise.reject(error)
-      }
-
       try {
+        const userLogin = JSON.parse(getCookie('userLogin') || '{}')
+        const refreshToken = userLogin?.refreshToken
+
+        if (!refreshToken) {
+          throw new Error('No refreshToken found')
+        }
+
+        // Call your refresh token endpoint to get new tokens
         const { data } = await axios.post(`${baseURL}/auth/refresh-token`, {
-          refresh_token: refreshToken,
+          refreshToken: refreshToken,
         })
 
-        const { newAccessToken, newRefreshToken } = data
-
+        // Update the accessToken and refreshToken in cookies or global state
         setCookie(
           'userLogin',
           JSON.stringify({
             ...userLogin,
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
           }),
         )
 
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+        // Update the Authorization header with the new accessToken
+        axiosClient.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`
 
+        // Retry the original request with the new accessToken
         return axiosClient(originalRequest)
       } catch (refreshError) {
-        // Optionally, you can clear the cookies and redirect to login if refresh fails
-        setCookie('userLogin', '')
-        // Redirect to login page
-        window.location.href = '/login'
-        return Promise.reject(refreshError)
+        console.error('Failed to refresh token', refreshError)
+        // Optionally, you can redirect to login or handle logout here
+        throw refreshError
       }
     }
 
