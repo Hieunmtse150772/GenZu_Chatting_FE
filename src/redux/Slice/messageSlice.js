@@ -150,24 +150,22 @@ const messageSlice = createSlice({
         answerSuggestion: answerSuggestion.message,
         isAnswerAI: answerSuggestion.isAIClick,
       }
-      
+
       console.log('state', state)
-      return { 
-        ...state,
-        answerAI : [
-          newAIMessage
-        ]
-      }
-      
-    },
-    setAnswerClick : (state, action) => {
       return {
         ...state,
-        answerAI : [{
-          answerSuggestion: '',
-          isAnswerAI : action.payload
-          }
-        ]
+        answerAI: [newAIMessage],
+      }
+    },
+    setAnswerClick: (state, action) => {
+      return {
+        ...state,
+        answerAI: [
+          {
+            answerSuggestion: '',
+            isAnswerAI: action.payload,
+          },
+        ],
       }
     },
     deleteEmoji: (state) => {
@@ -179,33 +177,27 @@ const messageSlice = createSlice({
       state.message = [...state.message]
       state.message.map((item, index) => {
         if (item.id_message == action.payload.id_message) {
-          
-            state.message[index].emoji_user.map((emoji, i) => {
-              
-              if (emoji.id_user == action.payload.id_user) {
-                state.message[index].emoji_user[i] = emoji.url_emoji ==  action.payload.emoji ?
-                                                  {url_emoji:''} : 
-                                                  { id_user: action.payload.id_user, url_emoji: action.payload.emoji }
-              }else if (state.message[index].emoji_user[0].url_emoji == ''){
-                state.message[index].emoji_user[i] = { 
-                  id_user: action.payload.id_user, url_emoji: action.payload.emoji 
-                }
+          state.message[index].emoji_user.map((emoji, i) => {
+            if (emoji.id_user == action.payload.id_user) {
+              state.message[index].emoji_user[i] =
+                emoji.url_emoji == action.payload.emoji
+                  ? { url_emoji: '' }
+                  : { id_user: action.payload.id_user, url_emoji: action.payload.emoji }
+            } else if (state.message[index].emoji_user[0].url_emoji == '') {
+              state.message[index].emoji_user[i] = {
+                id_user: action.payload.id_user,
+                url_emoji: action.payload.emoji,
               }
-            })
-          if (state.message[index].emoji_user[0] != null ){
-
+            }
+          })
+          if (state.message[index].emoji_user[0] != null) {
+            state.message[index].emoji_user = [...state.message[index].emoji_user]
+          } else {
             state.message[index].emoji_user = [
               ...state.message[index].emoji_user,
-            ]
-
-          }else{
-
-            state.message[index].emoji_user = [
-              ...state.message[index].emoji_user,
-              { id_user: action.payload.id_user, url_emoji: action.payload.emoji }
+              { id_user: action.payload.id_user, url_emoji: action.payload.emoji },
             ]
           }
-
         }
       })
       console.log('state:', state.message)
@@ -230,5 +222,6 @@ export const {
   setAnswerSuggestion,
   setAnswerClick,
   getMessagesById,
+  setTestMessage,
 } = messageSlice.actions
 export default messageSlice.reducer
