@@ -11,6 +11,7 @@ import { removeCookie } from '../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
 import EditAndSetting from '../PopUp/EditAndSetting/EditAndSetting'
 import PopUpFindFriends from '../PopUp/PopUpFindFriends/PopUpFindFriends'
+import PopUpAddMenber from '../PopUp/PopUpAddMember/PopUpAddMember'
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -20,11 +21,15 @@ const Sidebar = () => {
 
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const [isPopupVisibleFindFriends, setIsPopupVisibleFindFriends] = useState(false)
+  const [isPopupVisibleAddMember, setIsPopupVisibleAddMember] = useState(false)
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible)
   }
   const togglePopupFindFriend = () => {
     setIsPopupVisibleFindFriends(!isPopupVisibleFindFriends)
+  }
+  const togglePopupAddMember = () => {
+    setIsPopupVisibleAddMember(!isPopupVisibleAddMember)
   }
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
@@ -77,7 +82,10 @@ const Sidebar = () => {
                 onClick={togglePopupFindFriend}
                 className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white'
               />
-              <LiaUserFriendsSolid className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white' />
+              <LiaUserFriendsSolid
+                onClick={togglePopupAddMember}
+                className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white'
+              />
             </div>
           </div>
           <div className='flex-grow'>
@@ -127,6 +135,7 @@ const Sidebar = () => {
       )}
       <EditAndSetting isVisible={isPopupVisible} onClose={togglePopup} />
       <PopUpFindFriends isVisible={isPopupVisibleFindFriends} onClose={togglePopupFindFriend} />
+      <PopUpAddMenber isVisible={isPopupVisibleAddMember} onClose={togglePopupAddMember} />
     </>
   )
 }
