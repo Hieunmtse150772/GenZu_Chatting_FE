@@ -1,9 +1,10 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
-import { getConversations, getMessages } from '../../utils/api'
-import { setIdConversation } from '../Slice/userSlice'
-import { io } from 'socket.io-client'
-import { getCookie } from '../../services/Cookies'
-import { setTestMessage } from '../Slice/messageSlice'
+import { setTestMessage } from "@/redux/Slice/messageSlice"
+import { setIdConversation } from "@/redux/Slice/userSlice"
+import { getCookie } from "@/services/Cookies"
+import { getConversations, getMessages } from "@/utils/api"
+import { call, put, takeLatest } from "redux-saga/effects"
+import { io } from "socket.io-client"
+
 
 var socket
 // Export hàm `fetchIdConversation`

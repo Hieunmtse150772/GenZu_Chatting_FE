@@ -77,5 +77,13 @@ export const getConversations = () => {
 }
 
 export const getMessages = (messageId) => {
+  console.log(messageId)
   return api.get(`/messages/${messageId}`)
+}
+export const sendMessage = (message, id) => {
+  console.log(message, id)
+  return api.post('/messages/send/', {
+    message,
+    id,
+  })
 }
