@@ -121,6 +121,7 @@ const initialState = {
       message: 'Koalas sleep around 20 hours a day and are known for their eucalyptus diet.',
     },
   ],
+  lsConversation: [],
   editUser: false,
   idConversation: null,
 }
@@ -156,6 +157,12 @@ const userSlice = createSlice({
       }
     },
     getIdConversation: (state, action) => {},
+    setLsConversation: (state, action) => {
+      return {
+        ...state,
+        lsConversation: action.payload,
+      }
+    },
   },
 })
 
@@ -166,5 +173,6 @@ export const {
   updateUser,
   setIdConversation,
   getIdConversation,
+  setLsConversation,
 } = userSlice.actions
 export default userSlice.reducer

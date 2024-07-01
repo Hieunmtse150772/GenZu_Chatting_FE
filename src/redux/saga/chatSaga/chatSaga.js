@@ -4,7 +4,7 @@ import {
   setNewMessage,
   setSocketConnected,
 } from '@/redux/Slice/chatSlice'
-import { setTestMessage } from '@/redux/Slice/messageSlice'
+import { setMessage, setTestMessage } from '@/redux/Slice/messageSlice'
 import { getCookie } from '@/services/Cookies'
 import { getMessages } from '@/services/messageService'
 import { eventChannel } from 'redux-saga'
@@ -56,7 +56,7 @@ function* fetchMessages(action) {
     socket = io(import.meta.env.VITE_ENDPOINT)
     socket.emit('join chat', action.payload)
 
-    yield put(setTestMessage(lsMessage))
+    yield put(setMessage(lsMessage))
     console.log(lsMessage)
   } catch (error) {
     console.error('Lỗi khi lấy lsMessages:', error)

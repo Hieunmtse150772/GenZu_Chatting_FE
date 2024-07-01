@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import axios from 'axios'
-import { setCookie } from '../../../services/Cookies'
 import userService from '@/services/userService'
 import { useNavigate } from 'react-router-dom'
 

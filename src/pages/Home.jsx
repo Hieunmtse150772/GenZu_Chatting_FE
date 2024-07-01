@@ -11,19 +11,19 @@ export default function Home() {
   const dispatch = useDispatch()
   useLayoutEffect(() => {
     if (checkCookie()) {
-      console.log('thien123456798')
       dispatch(getIdConversation())
+      
     }
     // !checkCookie() ?: navigate('/chat/123456')
   }, [dispatch, navigate])
   useEffect(() => {
-    console.log(idConversation)
     if (idConversation !== null) {
       navigate(`/chat/${idConversation}`)
     }
   }, [idConversation, navigate])
   return (
     <div>
+      {checkCookie() ? <Login /> : ''}
       <Login />
     </div>
   )

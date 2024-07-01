@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import UserCard from '../UserCard/UserCard'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const UserList = () => {
   const [activeTab, setActiveTab] = useState('personal')
   const [activeUserID, setActiveUserID] = useState(null)
-
-  const personalChats = useSelector((state) => state.user.lsPersonalChats)
-
+  const navigate = useNavigate()
   const groupChats = useSelector((state) => state.user.lsGroupChats)
-
+  const lsChats = useSelector((state) => state.user.lsConversation)
   const handleUserClick = (id) => {
+    navigate(`/chat/${id}`)
     setActiveUserID(id)
   }
 
@@ -40,12 +40,12 @@ const UserList = () => {
       </div>
       <div className='mt-4 h-full overflow-y-auto'>
         {activeTab === 'personal' &&
-          personalChats.map((item) => (
+          lsChats.map((item) => (
             <UserCard
               user={item}
-              key={item.id}
-              isActive={activeUserID === item.id}
-              onUserCardClick={() => handleUserClick(item.id)}
+              key={item._id}
+              isActive={activeUserID === item._id}
+              onUserCardClick={() => handleUserClick(item._id)}
             />
           ))}
         {activeTab === 'group' &&

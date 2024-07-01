@@ -46,8 +46,10 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
         className='h-12 w-12 rounded-full object-cover'
       />
       <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
-        <h3 className='truncate text-sm font-semibold'>{user?.name}</h3>
-        <p className='truncate text-sm text-gray-500 dark:text-slate-500'>{user?.message}</p>
+        <h3 className='truncate text-sm font-semibold'>{user?.chatName}</h3>
+        <p className='truncate text-sm text-gray-500 dark:text-slate-500'>
+          {user?.latestMessage?.message}
+        </p>
       </div>
       <div
         className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${
