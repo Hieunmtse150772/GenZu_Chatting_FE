@@ -68,7 +68,6 @@ const Sidebar = () => {
           </div>
           <div className='flex items-center justify-between'>
             <SearchInput setSearchResults={setSearchResults} />
-            {console.log(searchResults)}
             <div className='ml-4 flex cursor-pointer items-center outline-none'>
               <LiaUserPlusSolid className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white' />
               <LiaUserFriendsSolid className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white' />
