@@ -3,8 +3,7 @@ import { checkCookie } from '../services/Cookies'
 import { useNavigate } from 'react-router-dom'
 import Login from './Login/Login'
 import { useDispatch, useSelector } from 'react-redux'
-
-import { getIdConversation } from '../redux/Slice/userSlice'
+import { getIdConversation } from '@/redux/Slice/userSlice'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -12,6 +11,7 @@ export default function Home() {
   const dispatch = useDispatch()
   useLayoutEffect(() => {
     if (checkCookie()) {
+      console.log('thien123456798')
       dispatch(getIdConversation())
     }
     // !checkCookie() ?: navigate('/chat/123456')

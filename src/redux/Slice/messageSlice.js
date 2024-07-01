@@ -208,7 +208,9 @@ const messageSlice = createSlice({
         testMessage: action.payload,
       }
     },
-    getMessagesById: (state, action) => {},
+    getMessagesById: (state, action) => {
+      console.log(action.payload)
+    },
   },
 })
 

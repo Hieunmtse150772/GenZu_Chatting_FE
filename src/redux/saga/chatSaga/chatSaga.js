@@ -1,7 +1,14 @@
-import { appendMessage, setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
+import {
+  appendMessage,
+  setIsTyping,
+  setNewMessage,
+  setSocketConnected,
+} from '@/redux/Slice/chatSlice'
+import { setTestMessage } from '@/redux/Slice/messageSlice'
 import { getCookie } from '@/services/Cookies'
+import { getMessages } from '@/services/messageService'
 import { eventChannel } from 'redux-saga'
-import { call, put, take } from 'redux-saga/effects'
+import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects'
 import { io } from 'socket.io-client'
 
 var socket

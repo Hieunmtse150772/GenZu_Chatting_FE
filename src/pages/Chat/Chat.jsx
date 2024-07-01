@@ -15,6 +15,7 @@ export default function Chat() {
   }
   const idConversation = useParams()
   useEffect(() => {
+    console.log(idConversation)
     dispatch(getMessagesById(idConversation))
   })
 
