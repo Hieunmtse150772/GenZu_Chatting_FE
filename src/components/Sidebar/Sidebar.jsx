@@ -1,5 +1,6 @@
 import { CiSettings } from 'react-icons/ci'
 import { IoIosLogOut, IoIosMenu } from 'react-icons/io'
+import userIcon from '@/assets/user_icon.jpg'
 import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
 import SearchInput from '../Sidebar/SearchInput/SearchInput'
 import UserList from '../Sidebar/UserList/UserList'
@@ -13,6 +14,7 @@ import EditAndSetting from '../PopUp/EditAndSetting/EditAndSetting'
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef(null)
+  const [searchResults, setSearchResults] = useState([])
   const navigate = useNavigate()
 
   const [isPopupVisible, setIsPopupVisible] = useState(false)
@@ -65,14 +67,33 @@ const Sidebar = () => {
             />
           </div>
           <div className='flex items-center justify-between'>
-            <SearchInput />
+            <SearchInput setSearchResults={setSearchResults} />
+            {console.log(searchResults)}
             <div className='ml-4 flex cursor-pointer items-center outline-none'>
               <LiaUserPlusSolid className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white' />
               <LiaUserFriendsSolid className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white' />
             </div>
           </div>
           <div className='flex-grow'>
-            <UserList />
+            {searchResults.user ? (
+              <ul className='mt-2 h-screen overflow-y-auto'>
+                {searchResults.user.map((result) => (
+                  <li key={result._id} className='group relative border-b border-gray-300 p-2'>
+                    <img
+                      src={result?.image || userIcon}
+                      alt='user avatar'
+                      className='h-12 w-12 rounded-full object-cover'
+                    />
+                    <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
+                      <h3 className='truncate text-sm font-semibold'>{result?.fullName}</h3>
+                      <p className='truncate text-sm text-gray-500 dark:text-slate-500'></p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <UserList />
+            )}
           </div>
           <div className='absolute bottom-4 left-4 flex w-full items-center justify-between pr-8'>
             <Switcher />
