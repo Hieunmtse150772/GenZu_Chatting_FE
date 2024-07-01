@@ -1,10 +1,5 @@
-import {
-  appendMessage,
-  setIsTyping,
-  setNewMessage,
-  setSocketConnected,
-} from '@/redux/Slice/chatSlice'
-import { setMessage, setTestMessage } from '@/redux/Slice/messageSlice'
+import { appendMessage, setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
+import { setMessage, setNewMessage, setTestMessage } from '@/redux/Slice/messageSlice'
 import { getCookie } from '@/services/Cookies'
 import { getMessages } from '@/services/messageService'
 import { eventChannel } from 'redux-saga'
@@ -18,7 +13,9 @@ function createSocketChannel(socket) {
     socket.on('connected', () => emit(setSocketConnected(true)))
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
-    socket.on('message received', (message) => emit(appendMessage(message)))
+    socket.on('message received', (message) => {
+      emit(setNewMessage(message))
+    })
     return () => {
       socket.off('connected')
       socket.off('typing')
@@ -33,12 +30,10 @@ function* handleSocketConnect() {
   const user = JSON.parse(getCookie('userLogin')).user
   socket.emit('setup', user)
   socket.emit('join chat', '667bc019d4df68dfbbd89ab0')
-  socket.on('connected', () => {
-    console.log('check connect')
-  })
+
   socket.on('message received', (newMessageReceived) => {
     console.log(newMessageReceived)
-    console.log('check')
+    console.log('check recieves')
   })
   const socketChannel = yield call(createSocketChannel, socket)
   while (true) {

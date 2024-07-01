@@ -143,6 +143,33 @@ const messageSlice = createSlice({
     getMessagesById: (state, action) => {
       console.log(action.payload)
     },
+    setNewMessage: (state, action) => {
+      const newMs = action.payload
+      return {
+        ...state,
+        message: [
+          ...state.message,
+          {
+            sender: newMs.sender,
+            _id: newMs._id,
+            conversation: newMs.conversation,
+            message: newMs.message,
+            createdAt: newMs.createdAt,
+            updatedAt: newMs.updatedAt,
+            styles: {},
+            isSpoiled: true,
+            message_type: newMs.message_type,
+            readBy: newMs.readBy,
+            emoji_user: [
+              {
+                id_user: 1,
+                url_emoji: '😡',
+              },
+            ],
+          },
+        ],
+      }
+    },
   },
 })
 
@@ -157,5 +184,6 @@ export const {
   setAnswerClick,
   getMessagesById,
   setTestMessage,
+  setNewMessage,
 } = messageSlice.actions
 export default messageSlice.reducer

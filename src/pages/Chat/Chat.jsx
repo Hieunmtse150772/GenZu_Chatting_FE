@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getMessagesById } from '../../redux/Slice/messageSlice'
 import { getIdConversation } from '@/redux/Slice/userSlice'
+import { connectSocket } from '@/redux/Slice/chatSlice'
 
 export default function Chat() {
   const [showInfo, setShowInfo] = useState(false)
@@ -16,7 +17,9 @@ export default function Chat() {
   }
   const idConversation = useParams()
   useEffect(() => {
-    console.log(idConversation)
+    dispatch(connectSocket())
+  }, [dispatch, idConversation])
+  useEffect(() => {
     dispatch(getIdConversation())
     dispatch(getMessagesById(idConversation))
   })

@@ -16,7 +16,7 @@ const signIn = async (email, password, rememberMe) => {
     if (!rememberMe) {
       sessionStorage.setItem('userLogin', JSON.stringify(userData))
     } else {
-      setCookie('userLoginTets', JSON.stringify(userData), 7) // Set cookie with 7 days expiry
+      setCookie('userLogin', JSON.stringify(userData), 7) // Set cookie with 7 days expiry
     }
 
     return userData
