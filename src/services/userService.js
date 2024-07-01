@@ -35,4 +35,14 @@ const updateUser = async (id_user, formData) => {
   }
 }
 
-export default { signIn, updateUser }
+const searchUser = async (search) => {
+  try {
+    const response = await axiosClient.get('/users/searchUsers', { params: { search } })
+    return response.data
+  } catch (error) {
+    console.error('Failed to search user', error)
+    throw error
+  }
+}
+
+export default { signIn, updateUser, searchUser }
