@@ -10,8 +10,8 @@ const axiosClient = axios.create({
 // Request interceptor to add access token to headers
 axiosClient.interceptors.request.use(
   (config) => {
-    const userLogin = JSON.parse(getCookie('userLogin'))
-    const accessToken = userLogin ? userLogin?.accessToken : null
+    const userLogin = JSON.parse(getCookie('userLogin') || '{}')
+    const accessToken = userLogin?.accessToken
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`
     }
@@ -23,7 +23,7 @@ axiosClient.interceptors.request.use(
 // Response interceptor to handle 401 or 403 errors and retry the original request
 axiosClient.interceptors.response.use(
   (response) => {
-    const userLogin = JSON.parse(getCookie('userLogin'))
+    const userLogin = JSON.parse(getCookie('userLogin') || '{}')
 
     if (response.data.accessToken) {
       setCookie(
@@ -56,16 +56,16 @@ axiosClient.interceptors.response.use(
     ) {
       originalRequest._retry = true
 
-      const userLogin = JSON.parse(getCookie('userLogin'))
-      const refresh_token = userLogin ? userLogin.refreshToken : null
+      const userLogin = JSON.parse(getCookie('userLogin') || '{}')
+      const refreshToken = userLogin?.refreshToken
 
-      if (!refresh_token) {
+      if (!refreshToken) {
         return Promise.reject(error)
       }
 
       try {
-        const { data } = await axiosClient.post('/auth/refresh-token', {
-          refresh_token: refresh_token,
+        const { data } = await axios.post(`${baseURL}/auth/refresh-token`, {
+          refresh_token: refreshToken,
         })
 
         const { newAccessToken, newRefreshToken } = data
@@ -83,11 +83,14 @@ axiosClient.interceptors.response.use(
 
         return axiosClient(originalRequest)
       } catch (refreshError) {
+        // Optionally, you can clear the cookies and redirect to login if refresh fails
+        setCookie('userLogin', '')
+        // Redirect to login page
+        window.location.href = '/login'
         return Promise.reject(refreshError)
       }
     }
 
-    // alert(error.message)
     return Promise.reject(error)
   },
 )
