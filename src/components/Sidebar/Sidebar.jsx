@@ -78,7 +78,10 @@ const Sidebar = () => {
             {searchResults.user ? (
               <ul className='mt-2 h-screen overflow-y-auto'>
                 {searchResults.user.map((result) => (
-                  <li key={result._id} className='group relative border-b border-gray-300 p-2'>
+                  <li
+                    key={result._id}
+                    className='group relative cursor-pointer border-b border-gray-300 p-2'
+                  >
                     <img
                       src={result?.image || userIcon}
                       alt='user avatar'
