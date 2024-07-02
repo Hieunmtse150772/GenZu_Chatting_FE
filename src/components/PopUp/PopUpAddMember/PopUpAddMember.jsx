@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import './PopUpAddMember.scss'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { searchUser } from '../../../redux/Slice/userSlice'
 import { MdOutlineSavedSearch } from 'react-icons/md'
 import axios from 'axios'
@@ -63,23 +63,23 @@ export default function PopUpAddMember({ isVisible, onClose }) {
   const handleAddToGroup = (friendID) => {
     console.log(friendID)
   }
-  //  useLayoutEffect(() => {
-  //   const fetchFriends = async () => {
-  //     try {
-  //       const response = await axios.get('https://genzu-chatting-be.onrender.com/friends', {
-  //         headers: {
-  //           accept: 'application/json',
-  //           Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}`,
-  //         },
-  //       })
-  //       setFriends(response.data.data)
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
+  useLayoutEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const response = await axios.get('https://genzu-chatting-be.onrender.com/friends', {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}`,
+          },
+        })
+        setFriends(response.data.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
-  //   fetchFriends()
-  // }, [])
+    fetchFriends()
+  }, [])
   if (!isVisible) {
     return null
   }

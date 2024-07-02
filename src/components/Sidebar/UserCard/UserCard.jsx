@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from 'react'
 import { MdPhone, MdVideocam, MdBlock, MdOutlineDelete } from 'react-icons/md'
 import { CgProfile } from 'react-icons/cg'
 import DropdownItem from '../DropdownItem/DropdownItem'
+import { getCookie } from '@/services/Cookies'
 
 const UserCard = ({ user, isActive, onUserCardClick }) => {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
@@ -41,12 +42,21 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
       } mb-1 rounded-lg`}
     >
       <img
-        src={user?.picture || userIcon}
+        src={
+          !user.isGroupChat
+            ? user.users[0]._id == JSON.parse(getCookie('userLogin')).user._id
+              ? user.users[1].picture
+              : user.users[0].picture
+            : user.users[0].picture
+        }
         alt='user avatar'
         className='h-12 w-12 rounded-full object-cover'
       />
+      {console.log(user)}
       <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
-        <h3 className='truncate text-sm font-semibold'>{user?.chatName}</h3>
+        <h3 className='truncate text-sm font-semibold'>
+          {!user.isGroupChat ? user.users[0].fullName : user.chatName}
+        </h3>
         <p className='truncate text-sm text-gray-500 dark:text-slate-500'>
           {user?.latestMessage?.message}
         </p>

@@ -68,59 +68,8 @@ const initialState = {
     },
   ],
   lsSearchUser: [],
-  lsPersonalChats: [
-    {
-      id: '1',
-      name: 'Huy Nguyen',
-      image: userIcon,
-      message: "Let's go",
-    },
-    {
-      id: '2',
-      name: 'Ba Thien',
-      image: userIcon,
-      message:
-        'Elephants have the largest brains among land animals and demonstrate remarkable intelligence.',
-    },
-    {
-      id: '3',
-      name: 'Helena Hills',
-      image: userIcon,
-      message: 'Will head to the Help Center...',
-    },
-    {
-      id: '4',
-      name: 'Oscar Davis',
-      image: userIcon,
-      message: 'Trueeeeee',
-    },
-    {
-      id: '5',
-      name: 'Daniel Jay Park',
-      image: userIcon,
-      message: 'lol yeah, are you coming to the lunc...',
-    },
-    {
-      id: '6',
-      name: 'Daniel Jay Park',
-      image: userIcon,
-      message: 'lol yeah, are you coming to the lunc...',
-    },
-  ],
-  lsGroupChats: [
-    {
-      id: '3',
-      name: 'Ngan Tran',
-      image: userIcon,
-      message: 'Cheetahs are the fastest land animals, capable of reaching speeds up',
-    },
-    {
-      id: '4',
-      name: 'Minh Hieu',
-      image: userIcon,
-      message: 'Koalas sleep around 20 hours a day and are known for their eucalyptus diet.',
-    },
-  ],
+  lsPersonalChats: [],
+  lsGroupChats: [],
   lsConversation: [],
   editUser: false,
   idConversation: null,
@@ -163,6 +112,18 @@ const userSlice = createSlice({
         lsConversation: action.payload,
       }
     },
+    setLsGroupChat: (state, action) => {
+      return {
+        ...state,
+        lsGroupChats: action.payload,
+      }
+    },
+    setLsPersonalChats: (state, action) => {
+      return {
+        ...state,
+        lsPersonalChats: action.payload,
+      }
+    },
   },
 })
 
@@ -174,5 +135,7 @@ export const {
   setIdConversation,
   getIdConversation,
   setLsConversation,
+  setLsGroupChat,
+  setLsPersonalChats,
 } = userSlice.actions
 export default userSlice.reducer

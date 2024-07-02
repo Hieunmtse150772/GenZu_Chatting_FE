@@ -8,7 +8,7 @@ const UserList = () => {
   const [activeUserID, setActiveUserID] = useState(null)
   const navigate = useNavigate()
   const groupChats = useSelector((state) => state.user.lsGroupChats)
-  const lsChats = useSelector((state) => state.user.lsConversation)
+  const lsChats = useSelector((state) => state.user.lsPersonalChats)
   const handleUserClick = (id) => {
     navigate(`/chat/${id}`)
     setActiveUserID(id)
