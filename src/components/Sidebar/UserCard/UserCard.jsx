@@ -41,7 +41,7 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
       } mb-1 rounded-lg`}
     >
       <img
-        src={user?.image || userIcon}
+        src={user?.picture || userIcon}
         alt='user avatar'
         className='h-12 w-12 rounded-full object-cover'
       />
