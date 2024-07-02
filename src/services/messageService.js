@@ -10,7 +10,6 @@ export const getMessages = (messageId) => {
 }
 export const sendMessageApi = async (message, id) => {
   try {
-    console.log(message, id)
     const response = await axiosClient.post(`/messages/send?id=${id}`, { message })
     console.log(response)
     return response.data

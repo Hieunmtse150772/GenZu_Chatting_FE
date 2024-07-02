@@ -16,6 +16,8 @@ const UserList = () => {
 
   return (
     <section className='h-full w-full'>
+      {console.log(groupChats)}
+
       <div className='mt-4 flex'>
         <button
           onClick={() => setActiveTab('personal')}
@@ -52,9 +54,9 @@ const UserList = () => {
           groupChats.map((item) => (
             <UserCard
               user={item}
-              key={item.id}
-              isActive={activeUserID === item.id}
-              onUserCardClick={() => handleUserClick(item.id)}
+              key={item._id}
+              isActive={activeUserID === item._id}
+              onUserCardClick={() => handleUserClick(item._id)}
             />
           ))}
       </div>

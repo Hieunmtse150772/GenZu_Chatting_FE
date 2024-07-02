@@ -28,12 +28,12 @@ function createSocketChannel(socket) {
 function* handleSocketConnect() {
   socket = io(import.meta.env.VITE_ENDPOINT)
   const user = JSON.parse(getCookie('userLogin')).user
+  console.log(user)
   socket.emit('setup', user)
   socket.emit('join chat', '667bc019d4df68dfbbd89ab0')
 
   socket.on('message received', (newMessageReceived) => {
     console.log(newMessageReceived)
-    console.log('check recieves')
   })
   const socketChannel = yield call(createSocketChannel, socket)
   while (true) {
@@ -48,9 +48,6 @@ function* fetchMessages(action) {
       return getMessages(action.payload.idConversation)
     })
     const lsMessage = response.data.data
-    socket = io(import.meta.env.VITE_ENDPOINT)
-    socket.emit('join chat', action.payload)
-
     yield put(setMessage(lsMessage))
     console.log(lsMessage)
   } catch (error) {
@@ -68,12 +65,11 @@ function* sendMessageSaga(action) {
   console.log(inforChat)
   try {
     yield call([socket, 'emit'], 'stop_typing', action.payload.idConversation.idConversation)
-    const { data } = yield call(
+    const data = yield call(
       sendMessageApi,
       inforChat.message,
       action.payload.idConversation.idConversation,
     )
-    console.log(data)
     yield call([socket, 'emit'], 'new message', data)
   } catch (error) {
     console.error('Failed to send message', error)

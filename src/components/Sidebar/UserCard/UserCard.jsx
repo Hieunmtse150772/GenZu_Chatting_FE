@@ -44,10 +44,10 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
       <img
         src={
           !user.isGroupChat
-            ? user.users[0]._id == JSON.parse(getCookie('userLogin')).user._id
-              ? user.users[1].picture
-              : user.users[0].picture
-            : user.users[0].picture
+            ? user.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
+              ? user.users[1]?.picture
+              : user.users[0]?.picture
+            : user.users[0]?.picture
         }
         alt='user avatar'
         className='h-12 w-12 rounded-full object-cover'
