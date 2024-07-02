@@ -146,12 +146,7 @@ const messageSlice = createSlice({
       })
       console.log('state:', state.message)
     },
-    setTestMessage: (state, action) => {
-      return {
-        ...state,
-        testMessage: action.payload,
-      }
-    },
+
     getMessagesById: (state, action) => {
       console.log(action.payload)
     },
@@ -195,7 +190,6 @@ export const {
   setAnswerSuggestion,
   setAnswerClick,
   getMessagesById,
-  setTestMessage,
   setNewMessage,
 } = messageSlice.actions
 export default messageSlice.reducer

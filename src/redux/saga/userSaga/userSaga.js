@@ -1,11 +1,7 @@
-import { setTestMessage } from '@/redux/Slice/messageSlice'
 import { setIdConversation, setLsConversation } from '@/redux/Slice/userSlice'
-import { getCookie } from '@/services/Cookies'
-import { getConversations, getMessages } from '@/services/messageService'
+import { getConversations } from '@/services/messageService'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { io } from 'socket.io-client'
 
-var socket
 // Export hàm `fetchIdConversation`
 function* fetchIdConversation() {
   try {
@@ -18,24 +14,9 @@ function* fetchIdConversation() {
     console.error('Lỗi khi lấy idConversation:', error)
   }
 }
-function* fetchMessageById(action) {
-  console.log(action.payload)
-  try {
-    const response = yield call(() => {
-      return getMessages(action.payload.idConversation)
-    })
-    const lsMessage = response.data.data
-    socket = io(import.meta.env.VITE_ENDPOINT)
-    socket.emit('join chat', JSON.parse(getCookie('userLogin')).user._id)
 
-    yield put(setTestMessage(lsMessage))
-  } catch (error) {
-    console.error('Lỗi khi lấy lsMessages:', error)
-  }
-}
 function* authSaga() {
   yield takeLatest('user/getIdConversation', fetchIdConversation)
-  // yield takeLatest('message/getMessagesById', fetchMessageById)
 }
 
 export default authSaga

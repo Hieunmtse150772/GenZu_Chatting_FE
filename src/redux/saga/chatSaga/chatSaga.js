@@ -1,5 +1,5 @@
-import { appendMessage, setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
-import { setMessage, setNewMessage, setTestMessage } from '@/redux/Slice/messageSlice'
+import { setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
+import { setMessage, setNewMessage } from '@/redux/Slice/messageSlice'
 import { getCookie } from '@/services/Cookies'
 import { getMessages, sendMessageApi } from '@/services/messageService'
 import { eventChannel } from 'redux-saga'
