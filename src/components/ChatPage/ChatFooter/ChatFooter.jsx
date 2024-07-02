@@ -15,6 +15,8 @@ import { useSelector } from 'react-redux'
 import EmojiMessage from '../../FeatureEmoji/EmojiMessage'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import './ChatFooter.css'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { storage } from '@/utils/firebaseConfig'
 
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
@@ -33,8 +35,6 @@ const ChatFooter = () => {
   const [isAiSuggestionClick, setIsAiSuggestionClick] = useState(true)
   const [showAnswerSuggestion, setShowAnswerSuggestion] = useState(false)
   const [answerArray, setAnswerArray] = useState([])
-
-
 
   const dispatch = useDispatch()
   const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
@@ -60,22 +60,21 @@ const ChatFooter = () => {
   }, [transcript, listening, resetTranscript])
 
   useEffect(() => {
-    answerSuggestionAI.map((answer, index) =>
-      {
-        if(answer.answerSuggestion){
-          let checkMutiAnswer = answer.answerSuggestion.startsWith('*')
-                                ? answer.answerSuggestion.split(/(?<=[.?!])\s+/)
-                                : answer.answerSuggestion
-          let answerText = typeof checkMutiAnswer === 'string' ? [checkMutiAnswer]: checkMutiAnswer;
-                                setAnswerArray(answerText)
-                                // setInputStr(checkMutiAnswer)
-                                console.log('checkMutiAnswer', answerText)
-          checkMutiAnswer != null ? setShowAnswerSuggestion(answer.isAnswerAI)
-                                  : setShowAnswerSuggestion(false)
-        }
-        setIsAiSuggestionClick(answer.isAnswerAI)
-     }
-    )
+    answerSuggestionAI.map((answer, index) => {
+      if (answer.answerSuggestion) {
+        let checkMutiAnswer = answer.answerSuggestion.startsWith('*')
+          ? answer.answerSuggestion.split(/(?<=[.?!])\s+/)
+          : answer.answerSuggestion
+        let answerText = typeof checkMutiAnswer === 'string' ? [checkMutiAnswer] : checkMutiAnswer
+        setAnswerArray(answerText)
+        // setInputStr(checkMutiAnswer)
+        console.log('checkMutiAnswer', answerText)
+        checkMutiAnswer != null
+          ? setShowAnswerSuggestion(answer.isAnswerAI)
+          : setShowAnswerSuggestion(false)
+      }
+      setIsAiSuggestionClick(answer.isAnswerAI)
+    })
   }, [answerSuggestionAI])
 
   useEffect(() => {
@@ -171,8 +170,19 @@ const ChatFooter = () => {
     }
   }
 
-  const handleFileChange = (event, type) => {
-    const files = event.target.files
+  const handleFileChange = async (event, type) => {
+    const file = event.target.files[0]
+    if (!file) return
+    /// GỬi upload lên server và nhận url 
+    console.log('test')
+    const storageRef = ref(storage, `${type}/${file.name}`)
+    try {
+      const snapshot = await uploadBytes(storageRef, file)
+      const downloadURL = await getDownloadURL(snapshot.ref)
+      console.log(`Uploaded ${type} file:`, downloadURL)
+    } catch (error) {
+      console.error('Error uploading file:', error)
+    }
     // Xử lý khi người dùng chọn file
   }
 
@@ -255,32 +265,40 @@ const ChatFooter = () => {
 
   return (
     <>
-      {showAnswerSuggestion &&
-        <div className="flex items-center justify-center w-full select-none font-mono">
-          <div className={`grid p-2 ${answerArray.length >=4 ? 'grid-cols-4 gap-4': `grid-cols-${answerArray.length} gap-${answerArray.length}`}`}>
-           {answerArray.map((answerText, index) =>
-              
-              (index < 4) && <h1 key={index} className="px-3 py-1 shadow-lg shadow-gray-500/50 bg-[#93c5fd] text-white
-                                     rounded-lg text-[15px] cursor-pointer active:scale-[.97]"
-                              onClick={() => setInputStr(answerText)} >{answerText}</h1>
-                              )
-            }
+      {console.log(fileInputRefs)}
+      {showAnswerSuggestion && (
+        <div className='flex w-full select-none items-center justify-center font-mono'>
+          <div
+            className={`grid p-2 ${answerArray.length >= 4 ? 'grid-cols-4 gap-4' : `grid-cols-${answerArray.length} gap-${answerArray.length}`}`}
+          >
+            {answerArray.map(
+              (answerText, index) =>
+                index < 4 && (
+                  <h1
+                    key={index}
+                    className='cursor-pointer rounded-lg bg-[#93c5fd] px-3 py-1 text-[15px] text-white shadow-lg shadow-gray-500/50 active:scale-[.97]'
+                    onClick={() => setInputStr(answerText)}
+                  >
+                    {answerText}
+                  </h1>
+                ),
+            )}
           </div>
         </div>
-          }
+      )}
       <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
         {/*  */}
-        {!isAiSuggestionClick ?(
+        {!isAiSuggestionClick ? (
           // <div>Loading</div>
           // <div className="bg-[#cbd5dd] border py-2 px-5 flex items-center flex-col z-50 w-screen justify-center" >
           // </div>
-            <div className="w-10/12 loader-dots relative h-5 mt-2">
-              <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
-              <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
-              <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
-              <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-[#93c5fd]"></div>
-            </div>
-        ) : 
+          <div className='loader-dots relative mt-2 h-5 w-10/12'>
+            <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+            <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+            <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+            <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+          </div>
+        ) : (
           <input
             placeholder='Type your message...'
             onChange={handleChangeInput}
@@ -293,9 +311,10 @@ const ChatFooter = () => {
               fontWeight: boldActive ? 'bold' : 'normal',
               fontStyle: italicActive ? 'italic' : 'normal',
               textDecoration: underlineActive ? 'underline' : 'none',
-            }}/>
-        }
-        
+            }}
+          />
+        )}
+
         {isTextSelected && (
           <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
             <button
