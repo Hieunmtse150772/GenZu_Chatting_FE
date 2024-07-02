@@ -48,10 +48,27 @@ const searchUser = async (search) => {
 const sendFriendRequest = async (receiverId) => {
   try {
     const response = await axiosClient.post(`/friends/addFriendRequest?receiverId=${receiverId}`)
-    return response
+    return {
+      data: response.data,
+      statusCode: response.status,
+    }
   } catch (error) {
     console.error('Failed to send friend request:', error)
     throw error
+  }
+}
+
+const deleteFriendRequestHasBeenSent = async (requestId) => {
+  try {
+    const response = await axiosClient.delete(
+      `/friends/friendRequestHasBeenSent?requestId=${requestId}`,
+    )
+    return {
+      statusCode: response.status,
+      data: response.data,
+    }
+  } catch (error) {
+    console.error('Failed to delete friend request', error)
   }
 }
 
@@ -64,4 +81,11 @@ const getFriendRequestHasBeenSent = async () => {
   }
 }
 
-export default { signIn, updateUser, searchUser, sendFriendRequest, getFriendRequestHasBeenSent }
+export default {
+  signIn,
+  updateUser,
+  searchUser,
+  sendFriendRequest,
+  getFriendRequestHasBeenSent,
+  deleteFriendRequestHasBeenSent,
+}

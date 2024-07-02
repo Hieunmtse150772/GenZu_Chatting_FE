@@ -1,5 +1,6 @@
 import { CiSettings } from 'react-icons/ci'
 import { IoIosLogOut, IoIosMenu } from 'react-icons/io'
+import { IoIosNotificationsOutline } from 'react-icons/io'
 import userIcon from '@/assets/user_icon.jpg'
 import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
 import SearchInput from '../Sidebar/SearchInput/SearchInput'
@@ -70,10 +71,13 @@ const Sidebar = () => {
         <div className='no-scrollbar relative h-full w-80 overflow-x-hidden overflow-y-scroll border-slate-500 bg-lightTheme p-4 shadow-2xl dark:bg-darkTheme sm:max-w-[12rem] md:w-[22rem] lg:max-w-[20rem]'>
           <div className='mb-4 flex items-center justify-between'>
             <p className='text-xl font-bold dark:text-white'>App</p>
-            <CiSettings
-              onClick={togglePopup}
-              className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white'
-            />
+            <div className='flex justify-between'>
+              <IoIosNotificationsOutline className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
+              <CiSettings
+                onClick={togglePopup}
+                className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white'
+              />
+            </div>
           </div>
           <div className='flex items-center justify-between'>
             <SearchInput setSearchResults={setSearchResults} />
