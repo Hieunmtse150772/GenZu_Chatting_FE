@@ -16,8 +16,6 @@ const UserList = () => {
 
   return (
     <section className='h-full w-full'>
-      {console.log(groupChats)}
-
       <div className='mt-4 flex'>
         <button
           onClick={() => setActiveTab('personal')}

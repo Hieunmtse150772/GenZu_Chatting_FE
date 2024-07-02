@@ -17,7 +17,7 @@ export default function Chat() {
   }
   const idConversation = useParams()
   useEffect(() => {
-    dispatch(connectSocket())
+    dispatch(connectSocket(idConversation))
   }, [dispatch, idConversation])
   useEffect(() => {
     dispatch(getIdConversation())

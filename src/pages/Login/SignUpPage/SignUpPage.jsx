@@ -36,8 +36,6 @@ const SignUpComponent = () => {
           },
         },
       )
-
-      console.log('Sign up successful:', response.data)
       const user = {
         accessToken: response.data.accessToken,
         refreshToken: response.data.refreshToken,

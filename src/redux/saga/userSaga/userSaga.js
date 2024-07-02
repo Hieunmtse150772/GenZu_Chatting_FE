@@ -12,7 +12,6 @@ function* fetchIdConversation() {
   try {
     const response = yield call(getConversations)
     const firstConversationId = response?.data[0]?._id
-    console.log(response.data)
     yield put(setLsConversation(response.data))
     yield put(setLsPersonalChats(response.data.filter((value) => value.isGroupChat == false)))
     yield put(setLsGroupChat(response.data.filter((value) => value.isGroupChat == true)))

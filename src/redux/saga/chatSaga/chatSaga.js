@@ -8,13 +8,16 @@ import { io } from 'socket.io-client'
 
 var socket
 
-function createSocketChannel(socket) {
+function createSocketChannel(socket, idConversation) {
   return eventChannel((emit) => {
     socket.on('connected', () => emit(setSocketConnected(true)))
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
     socket.on('message received', (message) => {
-      emit(setNewMessage(message))
+      console.log(message.conversation)
+      if (message.conversation._id == idConversation) {
+        emit(setNewMessage(message))
+      }
     })
     return () => {
       socket.off('connected')
@@ -25,17 +28,13 @@ function createSocketChannel(socket) {
   })
 }
 
-function* handleSocketConnect() {
+function* handleSocketConnect(action) {
   socket = io(import.meta.env.VITE_ENDPOINT)
   const user = JSON.parse(getCookie('userLogin')).user
-  console.log(user)
   socket.emit('setup', user)
-  socket.emit('join chat', '667bc019d4df68dfbbd89ab0')
+  socket.emit('join chat', action.payload.idConversation)
 
-  socket.on('message received', (newMessageReceived) => {
-    console.log(newMessageReceived)
-  })
-  const socketChannel = yield call(createSocketChannel, socket)
+  const socketChannel = yield call(createSocketChannel, socket, action.payload.idConversation)
   while (true) {
     const action = yield take(socketChannel)
     yield put(action)

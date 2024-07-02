@@ -52,7 +52,7 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
         alt='user avatar'
         className='h-12 w-12 rounded-full object-cover'
       />
-      {console.log(user)}
+
       <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
         <h3 className='truncate text-sm font-semibold'>
           {!user.isGroupChat ? user.users[0].fullName : user.chatName}

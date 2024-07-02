@@ -41,7 +41,7 @@ const chatSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload
     },
-    connectSocket: () => {},
+    connectSocket: (state, action) => {},
     sendTestMessage: (state, action) => {}, // thêm connectSocket reducer trống
   },
 })
