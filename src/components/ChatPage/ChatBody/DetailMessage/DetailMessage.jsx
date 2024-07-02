@@ -162,13 +162,12 @@ export default function DetailMessage(props) {
                   onClick={() => handleEmoteClick(item._id)}
                 >
                   {/* show react emote  */}
-                  {item.emoji_user.length != 0 ? (
-                    item.emoji_user.map((emoji, index) =>
-                      emoji.url_emoji != '' ? emoji.url_emoji : <MdOutlineEmojiEmotions key={index} size={14} />,
-                    )
-                  ) : (
-                    <MdOutlineEmojiEmotions size={14} />
-                  )}
+                  {item.emoji_user.length != 0 && item.emoji_user.length > 1 ? 
+                    (item.emoji_user.map((emoji, index) =>
+                      emoji.url_emoji != null &&  emoji.url_emoji ))
+                    : (
+                      (item.emoji_user.length != 0) && (item.emoji_user[0].url_emoji != null) ? item.emoji_user[0].url_emoji :<MdOutlineEmojiEmotions size={14} />
+                    )}
                 </div>
               </div>
             </div>
@@ -195,12 +194,12 @@ export default function DetailMessage(props) {
                   onClick={() => handleEmoteClick(item._id)}
                 >
                   {/* show react emote  */}
-                  {item.emoji_user.length != 0 ? (
-                    item.emoji_user.map((emoji, index) =>
-                    emoji ? emoji.url_emoji : <MdOutlineEmojiEmotions key={index} size={14} />)
-                  ) : (
-                    <MdOutlineEmojiEmotions key={index} size={14} />
-                  )}
+                  {item.emoji_user.length != 0 && item.emoji_user.length > 1 ? 
+                    (item.emoji_user.map((emoji, index) =>
+                      emoji.url_emoji != null &&  emoji.url_emoji ))
+                    : (
+                      (item.emoji_user.length != 0) && (item.emoji_user[0].url_emoji != null) ? item.emoji_user[0].url_emoji :<MdOutlineEmojiEmotions size={14} />
+                    )}
                 </div>
                 {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
                   <div className='absolute z-10' ref={emoteRef}>

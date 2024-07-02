@@ -45,4 +45,14 @@ const searchUser = async (search) => {
   }
 }
 
-export default { signIn, updateUser, searchUser }
+const sendFriendRequest = async (receiverId) => {
+  try {
+    const response = await axiosClient.post(`/friends/addFriendRequest?receiverId=${receiverId}`)
+    return response
+  } catch (error) {
+    console.error('Failed to send friend request:', error)
+    throw error
+  }
+}
+
+export default { signIn, updateUser, searchUser, sendFriendRequest }
