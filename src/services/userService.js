@@ -55,4 +55,13 @@ const sendFriendRequest = async (receiverId) => {
   }
 }
 
-export default { signIn, updateUser, searchUser, sendFriendRequest }
+const getFriendRequestHasBeenSent = async () => {
+  try {
+    const response = await axiosClient.get('/friends/friendRequestHasBeenSent')
+    return response.data
+  } catch (error) {
+    console.error('Failed to get friend request has been sent', error)
+  }
+}
+
+export default { signIn, updateUser, searchUser, sendFriendRequest, getFriendRequestHasBeenSent }
