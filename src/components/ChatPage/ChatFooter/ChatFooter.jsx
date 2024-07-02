@@ -17,6 +17,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import './ChatFooter.css'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { storage } from '@/utils/firebaseConfig'
+import { useParams } from 'react-router-dom'
 
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
@@ -48,7 +49,7 @@ const ChatFooter = () => {
     audio: useRef(null),
   }
   const audioContainerRef = useRef(null)
-
+  const param = useParams()
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition()
 
@@ -125,6 +126,7 @@ const ChatFooter = () => {
           underline: underlineActive,
         },
         isSpoiled,
+        idConversation: param,
       }
       dispatch(sendMessage(messageData))
       dispatch(deleteEmoji())
@@ -139,7 +141,10 @@ const ChatFooter = () => {
   const handleSendMsg = () => {
     const messageData = {
       message: inputStr,
+      isSpoiled: isSpoiled,
+      messageType: 'string',
       styles: {
+        fontSize: 10,
         bold: boldActive,
         italic: italicActive,
         underline: underlineActive,
@@ -173,7 +178,7 @@ const ChatFooter = () => {
   const handleFileChange = async (event, type) => {
     const file = event.target.files[0]
     if (!file) return
-    /// GỬi upload lên server và nhận url 
+    /// GỬi upload lên server và nhận url
     console.log('test')
     const storageRef = ref(storage, `${type}/${file.name}`)
     try {

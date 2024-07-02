@@ -1,7 +1,7 @@
 import { appendMessage, setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
 import { setMessage, setNewMessage, setTestMessage } from '@/redux/Slice/messageSlice'
 import { getCookie } from '@/services/Cookies'
-import { getMessages } from '@/services/messageService'
+import { getMessages, sendMessageApi } from '@/services/messageService'
 import { eventChannel } from 'redux-saga'
 import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects'
 import { io } from 'socket.io-client'
@@ -58,20 +58,23 @@ function* fetchMessages(action) {
   }
 }
 
-function* sendMessage(action) {
-  const inforChat = action.payload
+function* sendMessageSaga(action) {
+  const inforChat = {
+    message: action.payload.message,
+    isSpoiled: action.payload.isSpoiled,
+    messageType: 'string',
+    styles: action.payload.styles,
+  }
   console.log(inforChat)
   try {
-    yield call([socket, 'emit'], 'stop_typing', inforChat.idConversation.idConversation)
-    yield put(setNewMessage(''))
+    yield call([socket, 'emit'], 'stop_typing', action.payload.idConversation.idConversation)
     const { data } = yield call(
       sendMessageApi,
       inforChat.message,
-      inforChat.idConversation.idConversation,
+      action.payload.idConversation.idConversation,
     )
-
+    console.log(data)
     yield call([socket, 'emit'], 'new message', data)
-    yield put(appendMessage(data))
   } catch (error) {
     console.error('Failed to send message', error)
   }
@@ -80,5 +83,5 @@ function* sendMessage(action) {
 export default function* chatSaga() {
   yield takeEvery('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
-  yield takeLatest('chat/sendTestMessage', sendMessage)
+  yield takeLatest('message/sendMessage', sendMessageSaga)
 }

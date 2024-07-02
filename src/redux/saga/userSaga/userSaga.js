@@ -29,14 +29,13 @@ function* fetchMessageById(action) {
     socket.emit('join chat', JSON.parse(getCookie('userLogin')).user._id)
 
     yield put(setTestMessage(lsMessage))
-    console.log(lsMessage)
   } catch (error) {
     console.error('Lỗi khi lấy lsMessages:', error)
   }
 }
 function* authSaga() {
   yield takeLatest('user/getIdConversation', fetchIdConversation)
-  yield takeLatest('message/getMessagesById', fetchMessageById)
+  // yield takeLatest('message/getMessagesById', fetchMessageById)
 }
 
 export default authSaga
