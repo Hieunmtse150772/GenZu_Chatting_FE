@@ -1,4 +1,5 @@
 import { getCookie } from '@/services/Cookies'
+import { translateText } from '@/services/TranslationService'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
@@ -177,6 +178,10 @@ const messageSlice = createSlice({
         ],
       }
     },
+    translationMessage: (state, action) => {},
+    setTranslationMessage: (state, action) => {
+      console.log('hihi')
+    },
   },
 })
 
@@ -191,5 +196,6 @@ export const {
   setAnswerClick,
   getMessagesById,
   setNewMessage,
+  translationMessage,
 } = messageSlice.actions
 export default messageSlice.reducer

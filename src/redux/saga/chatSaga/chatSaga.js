@@ -1,6 +1,7 @@
 import { setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
 import { setMessage, setNewMessage } from '@/redux/Slice/messageSlice'
 import { getCookie } from '@/services/Cookies'
+import { translateText } from '@/services/TranslationService'
 import { getMessages, sendMessageApi } from '@/services/messageService'
 import { eventChannel } from 'redux-saga'
 import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects'
@@ -74,9 +75,20 @@ function* sendMessageSaga(action) {
     console.error('Failed to send message', error)
   }
 }
-
+function* translationTextSaga(action) {
+  console.log(action.payload)
+  try {
+    const message = yield call(() => {
+      translateText(action.payload.message, 'en')
+    })
+    yield console.log(message)
+  } catch (error) {
+    console.log('Translation Error:', error)
+  }
+}
 export default function* chatSaga() {
-  yield takeEvery('chat/connectSocket', handleSocketConnect)
+  yield takeLatest('message/translationMessage', translationTextSaga)
+  yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/sendMessage', sendMessageSaga)
 }
