@@ -1,6 +1,6 @@
 import axios from 'axios'
 import './PopUpFindFriends.scss'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { getCookie } from '../../../services/Cookies'
 import { MdPersonSearch } from 'react-icons/md'
 import { IoPersonAdd } from 'react-icons/io5'
@@ -14,7 +14,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
   const [sentRequests, setSentRequests] = useState({})
   const popupRef = useRef()
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     try {
       const token = JSON.parse(getCookie('userLogin')).accessToken
       const response = await axios.get(
@@ -30,7 +30,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
     } catch (error) {
       setMessage({ text: error.message, isSuccess: false })
     }
-  }
+  }, [searchTerm])
 
   const handleKeyDown = (event) => {
     if (event.keyCode === 13) {
@@ -38,19 +38,71 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
     }
   }
 
-  useEffect(() => {
-    const fetchSentRequests = async () => {
-      const response = await userService.getFriendRequestHasBeenSent()
-      const requests = response.data.reduce((acc, request) => {
-        acc[request.receiver] = { _id: request._id, status: request.status }
-        return acc
-      }, {})
-      setSentRequests(requests)
+  const fetchSentRequests = useCallback(async () => {
+    const response = await userService.getFriendRequestHasBeenSent()
+    const requests = response?.data.reduce((acc, request) => {
+      acc[request.receiver] = { _id: request._id, status: request.status }
+      return acc
+    }, {})
+    setSentRequests(requests)
+  }, [])
+
+  const handleSendFriendRequest = useCallback(async (userID) => {
+    try {
+      const response = await userService.sendFriendRequest(userID)
+      if (response.statusCode === 201) {
+        const friendRequestID = response?.data?.data?._id
+        setMessage({ text: 'Friend request sent successfully!', isSuccess: true })
+        setSentRequests((prevRequests) => ({
+          ...prevRequests,
+          [userID]: { _id: friendRequestID, status: 'pending' },
+        }))
+        setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
+      }
+    } catch (error) {
+      setMessage({ text: 'Friend request already sent!', isSuccess: false })
+      setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
     }
+  }, [])
+
+  const handleCancelFriendRequest = useCallback(
+    async (userID) => {
+      try {
+        const requestId = sentRequests[userID]._id
+        const response = await userService.deleteFriendRequestHasBeenSent(requestId)
+        if (response.statusCode === 201) {
+          setMessage({ text: 'Friend request cancelled successfully!', isSuccess: true })
+          setSentRequests((prevRequests) => {
+            const updatedRequests = { ...prevRequests }
+            delete updatedRequests[userID]
+            return updatedRequests
+          })
+          setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
+        }
+      } catch (error) {
+        setMessage({ text: 'Failed to cancel friend request!', isSuccess: false })
+        setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
+      }
+    },
+    [sentRequests],
+  )
+
+  const handleFriendRequest = useCallback(
+    (userID) => {
+      if (sentRequests[userID] && sentRequests[userID]?.status === 'pending') {
+        handleCancelFriendRequest(userID)
+      } else {
+        handleSendFriendRequest(userID)
+      }
+    },
+    [handleCancelFriendRequest, handleSendFriendRequest, sentRequests],
+  )
+
+  useEffect(() => {
     if (isVisible) {
       fetchSentRequests()
     }
-  }, [isVisible])
+  }, [isVisible, fetchSentRequests])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -74,48 +126,6 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
     return null
   }
 
-  const handleSendFriendRequest = async (userID) => {
-    try {
-      const response = await userService.sendFriendRequest(userID)
-      if (response.statusCode === 201) {
-        const friendRequestID = response?.data?.data?._id
-        setMessage({ text: 'Friend request sent successfully!', isSuccess: true })
-        setSentRequests({ ...sentRequests, [userID]: { _id: friendRequestID, status: 'pending' } })
-        setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
-      }
-    } catch (error) {
-      setMessage({ text: 'Friend request already sent!', isSuccess: false })
-      setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
-      throw error
-    }
-  }
-
-  const handleCancelFriendRequest = async (userID) => {
-    try {
-      const requestId = sentRequests[userID]._id
-      const response = await userService.deleteFriendRequestHasBeenSent(requestId)
-      if (response.statusCode === 201) {
-        setMessage({ text: 'Friend request cancelled successfully!', isSuccess: true })
-        const updatedRequests = { ...sentRequests }
-        delete updatedRequests[userID]
-        setSentRequests(updatedRequests)
-        setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
-      }
-    } catch (error) {
-      setMessage({ text: 'Failed to cancel friend request!', isSuccess: false })
-      setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
-      throw error
-    }
-  }
-
-  const handleFriendRequest = (userID) => {
-    if (sentRequests[userID] && sentRequests[userID]?.status === 'pending') {
-      handleCancelFriendRequest(userID)
-    } else {
-      handleSendFriendRequest(userID)
-    }
-  }
-
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
       <div
@@ -132,21 +142,10 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
         <div className='relative mx-auto mt-10 max-w-md rounded-lg bg-white p-6 shadow-xl'>
           {
             <div
-              className={`${message.text !== '' ? 'opacity-100' : 'opacity-0'} lg: absolute -top-9 z-50 mb-2 mt-2 box-content flex justify-between rounded border px-2 py-1 lg:-top-10 lg:px-4 lg:py-3 ${message.isSuccess ? 'border-green-400 bg-green-200 text-green-700' : 'border-red-400 bg-red-200 text-red-700'}`}
+              className={`${message.text !== '' ? 'opacity-100' : 'opacity-0'} absolute -top-10 z-50 my-2 box-content flex justify-between rounded border px-3 py-2 lg:-top-12 ${message.isSuccess ? 'border-green-400 bg-green-200 text-green-700' : 'border-red-400 bg-red-200 text-red-700'}`}
               role='alert'
             >
               <span className='block sm:inline'>{message.text}</span>
-              {/* <span className='absolute right-0 top-0 ml-4 px-1 py-3'>
-                <svg
-                  className='h-6 w-6 fill-current text-red-500'
-                  role='button'
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 20 20'
-                >
-                  <title>Close</title>
-                  <path d='M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z' />
-                </svg>
-              </span> */}
             </div>
           }
           <div className='flex justify-between'>
