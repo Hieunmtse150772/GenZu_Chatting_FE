@@ -1,8 +1,8 @@
 import { setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
-import { setMessage, setNewMessage, setTranslationMessage } from '@/redux/Slice/messageSlice'
+import { setMessage, setNewMessage, setTranslationMessage, setEmojiOnMessage } from '@/redux/Slice/messageSlice'
 import { getCookie } from '@/services/Cookies'
 import { translateText } from '@/services/TranslationService'
-import { getMessages, sendMessageApi } from '@/services/messageService'
+import { getMessages, sendMessageApi, addEmoji, updateEmoji, deleteEmoji} from '@/services/messageService'
 import { eventChannel } from 'redux-saga'
 import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects'
 import { io } from 'socket.io-client'
@@ -15,10 +15,10 @@ function createSocketChannel(socket, idConversation) {
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
     socket.on('message received', (message) => {
-      console.log(message)
+console.log(message.conversation)
       if (message.conversation._id == idConversation) {
-        emit(setNewMessage(message))
-      }
+      emit(setNewMessage(message))
+}
     })
     return () => {
       socket.off('connected')
@@ -48,7 +48,7 @@ function* fetchMessages(action) {
       return getMessages(action.payload.idConversation)
     })
     const lsMessage = response.data.data
-    yield put(setMessage(lsMessage))
+        yield put(setMessage(lsMessage))
     console.log(lsMessage)
   } catch (error) {
     console.error('Lỗi khi lấy lsMessages:', error)
@@ -73,8 +73,7 @@ function* sendMessageSaga(action) {
       inforChat.message,
       action.payload.idConversation.idConversation,
     )
-    yield call([socket, 'emit'], 'new message', data)
-    yield put(setNewMessage(data))
+        yield call([socket, 'emit'], 'new message', data)
   } catch (error) {
     console.error('Failed to send message', error)
   }
@@ -90,10 +89,53 @@ function* translationTextSaga(action) {
     console.log('Translation Error:', error)
   }
 }
+
+function* setEmoji(action){
+  console.log('action:', action)
+  try {
+        if(action.payload.type=='ADD'){
+          const { data } = yield call(
+            addEmoji,
+            action.payload.id_message,
+            action.payload.emoji,
+          )
+          
+          console.log(data)
+          yield put(setEmojiOnMessage(action.payload))
+        }else if(action.payload.type=='UPDATE'){
+          const { data } = yield call(
+            updateEmoji,
+            action.payload.id_emoji,
+            action.payload.emoji,
+          )
+          
+          console.log(data)
+          yield put(setEmojiOnMessage(action.payload))
+
+        }else{
+          const { data } = yield call(
+            deleteEmoji,
+            action.payload.id_message,
+            action.payload.id_emoji
+          )
+          console.log(data)
+          yield put(setEmojiOnMessage(action.payload))
+        }
+
+    // console.log(data)
+    // yield call([socket, 'emit'], 'add emoji message', data)
+  } catch (error) {
+    console.error('Failed to add emoji message', error)
+  }
+}
+
 export default function* chatSaga() {
   yield takeLatest('user/alertRequesFriend', alertReques)
   yield takeLatest('message/translationMessage', translationTextSaga)
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/sendMessage', sendMessageSaga)
+  yield takeLatest('message/handleEmojiOnMessage', setEmoji)
+  yield takeLatest('message/setEmojiOnMessage', fetchMessages)
+
 }

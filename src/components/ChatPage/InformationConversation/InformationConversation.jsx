@@ -3,8 +3,14 @@ import { FaRegImage } from 'react-icons/fa'
 import { SlOptions } from 'react-icons/sl'
 import { MdOutlineGTranslate } from 'react-icons/md'
 import DropdownInfoItem from './DropdownInfoItem'
+import ViewProfile from './ViewProfile/ViewProfile'
+import { useState } from 'react'
 
 function InformationConversation() {
+  const [isViewProfileClick, setIsViewProfileClick] = useState(false)
+  const handleViewProfile = () =>{
+
+  }
   return (
     <div className='max-w-2xl mx-auto bg-mainBlue h-screen'>
       <div className='flex flex-col items-center pb-10'>
@@ -18,6 +24,7 @@ function InformationConversation() {
         <a
           href='#'
           className='inline-flex items-center my-4 py-4 px-8 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800'
+          onClick={() => handleViewProfile}        
         >
           View profile
         </a>

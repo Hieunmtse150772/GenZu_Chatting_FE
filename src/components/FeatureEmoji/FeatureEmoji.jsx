@@ -1,19 +1,27 @@
 import React, { useState } from 'react'
 import Picker from 'emoji-picker-react'
 import { useDispatch } from 'react-redux'
-import { selectedEmjiOnMessage } from '../../redux/Slice/messageSlice'
+import { handleEmojiOnMessage } from '../../redux/Slice/messageSlice'
 
 function FeatureEmoji(props) {
   
   const dispatch = useDispatch();
 
   const onEmojiClick = (event) => {
+    let id_emoji
+    props.item.emojiBy.map((emote) => {
+      if(emote.sender._id == props.item.sender._id){
+        id_emoji = emote._id
+      }
+    })
     const itemMessage = {
-      id_user: props.id_user,
-      id_message: props.id_message,
+      id_emoji,
+      id_user: props.item.sender != null ? props.item.sender._id : props.sessionId,
+      id_message: props.item._id,
       emoji: event.emoji,
+      idConversation: props.item.conversation._id
     }
-    dispatch(selectedEmjiOnMessage(itemMessage))
+    dispatch(handleEmojiOnMessage(itemMessage))
     props.handleCallBack()
   }
 
