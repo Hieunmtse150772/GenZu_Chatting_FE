@@ -13,16 +13,20 @@ import { useNavigate } from 'react-router-dom'
 import EditAndSetting from '../PopUp/EditAndSetting/EditAndSetting'
 import PopUpFindFriends from '../PopUp/PopUpFindFriends/PopUpFindFriends'
 import PopUpAddMenber from '../PopUp/PopUpAddMember/PopUpAddMember'
+import userService from '../../services/userService'
+import UserInfoFriendRequest from './UserInfoFriendRequest/UserInfoFriendRequest'
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef(null)
   const [searchResults, setSearchResults] = useState([])
   const navigate = useNavigate()
-
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const [isPopupVisibleFindFriends, setIsPopupVisibleFindFriends] = useState(false)
   const [isPopupVisibleAddMember, setIsPopupVisibleAddMember] = useState(false)
+  const [friendRequests, setFriendRequests] = useState([])
+  const [dropdownNotifyVisible, setDropdownNotifyVisible] = useState(false)
+
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible)
   }
@@ -40,6 +44,27 @@ const Sidebar = () => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
       setIsOpen(false)
     }
+  }
+
+  const handleNotificationClick = async () => {
+    try {
+      const requests = await userService.getAddFriendRequest()
+      if (requests?.data?.length > 0) {
+        const newFriendRequests = []
+        for (const request of requests.data) {
+          const getUser = await userService.getUserById(request.sender)
+          if (getUser?.user) {
+            newFriendRequests.push(getUser.user)
+          }
+        }
+        if (newFriendRequests.length > 0) {
+          setFriendRequests(newFriendRequests)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch friend requests', error)
+    }
+    setDropdownNotifyVisible(!dropdownNotifyVisible)
   }
 
   useEffect(() => {
@@ -72,7 +97,26 @@ const Sidebar = () => {
           <div className='mb-4 flex items-center justify-between'>
             <p className='text-xl font-bold dark:text-white'>App</p>
             <div className='flex justify-between'>
-              <IoIosNotificationsOutline className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
+              <button onClick={handleNotificationClick} className='relative'>
+                <IoIosNotificationsOutline className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
+                {dropdownNotifyVisible && (
+                  <div className='absolute right-0 z-10 mt-2 w-64 transition-all ease-in'>
+                    {/* Tooltip arrow */}
+                    <div className='absolute right-2 top-0.5 h-2 w-2 -translate-y-full transform border-b-8 border-l-8 border-r-8 border-b-white border-l-transparent border-r-transparent dark:border-b-gray-800'></div>
+                    <div className='overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
+                      {friendRequests.length > 0 ? (
+                        <ul className='divide-y divide-gray-200 dark:divide-gray-700'>
+                          {friendRequests.map((request) => (
+                            <UserInfoFriendRequest key={request._id} userInfo={request} />
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className='p-4 text-gray-800 dark:text-gray-200'>No friend requests</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </button>
               <CiSettings
                 onClick={togglePopup}
                 className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white'

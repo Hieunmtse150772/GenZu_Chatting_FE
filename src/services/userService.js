@@ -45,7 +45,7 @@ const searchUser = async (search) => {
 
 const sendFriendRequest = async (receiverId) => {
   try {
-    const response = await axiosClient.post(`/friends/addFriendRequest?receiverId=${receiverId}`)
+    const response = await axiosClient.post(`/friends/addFriendRequest?id=${receiverId}`)
     return {
       data: response.data,
       statusCode: response.status,
@@ -79,6 +79,42 @@ const getFriendRequestHasBeenSent = async () => {
   }
 }
 
+const acceptFriendRequest = async (requestId) => {
+  try {
+    const response = await axiosClient.put(`/friends/acceptFriendRequest?requestId=${requestId}`)
+    return response.data
+  } catch (error) {
+    console.error('Failed to accept friend request', error)
+  }
+}
+
+const rejectFriendRequest = async (requestId) => {
+  try {
+    const response = await axiosClient.patch(`/friends/rejectFriendRequest?requestId=${requestId}`)
+    return response.data
+  } catch (error) {
+    console.error('Failed to reject friend request', error)
+  }
+}
+
+const getAddFriendRequest = async () => {
+  try {
+    const response = await axiosClient.get('/friends/addFriendRequest')
+    return response.data
+  } catch (error) {
+    console.error('Failed to get add friend request', error)
+  }
+}
+
+const getUserById = async (userID) => {
+  try {
+    const response = await axiosClient.get(`/users/getUserById?userId=${userID}`)
+    return response.data
+  } catch (error) {
+    console.error('Failed to get user by id', error)
+  }
+}
+
 export default {
   signIn,
   updateUser,
@@ -86,4 +122,8 @@ export default {
   sendFriendRequest,
   getFriendRequestHasBeenSent,
   deleteFriendRequestHasBeenSent,
+  acceptFriendRequest,
+  rejectFriendRequest,
+  getAddFriendRequest,
+  getUserById,
 }

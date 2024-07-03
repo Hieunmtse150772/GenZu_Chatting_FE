@@ -142,7 +142,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
         <div className='relative mx-auto mt-10 max-w-md rounded-lg bg-white p-6 shadow-xl'>
           {
             <div
-              className={`${message.text !== '' ? 'opacity-100' : 'opacity-0'} absolute -top-10 z-50 my-2 box-content flex justify-between rounded border px-3 py-2 lg:-top-12 ${message.isSuccess ? 'border-green-400 bg-green-200 text-green-700' : 'border-red-400 bg-red-200 text-red-700'}`}
+              className={`${message.text !== '' ? 'opacity-100' : 'opacity-0'} absolute -top-10 z-50 my-2 box-content flex justify-between rounded border px-3 py-2 ${message.isSuccess ? 'border-green-400 bg-green-200 text-green-700' : 'border-red-400 bg-red-200 text-red-700'}`}
               role='alert'
             >
               <span className='block sm:inline'>{message.text}</span>
