@@ -126,6 +126,7 @@ const userSlice = createSlice({
         lsPersonalChats: action.payload,
       }
     },
+    alertFriendRequest: (state, action) => {},
     setConversation: (state, action) => {
       console.log(action.payload)
       return {
@@ -147,6 +148,7 @@ export const {
   getLsConversation,
   setLsGroupChat,
   setLsPersonalChats,
+  alertFriendRequest,
   setConversation,
 } = userSlice.actions
 export default userSlice.reducer

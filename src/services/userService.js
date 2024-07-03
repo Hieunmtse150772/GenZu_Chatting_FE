@@ -58,9 +58,7 @@ const sendFriendRequest = async (receiverId) => {
 
 const deleteFriendRequestHasBeenSent = async (requestId) => {
   try {
-    const response = await axiosClient.delete(
-      `/friends/friendRequestHasBeenSent?requestId=${requestId}`,
-    )
+    const response = await axiosClient.delete(`/friends/friendRequestHasBeenSent?id=${requestId}`)
     return {
       statusCode: response.status,
       data: response.data,
@@ -81,7 +79,7 @@ const getFriendRequestHasBeenSent = async () => {
 
 const acceptFriendRequest = async (requestId) => {
   try {
-    const response = await axiosClient.put(`/friends/acceptFriendRequest?requestId=${requestId}`)
+    const response = await axiosClient.put(`/friends/acceptFriendRequest?id=${requestId}`)
     return response.data
   } catch (error) {
     console.error('Failed to accept friend request', error)
@@ -90,7 +88,7 @@ const acceptFriendRequest = async (requestId) => {
 
 const rejectFriendRequest = async (requestId) => {
   try {
-    const response = await axiosClient.patch(`/friends/rejectFriendRequest?requestId=${requestId}`)
+    const response = await axiosClient.patch(`/friends/rejectFriendRequest?id=${requestId}`)
     return response.data
   } catch (error) {
     console.error('Failed to reject friend request', error)

@@ -6,7 +6,7 @@ import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
 import SearchInput from '../Sidebar/SearchInput/SearchInput'
 import UserList from '../Sidebar/UserList/UserList'
 import Switcher from '../Sidebar/Switcher/Switcher'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { PiSignOutBold } from 'react-icons/pi'
 import { removeCookie } from '../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
@@ -47,25 +47,38 @@ const Sidebar = () => {
   }
 
   const handleNotificationClick = async () => {
-    try {
-      const requests = await userService.getAddFriendRequest()
-      if (requests?.data?.length > 0) {
-        const newFriendRequests = []
-        for (const request of requests.data) {
-          const getUser = await userService.getUserById(request.sender)
-          if (getUser?.user) {
-            newFriendRequests.push(getUser.user)
-          }
-        }
-        if (newFriendRequests.length > 0) {
-          setFriendRequests(newFriendRequests)
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch friend requests', error)
-    }
     setDropdownNotifyVisible(!dropdownNotifyVisible)
   }
+
+  const handleRequestHandled = useCallback((requestId) => {
+    setFriendRequests((prevRequests) => {
+      const updatedRequests = prevRequests.filter((request) => request.requestId !== requestId)
+      console.log('update request', updatedRequests)
+      return updatedRequests
+    })
+  }, [])
+
+  useEffect(() => {
+    const fetchFriendRequests = async () => {
+      try {
+        const requests = await userService.getAddFriendRequest()
+        if (requests?.data?.length > 0) {
+          const newFriendRequests = []
+          for (const request of requests.data) {
+            console.log(request)
+            const getUser = await userService.getUserById(request.sender)
+            if (getUser?.user) {
+              newFriendRequests.push({ ...getUser.user, requestId: request._id })
+            }
+          }
+          setFriendRequests(newFriendRequests)
+        }
+      } catch (error) {
+        console.error('Failed to fetch friend requests', error)
+      }
+    }
+    fetchFriendRequests()
+  }, [])
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -97,7 +110,7 @@ const Sidebar = () => {
           <div className='mb-4 flex items-center justify-between'>
             <p className='text-xl font-bold dark:text-white'>App</p>
             <div className='flex justify-between'>
-              <button onClick={handleNotificationClick} className='relative'>
+              <div onClick={handleNotificationClick} className='relative'>
                 <IoIosNotificationsOutline className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
                 {dropdownNotifyVisible && (
                   <div className='absolute right-0 z-10 mt-2 w-64 transition-all ease-in'>
@@ -107,7 +120,11 @@ const Sidebar = () => {
                       {friendRequests.length > 0 ? (
                         <ul className='divide-y divide-gray-200 dark:divide-gray-700'>
                           {friendRequests.map((request) => (
-                            <UserInfoFriendRequest key={request._id} userInfo={request} />
+                            <UserInfoFriendRequest
+                              key={request._id}
+                              userInfo={request}
+                              onRequestHandled={handleRequestHandled}
+                            />
                           ))}
                         </ul>
                       ) : (
@@ -116,7 +133,7 @@ const Sidebar = () => {
                     </div>
                   </div>
                 )}
-              </button>
+              </div>
               <CiSettings
                 onClick={togglePopup}
                 className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white'

@@ -5,6 +5,8 @@ import { getCookie } from '../../../services/Cookies'
 import { MdPersonSearch } from 'react-icons/md'
 import { IoPersonAdd } from 'react-icons/io5'
 import { RiUserSharedFill } from 'react-icons/ri'
+import { useDispatch } from 'react-redux'
+import { alertFriendRequest } from '../../../redux/Slice/userSlice'
 import userService from '@/services/userService'
 
 export default function PopUpFindFriends({ isVisible, onClose }) {
@@ -13,6 +15,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
   const [message, setMessage] = useState({ text: '', isSuccess: true })
   const [sentRequests, setSentRequests] = useState({})
   const popupRef = useRef()
+  const dispatch = useDispatch()
 
   const handleSearch = useCallback(async () => {
     try {
@@ -57,6 +60,8 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
           ...prevRequests,
           [userID]: { _id: friendRequestID, status: 'pending' },
         }))
+        console.log(response?.data?.data)
+        dispatch(alertFriendRequest(response?.data?.data))
         setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
       }
     } catch (error) {
