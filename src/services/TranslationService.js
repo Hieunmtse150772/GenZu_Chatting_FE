@@ -1,7 +1,7 @@
 // src/services/translationService.js
 import axios from 'axios'
 
-const apiKey = import.meta.env.VITE_GOOGLE_API_KEY
+const apiKey = import.meta.env.VITE_GOOGLE_TRANSLATION_API_KEY_TRANSLATION
 const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`
 
 export const translateText = async (

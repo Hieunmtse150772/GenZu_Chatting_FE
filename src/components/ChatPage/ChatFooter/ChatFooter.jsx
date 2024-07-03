@@ -18,7 +18,7 @@ import './ChatFooter.css'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { storage } from '@/utils/firebaseConfig'
 import { useParams } from 'react-router-dom'
-
+import { TiDeleteOutline } from 'react-icons/ti'
 const ChatFooter = () => {
   const [showAttachments, setShowAttachments] = useState(false)
   const [isEmojiMsgClick, setIsEmojiMsgClick] = useState(false)
@@ -36,7 +36,9 @@ const ChatFooter = () => {
   const [isAiSuggestionClick, setIsAiSuggestionClick] = useState(true)
   const [showAnswerSuggestion, setShowAnswerSuggestion] = useState(false)
   const [answerArray, setAnswerArray] = useState([])
-
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState('')
+  const [downloadURL, SetDownloadURL] = useState('')
   const dispatch = useDispatch()
   const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
   const answerSuggestionAI = useSelector((state) => state.message.answerAI)
@@ -118,14 +120,24 @@ const ChatFooter = () => {
 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
+      handleSendMsg()
+    }
+  }
+
+  const handleSendMsg = () => {
+    if (selectedFile?.file) {
+      handleSendFile()
+    }
+    if (inputStr != null && inputStr != undefined && inputStr != '') {
       const messageData = {
         message: inputStr,
         styles: {
+          fontSize: 10,
           bold: boldActive,
           italic: italicActive,
           underline: underlineActive,
         },
-        isSpoiled,
+        isSpoiled: isSpoiled,
         idConversation: param,
       }
       dispatch(sendMessage(messageData))
@@ -136,27 +148,6 @@ const ChatFooter = () => {
       setUnderlineActive(false)
       setIsSpoiled(true)
     }
-  }
-
-  const handleSendMsg = () => {
-    const messageData = {
-      message: inputStr,
-      isSpoiled: isSpoiled,
-      messageType: 'string',
-      styles: {
-        fontSize: 10,
-        bold: boldActive,
-        italic: italicActive,
-        underline: underlineActive,
-      },
-    }
-    dispatch(sendMessage(messageData))
-    dispatch(deleteEmoji())
-    setInputStr('') // Clear input field after dispatch
-    setBoldActive(false)
-    setItalicActive(false)
-    setUnderlineActive(false)
-    setIsSpoiled(false)
   }
 
   const toggleInlineStyle = (style) => {
@@ -179,20 +170,41 @@ const ChatFooter = () => {
     const file = event.target.files[0]
     if (!file) return
     /// GỬi upload lên server và nhận url
-    console.log('test')
-    const storageRef = ref(storage, `${type}/${file.name}`)
-    try {
-      const snapshot = await uploadBytes(storageRef, file)
-      const downloadURL = await getDownloadURL(snapshot.ref)
-      console.log(`Uploaded ${type} file:`, downloadURL)
-    } catch (error) {
-      console.error('Error uploading file:', error)
+    if (file) {
+      setSelectedFile({ file: file, type: type })
+      setPreviewUrl(URL.createObjectURL(file)) // Tạo URL xem trước
     }
-    // Xử lý khi người dùng chọn file
   }
-
+  const handleSendFile = async () => {
+    const storageRef = ref(storage, `${selectedFile.type}/${selectedFile.file.name}`)
+    uploadBytes(storageRef, selectedFile.file)
+      .then((snapshot) => {
+        return getDownloadURL(snapshot.ref)
+      })
+      .then((downloadURL) => {
+        SetDownloadURL(downloadURL)
+        const messageData = {
+          message: downloadURL,
+          styles: {
+            fontSize: 10,
+            bold: false,
+            italic: false,
+            underline: false,
+          },
+          isSpoiled: isSpoiled,
+          idConversation: param,
+        }
+        dispatch(sendMessage(messageData))
+        setPreviewUrl(null)
+        setSelectedFile(null)
+      })
+      .catch((error) => {
+        console.error('Error uploading file:', error)
+      })
+  }
   const handleFileButtonClick = (type) => {
     fileInputRefs[type].current.click()
+    setShowAttachments(false)
   }
 
   const toggleAttachments = () => {
@@ -270,7 +282,6 @@ const ChatFooter = () => {
 
   return (
     <>
-      {console.log(fileInputRefs)}
       {showAnswerSuggestion && (
         <div className='flex w-full select-none items-center justify-center font-mono'>
           <div
@@ -291,159 +302,178 @@ const ChatFooter = () => {
           </div>
         </div>
       )}
-      <div className='relative flex items-center rounded-lg bg-white p-4 dark:bg-[#6c8ea3]'>
-        {/*  */}
-        {!isAiSuggestionClick ? (
-          // <div>Loading</div>
-          // <div className="bg-[#cbd5dd] border py-2 px-5 flex items-center flex-col z-50 w-screen justify-center" >
-          // </div>
-          <div className='loader-dots relative mt-2 h-5 w-10/12'>
-            <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
-            <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
-            <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
-            <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+      <div>
+        {previewUrl && (
+          <div className='bg-white px-6 dark:bg-[#6c8ea3]'>
+            <div className='relative inline-block'>
+              <img src={previewUrl} alt='Preview' style={{ width: '100px', height: '100px' }} />
+              <button
+                className='absolute -right-3 -top-3'
+                onClick={() => {
+                  setPreviewUrl(null)
+                  setSelectedFile(null)
+                }}
+              >
+                <TiDeleteOutline />
+              </button>
+            </div>
           </div>
-        ) : (
-          <input
-            placeholder='Type your message...'
-            onChange={handleChangeInput}
-            onKeyDown={handleKeyPress}
-            onFocus={handleFocus}
-            ref={inputRef}
-            value={inputStr}
-            className={`flex-1 rounded-full border px-4 py-2 focus:outline-none ${isSpoiled ? 'show' : 'hide'}`}
-            style={{
-              fontWeight: boldActive ? 'bold' : 'normal',
-              fontStyle: italicActive ? 'italic' : 'normal',
-              textDecoration: underlineActive ? 'underline' : 'none',
-            }}
-          />
         )}
+        <div className='relative flex items-center rounded-lg bg-white px-4 pb-4 pt-1 dark:bg-[#6c8ea3]'>
+          {/*  */}
 
-        {isTextSelected && (
-          <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
-            <button
-              className={`tool-btn ${isSpoiled ? 'hover:bg-neutral-300' : 'bg-blue-500 text-white'}`}
-              onClick={handleSpoiledClick}
-            >
-              <BiHide size={22} />
-            </button>
-            <div className='divider'></div>
-            <button onClick={() => toggleInlineStyle('bold')}>
-              <VscBold
-                size={22}
-                className={`tool-btn ${boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
-              />
-            </button>
-            <button onClick={() => toggleInlineStyle('italic')}>
-              <GoItalic
-                size={22}
-                className={`tool-btn ${italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
-              />
-            </button>
-            <button onClick={() => toggleInlineStyle('underline')}>
-              <BsTypeUnderline
-                size={22}
-                className={`tool-btn ${underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
-              />
-            </button>
-          </div>
-        )}
-        <div
-          className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
-          ref={emoteRef}
-        >
-          {isEmojiMsgClick && <EmojiMessage />}
-        </div>
-        <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
-          <div className='flex items-center justify-between'>
-            <AudioRecorder
-              onRecordingComplete={addAudioElement}
-              record={isRecording}
-              title={'Record your message'}
-              onStop={(data) => onDataRecorded(data)}
-              audioURL={(audioBlob && URL.createObjectURL(audioBlob)) || ''}
+          {!isAiSuggestionClick ? (
+            // <div>Loading</div>
+            // <div className="bg-[#cbd5dd] border py-2 px-5 flex items-center flex-col z-50 w-screen justify-center" >
+            // </div>
+            <div className='loader-dots relative mt-2 h-5 w-10/12'>
+              <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+              <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+              <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+              <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+            </div>
+          ) : (
+            <input
+              placeholder='Type your message...'
+              onChange={handleChangeInput}
+              onKeyDown={handleKeyPress}
+              onFocus={handleFocus}
+              ref={inputRef}
+              value={inputStr}
+              className={`flex-1 rounded-full border px-4 py-2 focus:outline-none ${isSpoiled ? 'show' : 'hide'}`}
+              style={{
+                fontWeight: boldActive ? 'bold' : 'normal',
+                fontStyle: italicActive ? 'italic' : 'normal',
+                textDecoration: underlineActive ? 'underline' : 'none',
+              }}
             />
-            <div
-              ref={audioContainerRef}
-              className={audioContainerRef === null ? 'hidden' : 'mx-1 flex items-center'}
-            ></div>
+          )}
+
+          {isTextSelected && (
+            <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
+              <button
+                className={`tool-btn ${isSpoiled ? 'hover:bg-neutral-300' : 'bg-blue-500 text-white'}`}
+                onClick={handleSpoiledClick}
+              >
+                <BiHide size={22} />
+              </button>
+              <div className='divider'></div>
+              <button onClick={() => toggleInlineStyle('bold')}>
+                <VscBold
+                  size={22}
+                  className={`tool-btn ${boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+                />
+              </button>
+              <button onClick={() => toggleInlineStyle('italic')}>
+                <GoItalic
+                  size={22}
+                  className={`tool-btn ${italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+                />
+              </button>
+              <button onClick={() => toggleInlineStyle('underline')}>
+                <BsTypeUnderline
+                  size={22}
+                  className={`tool-btn ${underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+                />
+              </button>
+            </div>
+          )}
+          <div
+            className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
+            ref={emoteRef}
+          >
+            {isEmojiMsgClick && <EmojiMessage />}
+          </div>
+          <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
+            <div className='flex items-center justify-between'>
+              <AudioRecorder
+                onRecordingComplete={addAudioElement}
+                record={isRecording}
+                title={'Record your message'}
+                onStop={(data) => onDataRecorded(data)}
+                audioURL={(audioBlob && URL.createObjectURL(audioBlob)) || ''}
+              />
+              <div
+                ref={audioContainerRef}
+                className={audioContainerRef === null ? 'hidden' : 'mx-1 flex items-center'}
+              ></div>
+              <button
+                className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
+                onClick={toggleAttachments}
+              >
+                <MdAttachFile size={24} />
+              </button>
+              <button
+                className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
+                ref={buttonRef}
+                onClick={handleEmojiMsgClick}
+              >
+                <MdInsertEmoticon size={24} />
+              </button>
+              <button
+                className='mx-auto rounded-full bg-slate-200 p-4 text-sky-500 hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'
+                onClick={handleSendMsg}
+              >
+                <LuSend size={18} />
+              </button>
+            </div>
+          </div>
+          <div
+            className={`absolute bottom-20 right-20 flex flex-col space-y-2 transition-transform duration-300 ease-in-out ${
+              showAttachments
+                ? 'translate-y-0 opacity-100'
+                : 'pointer-events-none translate-y-4 opacity-0'
+            }`}
+          >
+            <AttachmentButton
+              icon={FaFile}
+              color={'blue'}
+              onAttachBtnClick={() => handleFileButtonClick('file')}
+            />
+            <AttachmentButton
+              icon={FaImage}
+              color={'blue'}
+              onAttachBtnClick={() => handleFileButtonClick('image')}
+            />
+            <AttachmentButton
+              icon={FaVideo}
+              color={'red'}
+              onAttachBtnClick={() => handleFileButtonClick('video')}
+            />
             <button
-              className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
-              onClick={toggleAttachments}
+              className={`mx-auto rounded-full p-3 focus:outline-none dark:text-white ${
+                listening ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'
+              }`}
+              onMouseDown={startRecording}
+              onMouseUp={stopRecording}
+              onTouchStart={startRecording}
+              onTouchEnd={stopRecording}
             >
-              <MdAttachFile size={24} />
-            </button>
-            <button
-              className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
-              ref={buttonRef}
-              onClick={handleEmojiMsgClick}
-            >
-              <MdInsertEmoticon size={24} />
-            </button>
-            <button
-              className='mx-auto rounded-full bg-slate-200 p-4 text-sky-500 hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'
-              onClick={handleSendMsg}
-            >
-              <LuSend size={18} />
+              <MdOutlineKeyboardVoice size={22} />
             </button>
           </div>
+          {/* Input fields for file selection */}
+          <input
+            type='file'
+            ref={fileInputRefs.file}
+            className='hidden'
+            onChange={(e) => handleFileChange(e, 'file')}
+          />
+          <input
+            type='file'
+            accept='image/*'
+            ref={fileInputRefs.image}
+            className='hidden'
+            onChange={(e) => handleFileChange(e, 'image')}
+          />
+          <input
+            type='file'
+            accept='video/*'
+            ref={fileInputRefs.video}
+            className='hidden'
+            onChange={(e) => handleFileChange(e, 'video')}
+          />
         </div>
-        <div
-          className={`absolute bottom-20 right-20 flex flex-col space-y-2 transition-transform duration-300 ease-in-out ${
-            showAttachments
-              ? 'translate-y-0 opacity-100'
-              : 'pointer-events-none translate-y-4 opacity-0'
-          }`}
-        >
-          <AttachmentButton
-            icon={FaFile}
-            color={'blue'}
-            onAttachBtnClick={() => handleFileButtonClick('file')}
-          />
-          <AttachmentButton
-            icon={FaImage}
-            color={'blue'}
-            onAttachBtnClick={() => handleFileButtonClick('image')}
-          />
-          <AttachmentButton
-            icon={FaVideo}
-            color={'red'}
-            onAttachBtnClick={() => handleFileButtonClick('video')}
-          />
-          <button
-            className={`mx-auto rounded-full p-3 focus:outline-none dark:text-white ${
-              listening ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'
-            }`}
-            onMouseDown={startRecording}
-            onMouseUp={stopRecording}
-            onTouchStart={startRecording}
-            onTouchEnd={stopRecording}
-          >
-            <MdOutlineKeyboardVoice size={22} />
-          </button>
-        </div>
-        {/* Input fields for file selection */}
-        <input
-          type='file'
-          ref={fileInputRefs.file}
-          className='hidden'
-          onChange={(e) => handleFileChange(e, 'file')}
-        />
-        <input
-          type='file'
-          accept='image/*'
-          ref={fileInputRefs.image}
-          className='hidden'
-          onChange={(e) => handleFileChange(e, 'image')}
-        />
-        <input
-          type='file'
-          accept='video/*'
-          ref={fileInputRefs.video}
-          className='hidden'
-          onChange={(e) => handleFileChange(e, 'video')}
-        />
       </div>
     </>
   )
