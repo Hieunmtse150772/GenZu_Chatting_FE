@@ -73,6 +73,7 @@ const initialState = {
   lsConversation: [],
   editUser: false,
   idConversation: null,
+  conversation: null,
 }
 
 const userSlice = createSlice({
@@ -106,6 +107,7 @@ const userSlice = createSlice({
       }
     },
     getIdConversation: (state, action) => {},
+    getLsConversation: (state, action) => {},
     setLsConversation: (state, action) => {
       return {
         ...state,
@@ -124,6 +126,13 @@ const userSlice = createSlice({
         lsPersonalChats: action.payload,
       }
     },
+    setConversation: (state, action) => {
+      console.log(action.payload)
+      return {
+        ...state,
+        conversation: state.lsConversation.find((item) => item._id == action.payload),
+      }
+    },
   },
 })
 
@@ -135,7 +144,9 @@ export const {
   setIdConversation,
   getIdConversation,
   setLsConversation,
+  getLsConversation,
   setLsGroupChat,
   setLsPersonalChats,
+  setConversation,
 } = userSlice.actions
 export default userSlice.reducer

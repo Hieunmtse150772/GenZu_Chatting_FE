@@ -5,6 +5,7 @@ function ChatHeader({ toggleInfo }) {
   return (
     <header className='mb-2 flex items-center justify-between rounded-lg bg-mainBlue px-8 py-4 shadow-xl dark:bg-[#6c8ea3]'>
       <div className='flex cursor-pointer items-center space-x-4'>
+        {console.log(toggleInfo)}
         <img
           src='https://flowbite.com/docs/images/people/profile-picture-3.jpg'
           className='h-16 w-16 rounded-full'

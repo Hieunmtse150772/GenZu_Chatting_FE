@@ -15,7 +15,7 @@ function createSocketChannel(socket, idConversation) {
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
     socket.on('message received', (message) => {
-      console.log(message.conversation)
+      console.log(message)
       if (message.conversation._id == idConversation) {
         emit(setNewMessage(message))
       }
@@ -54,7 +54,9 @@ function* fetchMessages(action) {
     console.error('Lỗi khi lấy lsMessages:', error)
   }
 }
-
+function* alertReques(action) {
+  yield call([socket, 'emit'], 'send request', action.payload)
+}
 function* sendMessageSaga(action) {
   const inforChat = {
     message: action.payload.message,
@@ -63,6 +65,7 @@ function* sendMessageSaga(action) {
     styles: action.payload.styles,
   }
   console.log(inforChat)
+
   try {
     yield call([socket, 'emit'], 'stop_typing', action.payload.idConversation.idConversation)
     const data = yield call(
@@ -71,6 +74,7 @@ function* sendMessageSaga(action) {
       action.payload.idConversation.idConversation,
     )
     yield call([socket, 'emit'], 'new message', data)
+    yield put(setNewMessage(data))
   } catch (error) {
     console.error('Failed to send message', error)
   }
@@ -87,6 +91,7 @@ function* translationTextSaga(action) {
   }
 }
 export default function* chatSaga() {
+  yield takeLatest('user/alertRequesFriend', alertReques)
   yield takeLatest('message/translationMessage', translationTextSaga)
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)

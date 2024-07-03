@@ -1,4 +1,5 @@
 import {
+  setConversation,
   setIdConversation,
   setLsConversation,
   setLsGroupChat,
@@ -16,6 +17,17 @@ function* fetchIdConversation() {
     yield put(setLsPersonalChats(response.data.filter((value) => value.isGroupChat == false)))
     yield put(setLsGroupChat(response.data.filter((value) => value.isGroupChat == true)))
     yield put(setIdConversation(firstConversationId)) // Sử dụng put
+    yield put(setConversation(firstConversationId)) // Sử dụng put
+  } catch (error) {
+    console.error('Lỗi khi lấy idConversation:', error)
+  }
+}
+function* fetchConversation() {
+  try {
+    const response = yield call(getConversations)
+    yield put(setLsConversation(response.data))
+    yield put(setLsPersonalChats(response.data.filter((value) => value.isGroupChat == false)))
+    yield put(setLsGroupChat(response.data.filter((value) => value.isGroupChat == true)))
   } catch (error) {
     console.error('Lỗi khi lấy idConversation:', error)
   }
@@ -23,6 +35,7 @@ function* fetchIdConversation() {
 
 function* authSaga() {
   yield takeLatest('user/getIdConversation', fetchIdConversation)
+  yield takeLatest('user/getLsConversation', fetchConversation)
 }
 
 export default authSaga

@@ -26,23 +26,7 @@ const messageSlice = createSlice({
   name: 'message',
   initialState,
   reducers: {
-    sendMessage: (state, action) => {
-      console.log(action.payload)
-      const { message, styles, isSpoiled, idConversation } = action.payload
-      const newMessage = {
-        sender: JSON.parse(getCookie('userLogin')),
-        id_message: state.message.length + 1,
-        message,
-        time: '',
-        styles: styles || {},
-        isSpoiled: isSpoiled || false,
-        emoji_user: [],
-      }
-      return {
-        ...state,
-        message: [...state.message, newMessage],
-      }
-    },
+    sendMessage: (state, action) => {},
     setMessage: (state, action) => {
       return {
         ...state,
@@ -180,7 +164,6 @@ const messageSlice = createSlice({
     },
     translationMessage: (state, action) => {},
     setTranslationMessage: (state, action) => {
-
       console.log(action.payload)
       return {
         ...state,

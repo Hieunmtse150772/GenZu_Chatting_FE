@@ -6,6 +6,8 @@ import './Login.scss'
 import { useLayoutEffect, useState } from 'react'
 import { checkCookie } from '../../services/Cookies'
 import axios from 'axios'
+import ForgotPassword from './ForgotPassword/ForgotPassword'
+import ChangeForgotPassword from './ChangeForgotPassword/ChangeForgotPassword'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -32,6 +34,8 @@ export default function Login() {
         <Routes>
           <Route path='/' element={<SignInPage linkGoogle={linkLoginGoogle} />} />
           <Route path='signup' element={<SignUpComponent />} />
+          <Route path='forgot/' element={<ForgotPassword />} />
+          <Route path='forgot/:id' element={<ChangeForgotPassword />} />
         </Routes>
       </div>
     </div>
