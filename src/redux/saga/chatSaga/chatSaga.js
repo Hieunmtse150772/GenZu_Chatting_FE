@@ -1,5 +1,5 @@
 import { setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
-import { setMessage, setNewMessage } from '@/redux/Slice/messageSlice'
+import { setMessage, setNewMessage, setTranslationMessage } from '@/redux/Slice/messageSlice'
 import { getCookie } from '@/services/Cookies'
 import { translateText } from '@/services/TranslationService'
 import { getMessages, sendMessageApi } from '@/services/messageService'
@@ -79,9 +79,9 @@ function* translationTextSaga(action) {
   console.log(action.payload)
   try {
     const message = yield call(() => {
-      translateText(action.payload.message, 'en')
+      return translateText(action.payload.message, 'en')
     })
-    yield console.log(message)
+    yield put(setTranslationMessage({ message: message, id: action.payload.id }))
   } catch (error) {
     console.log('Translation Error:', error)
   }

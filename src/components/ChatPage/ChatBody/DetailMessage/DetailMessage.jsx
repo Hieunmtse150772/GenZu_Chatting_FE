@@ -122,6 +122,7 @@ export default function DetailMessage(props) {
             >
               <FeatureAI
                 message={item.message}
+                id={item._id}
                 callBackOptionClick={() => handleOptionClick(item._id)}
               />
             </div>

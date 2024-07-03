@@ -15,7 +15,6 @@ export const translateText = async (
     })
 
     if (response.data.data && response.data.data.translations) {
-      console.log(response.data.data.translations[0].translatedText)
       return response.data.data.translations[0].translatedText
     } else {
       throw new Error('Unexpected response format from translation service')

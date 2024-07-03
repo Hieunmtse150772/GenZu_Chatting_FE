@@ -180,7 +180,22 @@ const messageSlice = createSlice({
     },
     translationMessage: (state, action) => {},
     setTranslationMessage: (state, action) => {
-      console.log('hihi')
+
+      console.log(action.payload)
+      return {
+        ...state,
+        message: state.message.map((message) => {
+          if (message._id === action.payload.id) {
+            return {
+              ...message,
+              message: action.payload.message,
+              updatedAt: new Date().toISOString(), // Cập nhật thời gian updatedAt
+            }
+          } else {
+            return message
+          }
+        }),
+      }
     },
   },
 })
@@ -197,5 +212,6 @@ export const {
   getMessagesById,
   setNewMessage,
   translationMessage,
+  setTranslationMessage,
 } = messageSlice.actions
 export default messageSlice.reducer
