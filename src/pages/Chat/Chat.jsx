@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import ChatBody from '../../components/ChatPage/ChatBody/ChatBody'
 import ToastMessage from '../../components/ToastMessage/ToastMessage'
@@ -7,13 +7,12 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useParams } from 'react-router-dom'
 import { getMessagesById } from '../../redux/Slice/messageSlice'
-import { getLsConversation, setConversation, setIdConversation } from '@/redux/Slice/userSlice'
 import {
   clearToastMessage,
-  setIdConversation,
   getLsConversation,
-} from '../../redux/Slice/userSlice'
-import { useSelector } from 'react-redux'
+  setConversation,
+  setIdConversation,
+} from '@/redux/Slice/userSlice'
 import { connectSocket } from '@/redux/Slice/chatSlice'
 
 export default function Chat() {
