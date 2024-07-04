@@ -51,8 +51,7 @@ const Sidebar = () => {
     }
   }
 
-  const handleNotificationClick = async () => {
-    console.log(friendRequests)
+  const handleNotificationClick = () => {
     setDropdownNotifyVisible(!dropdownNotifyVisible)
   }
 
@@ -68,17 +67,18 @@ const Sidebar = () => {
     const fetchFriendRequests = async () => {
       try {
         const response = await userService.getAddFriendRequestNotification()
+        console.log(response.data)
         if (response) {
-          const newFriends = response.data.filter((request) => request.status === 'pending')
-          console.log(newFriends)
-          setFriendRequests(newFriends)
+          const newFriendsRequest = response.data.filter((request) => request.status === 'pending')
+          console.log(newFriendsRequest)
+          setFriendRequests(newFriendsRequest)
         }
       } catch (error) {
         console.error('Failed to fetch friend requests', error)
       }
     }
     fetchFriendRequests()
-  }, [])
+  }, [friendRequestNotfication])
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
