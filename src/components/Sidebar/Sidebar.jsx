@@ -30,8 +30,9 @@ const Sidebar = () => {
   // Friend request notification
   const friendRequestNotfication = useSelector((state) => state?.user.friendRequestNotification)
   const friendRequestArray = Object.entries(friendRequestNotfication)
-  let pendingRequestsCount =
-    friendRequestArray.filter((item) => item[0] === 'status' && item[1] === 'pending').length || 0
+  let pendingRequestsCount = useRef(
+    friendRequestArray.filter((item) => item[0] === 'status' && item[1] === 'pending').length || 0,
+  )
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible)
   }
@@ -70,7 +71,8 @@ const Sidebar = () => {
         console.log(response.data)
         if (response) {
           const newFriendsRequest = response.data.filter((request) => request.status === 'pending')
-          console.log(newFriendsRequest)
+          pendingRequestsCount.current = newFriendsRequest.length
+          console.log(pendingRequestsCount)
           setFriendRequests(newFriendsRequest)
         }
       } catch (error) {
@@ -112,9 +114,9 @@ const Sidebar = () => {
             <div className='flex justify-between'>
               <div onClick={handleNotificationClick} className='relative'>
                 <IoIosNotificationsOutline className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
-                {pendingRequestsCount > 0 && (
+                {pendingRequestsCount.current > 0 && (
                   <span className='absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-xs text-white'>
-                    {pendingRequestsCount}
+                    {pendingRequestsCount.current}
                   </span>
                 )}
                 {dropdownNotifyVisible && (

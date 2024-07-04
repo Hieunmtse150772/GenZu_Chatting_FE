@@ -41,7 +41,6 @@ const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
       key={userInfo?._id}
       className='flex items-center justify-between rounded-lg bg-white p-4 shadow-md dark:bg-gray-800'
     >
-      {console.log(requestId)}
       <img
         src={userInfo?.picture}
         alt='user avatar'
