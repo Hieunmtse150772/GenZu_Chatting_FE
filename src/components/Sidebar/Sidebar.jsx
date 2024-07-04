@@ -62,6 +62,7 @@ const Sidebar = () => {
       console.log('Updated friend requests:', updatedRequests)
       return updatedRequests
     })
+    pendingRequestsCount.current -= 1
   }, [])
 
   useEffect(() => {
