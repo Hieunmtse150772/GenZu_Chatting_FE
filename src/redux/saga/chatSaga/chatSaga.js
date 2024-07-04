@@ -69,9 +69,6 @@ function* fetchMessages(action) {
 function* sendAddFriendRequest(action) {
   yield call([socket, 'emit'], 'friend request', action.payload)
 }
-function* alertReques(action) {
-  yield call([socket, 'emit'], 'send request', action.payload)
-}
 function* sendMessageSaga(action) {
   const inforChat = {
     message: action.payload.message,
@@ -89,6 +86,8 @@ function* sendMessageSaga(action) {
       action.payload.idConversation.idConversation,
     )
     yield call([socket, 'emit'], 'new message', data)
+    yield put(setNewMessage(data.newMessage))
+    console.log(data)
   } catch (error) {
     console.error('Failed to send message', error)
   }

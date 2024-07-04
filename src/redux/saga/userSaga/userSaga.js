@@ -1,5 +1,6 @@
 import {
   setConversation,
+  setConversationFirst,
   setIdConversation,
   setLsConversation,
   setLsGroupChat,
@@ -10,6 +11,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 
 // Export hàm `fetchIdConversation`
 function* fetchIdConversation() {
+  console.log('checl chel')
   try {
     const response = yield call(getConversations)
     const firstConversationId = response?.data[0]?._id
@@ -17,7 +19,9 @@ function* fetchIdConversation() {
     yield put(setLsPersonalChats(response.data.filter((value) => value.isGroupChat == false)))
     yield put(setLsGroupChat(response.data.filter((value) => value.isGroupChat == true)))
     yield put(setIdConversation(firstConversationId)) // Sử dụng put
-    yield put(setConversation(firstConversationId)) // Sử dụng put
+    yield put(
+      setConversationFirst({ lsConversation: response.data, idConversation: firstConversationId }),
+    ) // Sử dụng put
   } catch (error) {
     console.error('Lỗi khi lấy idConversation:', error)
   }

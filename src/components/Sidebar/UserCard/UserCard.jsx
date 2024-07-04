@@ -47,7 +47,9 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
             ? user.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
               ? user.users[1]?.picture
               : user.users[0]?.picture
-            : user.users[0]?.picture
+            : user.avatar != null
+              ? user.avatar
+              : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`
         }
         alt='user avatar'
         className='h-12 w-12 rounded-full object-cover'

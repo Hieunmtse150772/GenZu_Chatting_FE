@@ -87,8 +87,8 @@ const messageSlice = createSlice({
     },
     handleEmojiOnMessage: (state, action) => {
       console.log('emoji_payload:', action.payload)
-      const { id_user, id_message, emoji } = action.payload;
-      action.payload.type = 'ADD';
+      const { id_user, id_message, emoji } = action.payload
+      action.payload.type = 'ADD'
       let isDiffUserId
 
       state.message = [...state.message]
@@ -98,11 +98,10 @@ const messageSlice = createSlice({
           state.message[index].emojiBy.map((emote, i) => {
             isDiffUserId = emote.sender._id == id_user
             // neu cung user id
-           if (isDiffUserId) {
-              action.payload.type = emote.emoji == emoji ? 'DELETE': 'UPDATE'
+            if (isDiffUserId) {
+              action.payload.type = emote.emoji == emoji ? 'DELETE' : 'UPDATE'
             }
           })
-          
         }
       })
       console.log('action.payload.type:', action.payload.type)
@@ -110,9 +109,7 @@ const messageSlice = createSlice({
     setEmojiOnMessage: (state, action) => {
       console.log('action:', action.payload)
     },
-    getMessagesById: (state, action) => {
-      console.log(action.payload)
-    },
+    getMessagesById: (state, action) => {},
     setNewMessage: (state, action) => {
       const newMs = action.payload
       return {
@@ -140,7 +137,7 @@ const messageSlice = createSlice({
         ],
       }
     },
-translationMessage: (state, action) => {},
+    translationMessage: (state, action) => {},
     setTranslationMessage: (state, action) => {
       console.log(action.payload)
       return {
