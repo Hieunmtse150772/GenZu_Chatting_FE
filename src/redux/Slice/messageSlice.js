@@ -113,6 +113,7 @@ const messageSlice = createSlice({
     getMessagesById: (state, action) => {},
     setNewMessage: (state, action) => {
       const newMs = action.payload
+      console.log(newMs)
       return {
         ...state,
         message: [

@@ -95,10 +95,9 @@ function* sendMessageSaga(action) {
   try {
     yield call([socket, 'emit'], 'stop_typing', action.payload.idConversation.idConversation)
     const data = yield call(sendMessageApi, inforChat, action.payload.idConversation.idConversation)
-    yield call([socket, 'emit'], 'new message', data.newMessage)
-    yield put(setNewMessage(data.newMessage))
-    console.log(data)
-    console.log(data)
+    yield call([socket, 'emit'], 'new message', data.data)
+    console.log(data.data)
+    yield put(setNewMessage(data.data))
   } catch (error) {
     console.error('Failed to send message', error)
   }
