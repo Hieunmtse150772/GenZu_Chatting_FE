@@ -57,7 +57,11 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
 
       <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
         <h3 className='truncate text-sm font-semibold'>
-          {!user.isGroupChat ? user.users[0].fullName : user.chatName}
+          {!user.isGroupChat
+            ? user.users[0]._id == JSON.parse(getCookie('userLogin')).user._id
+              ? user.users[1].fullName
+              : user.users[0].fullName
+            : user.chatName}
         </h3>
         <p className='truncate text-sm text-gray-500 dark:text-slate-500'>
           {user?.latestMessage?.message}

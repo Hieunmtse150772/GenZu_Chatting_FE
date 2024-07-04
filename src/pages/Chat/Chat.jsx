@@ -37,12 +37,12 @@ export default function Chat() {
     dispatch(setIdConversation(idConversation.idConversation))
   }, [idConversation])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (lsConversation) {
       console.log('check set conversation')
       dispatch(setConversation(idConversation))
     }
-  }, [idConversation])
+  }, [lsConversation, idConversation])
 
   useEffect(() => {
     if (toastMessage) {

@@ -16,7 +16,9 @@ function ChatHeader({ toggleInfo }) {
               ? personalChat.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
                 ? personalChat.users[1]?.picture
                 : personalChat.users[0]?.picture
-              : personalChat.users[0]?.picture
+              : personalChat.avatar != null
+                ? personalChat.avatar
+                : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`
           }
           alt='user avatar'
           className='h-16 w-16 rounded-full'
@@ -27,7 +29,7 @@ function ChatHeader({ toggleInfo }) {
               ? personalChat.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
                 ? personalChat.users[1]?.fullName
                 : personalChat.users[0]?.fullName
-              : personalChat.users[0]?.fullName}
+              : personalChat.chatName}
           </span>
           <span className='font-semibold text-gray-500 dark:text-slate-500'>Active 2h ago</span>
         </div>
