@@ -3,6 +3,8 @@ import UserCard from '../UserCard/UserCard'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import UserCardSkeleton from '../UserCard/UserCardSkeleton/UserCardSkeleton'
+import { useDispatch } from 'react-redux' 
+import { setConversation } from '@/redux/Slice/userSlice'
 
 const UserList = () => {
   const [activeTab, setActiveTab] = useState('personal')
@@ -10,9 +12,11 @@ const UserList = () => {
   const navigate = useNavigate()
   const groupChats = useSelector((state) => state.user.lsGroupChats)
   const lsChats = useSelector((state) => state.user.lsPersonalChats)
+  const dispatch = useDispatch();
   const handleUserClick = (id) => {
     navigate(`/chat/${id}`)
     setActiveUserID(id)
+    dispatch(setConversation(id))
   }
 
   return (
