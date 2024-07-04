@@ -1,5 +1,6 @@
 import { CiSettings } from 'react-icons/ci'
 import { IoIosLogOut, IoIosMenu } from 'react-icons/io'
+import { useSelector } from 'react-redux'
 import { IoIosNotificationsOutline } from 'react-icons/io'
 import userIcon from '@/assets/user_icon.jpg'
 import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
@@ -26,7 +27,11 @@ const Sidebar = () => {
   const [isPopupVisibleAddMember, setIsPopupVisibleAddMember] = useState(false)
   const [friendRequests, setFriendRequests] = useState([])
   const [dropdownNotifyVisible, setDropdownNotifyVisible] = useState(false)
-
+  // Friend request notification
+  const friendRequestNotfication = useSelector((state) => state?.user.friendRequestNotification)
+  const friendRequestArray = Object.entries(friendRequestNotfication)
+  const pendingRequestsCount =
+    friendRequestArray.filter((item) => item[0] === 'status' && item[1] === 'pending').length || 0
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible)
   }
@@ -53,7 +58,7 @@ const Sidebar = () => {
   const handleRequestHandled = useCallback((requestId) => {
     setFriendRequests((prevRequests) => {
       const updatedRequests = prevRequests.filter((request) => request.requestId !== requestId)
-      console.log('update request', updatedRequests)
+      console.log('Updated friend requests:', updatedRequests)
       return updatedRequests
     })
   }, [])
@@ -65,10 +70,13 @@ const Sidebar = () => {
         if (requests?.data?.length > 0) {
           const newFriendRequests = []
           for (const request of requests.data) {
-            console.log(request)
             const getUser = await userService.getUserById(request.sender)
             if (getUser?.user) {
-              newFriendRequests.push({ ...getUser.user, requestId: request._id })
+              newFriendRequests.push({
+                ...getUser.user,
+                requestId: request._id,
+                status: request.status,
+              })
             }
           }
           setFriendRequests(newFriendRequests)
@@ -78,7 +86,7 @@ const Sidebar = () => {
       }
     }
     fetchFriendRequests()
-  }, [])
+  }, [friendRequests.status])
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -89,6 +97,8 @@ const Sidebar = () => {
 
   return (
     <>
+      {console.log(friendRequestArray)}
+      {console.log(pendingRequestsCount)}
       {/* Hamburger menu */}
       {!isOpen && (
         <div className='fixed top-6 z-50 md:hidden'>
@@ -112,6 +122,11 @@ const Sidebar = () => {
             <div className='flex justify-between'>
               <div onClick={handleNotificationClick} className='relative'>
                 <IoIosNotificationsOutline className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
+                {pendingRequestsCount > 0 && (
+                  <span className='absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-xs text-white'>
+                    {pendingRequestsCount}
+                  </span>
+                )}
                 {dropdownNotifyVisible && (
                   <div className='absolute right-0 z-10 mt-2 w-64 transition-all ease-in'>
                     {/* Tooltip arrow */}
@@ -119,13 +134,15 @@ const Sidebar = () => {
                     <div className='overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
                       {friendRequests.length > 0 ? (
                         <ul className='divide-y divide-gray-200 dark:divide-gray-700'>
-                          {friendRequests.map((request) => (
-                            <UserInfoFriendRequest
-                              key={request._id}
-                              userInfo={request}
-                              onRequestHandled={handleRequestHandled}
-                            />
-                          ))}
+                          {friendRequests
+                            .filter((request) => request.status === 'pending')
+                            .map((request) => (
+                              <UserInfoFriendRequest
+                                key={request._id}
+                                userInfo={request}
+                                onRequestHandled={() => handleRequestHandled(request.requestId)}
+                              />
+                            ))}
                         </ul>
                       ) : (
                         <p className='p-4 text-gray-800 dark:text-gray-200'>No friend requests</p>
