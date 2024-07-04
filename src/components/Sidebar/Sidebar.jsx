@@ -52,12 +52,13 @@ const Sidebar = () => {
   }
 
   const handleNotificationClick = async () => {
+    console.log(friendRequests)
     setDropdownNotifyVisible(!dropdownNotifyVisible)
   }
 
   const handleRequestHandled = useCallback((requestId) => {
     setFriendRequests((prevRequests) => {
-      const updatedRequests = prevRequests.filter((request) => request.requestId !== requestId)
+      const updatedRequests = prevRequests.filter((request) => request.id !== requestId)
       console.log('Updated friend requests:', updatedRequests)
       return updatedRequests
     })
@@ -66,27 +67,18 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchFriendRequests = async () => {
       try {
-        const requests = await userService.getAddFriendRequest()
-        if (requests?.data?.length > 0) {
-          const newFriendRequests = []
-          for (const request of requests.data) {
-            const getUser = await userService.getUserById(request.sender)
-            if (getUser?.user) {
-              newFriendRequests.push({
-                ...getUser.user,
-                requestId: request._id,
-                status: request.status,
-              })
-            }
-          }
-          setFriendRequests(newFriendRequests)
+        const response = await userService.getAddFriendRequestNotification()
+        if (response) {
+          const newFriends = response.data.filter((request) => request.status === 'pending')
+          console.log(newFriends)
+          setFriendRequests(newFriends)
         }
       } catch (error) {
         console.error('Failed to fetch friend requests', error)
       }
     }
     fetchFriendRequests()
-  }, [friendRequests.status])
+  }, [])
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -97,8 +89,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {console.log(friendRequestArray)}
-      {console.log(pendingRequestsCount)}
       {/* Hamburger menu */}
       {!isOpen && (
         <div className='fixed top-6 z-50 md:hidden'>
@@ -138,9 +128,10 @@ const Sidebar = () => {
                             .filter((request) => request.status === 'pending')
                             .map((request) => (
                               <UserInfoFriendRequest
-                                key={request._id}
-                                userInfo={request}
-                                onRequestHandled={() => handleRequestHandled(request.requestId)}
+                                key={request.id}
+                                userInfo={request.sender}
+                                requestId={request.id}
+                                onRequestHandled={() => handleRequestHandled(request.id)}
                               />
                             ))}
                         </ul>
