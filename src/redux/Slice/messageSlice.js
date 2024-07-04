@@ -127,6 +127,7 @@ const messageSlice = createSlice({
             styles: {},
             isSpoiled: true,
             message_type: newMs.message_type,
+            messageType: newMs.messageType,
             readBy: newMs.readBy,
             emojiBy: [
               {

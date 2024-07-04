@@ -172,7 +172,8 @@ const ChatFooter = () => {
     /// GỬi upload lên server và nhận url
     if (file) {
       setSelectedFile({ file: file, type: type })
-      setPreviewUrl(URL.createObjectURL(file)) // Tạo URL xem trước
+      console.log(type)
+      setPreviewUrl({ url: URL.createObjectURL(file), type: type }) // Tạo URL xem trước
     }
   }
   const handleSendFile = async () => {
@@ -307,7 +308,30 @@ const ChatFooter = () => {
         {previewUrl && (
           <div className='bg-white px-6 dark:bg-[#6c8ea3]'>
             <div className='relative inline-block'>
-              <img src={previewUrl} alt='Preview' style={{ width: '100px', height: '100px' }} />
+              {previewUrl.type == 'image' && (
+                <img
+                  src={previewUrl.url}
+                  alt='Preview'
+                  style={{ width: '100px', height: 'auto' }}
+                />
+              )}
+              {previewUrl.type == 'video' && (
+                <video
+                  src={previewUrl.url}
+                  alt='Preview'
+                  style={{ width: '100px', height: 'auto' }}
+                />
+              )}
+              {previewUrl.type == 'file' && (
+                <a href={previewUrl.url} download>
+                  <img
+                    src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAzHuAroNuDhtPXeGxXfL-Idoctgcv2wPggA&s'
+                    alt='image file'
+                    style={{ width: '100px', height: 'auto' }}
+                  />
+                </a>
+              )}
+
               <button
                 className='absolute -right-3 -top-3'
                 onClick={() => {
@@ -456,6 +480,7 @@ const ChatFooter = () => {
           {/* Input fields for file selection */}
           <input
             type='file'
+            accept='.zip,.rar,.7z,.tar,.pdf,.doc,.docx,.xls,.xlsx,.txt'
             ref={fileInputRefs.file}
             className='hidden'
             onChange={(e) => handleFileChange(e, 'file')}

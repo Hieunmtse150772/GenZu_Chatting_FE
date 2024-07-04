@@ -28,6 +28,7 @@ function createSocketChannel(socket, idConversation) {
     socket.on('stop_typing', () => emit(setIsTyping(false)))
     socket.on('message received', (message) => {
       console.log(message.conversation)
+      console.log('message recived new ')
       if (message.conversation._id == idConversation) {
         emit(setNewMessage(message))
       }
@@ -53,7 +54,6 @@ function* handleSocketConnect(action) {
   const user = JSON.parse(getCookie('userLogin')).user
   socket.emit('setup', user)
   socket.emit('join chat', action.payload.idConversation)
-
   const socketChannel = yield call(createSocketChannel, socket, action.payload.idConversation)
   while (true) {
     const action = yield take(socketChannel)
@@ -95,8 +95,9 @@ function* sendMessageSaga(action) {
   try {
     yield call([socket, 'emit'], 'stop_typing', action.payload.idConversation.idConversation)
     const data = yield call(sendMessageApi, inforChat, action.payload.idConversation.idConversation)
-    yield call([socket, 'emit'], 'new message', data)
+    yield call([socket, 'emit'], 'new message', data.newMessage)
     yield put(setNewMessage(data.newMessage))
+    console.log(data)
     console.log(data)
   } catch (error) {
     console.error('Failed to send message', error)

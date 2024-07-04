@@ -6,9 +6,8 @@ import FeatureEmoji from '../../../FeatureEmoji/FeatureEmoji'
 import { useDispatch } from 'react-redux'
 import { setMessageSpoiled } from '../../../../redux/Slice/messageSlice'
 import './DetailMessage.css'
-import { getCookie } from '@/services/Cookies';
-import { IoMdArrowRoundDown } from "react-icons/io";
-
+import { getCookie } from '@/services/Cookies'
+import { IoMdArrowRoundDown } from 'react-icons/io'
 
 /* eslint-disable react/prop-types */
 export default function DetailMessage(props) {
@@ -22,7 +21,7 @@ export default function DetailMessage(props) {
 
   const dispatch = useDispatch()
   const messages = useSelector((state) => state.message.message)
-  
+
   const handleUserClick = (id_message) => {
     setActiveMessageID(id_message)
   }
@@ -42,11 +41,11 @@ export default function DetailMessage(props) {
   // const session = sessionStorage.getItem("userLogin")
   const session = Object.values(JSON.parse(getCookie('userLogin')))
 
-  const sessionArray = Object.keys(session).map(key => {
-    return session[key]._id;
-  });
+  const sessionArray = Object.keys(session).map((key) => {
+    return session[key]._id
+  })
 
-  const sessionId = sessionArray[2];
+  const sessionId = sessionArray[2]
   // const message = useSelector((state) => state.message.message)
 
   const handleMessageHoverd = (id_message) => {
@@ -66,7 +65,6 @@ export default function DetailMessage(props) {
     handleUserOptionClick(id_message)
   }
 
-  
   const handleClickOutside = (e) => {
     if (
       emoteRef.current &&
@@ -89,7 +87,7 @@ export default function DetailMessage(props) {
       dispatch(setMessageSpoiled({ id_message }))
     }
   }
-  
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
@@ -97,7 +95,7 @@ export default function DetailMessage(props) {
     }
   }, [])
 
-  useEffect(() =>{
+  useEffect(() => {
     props.handleToBottom()
   }, [messages])
 
@@ -105,135 +103,190 @@ export default function DetailMessage(props) {
     <div id='messages' className='mx-2'>
       {messages.map((item, index) =>
         item.sender != null && sessionId == item.sender._id ? (
+          <div
+            key={index}
+            className='flex justify-end'
+            onMouseEnter={() => handleMessageHoverd(item._id)}
+          >
             <div
-              key={index}
-              className='flex justify-end'
-              onMouseEnter={() => handleMessageHoverd(item._id)}
-            >
-              <div
-                className={`${
-                  isOptionSelected && activeMessageOptionID == item._id
+              className={`${
+                isOptionSelected && activeMessageOptionID == item._id
+                  ? 'opacity-100'
+                  : isOptionBtnClick && activeMessageID == item._id
                     ? 'opacity-100'
-                    : isOptionBtnClick && activeMessageID == item._id
-                      ? 'opacity-100'
-                      : 'opacity-0 group-hover:opacity-100'
-                }`}
-                ref={optionRef}
+                    : 'opacity-0 group-hover:opacity-100'
+              }`}
+              ref={optionRef}
+            >
+              <FeatureAI
+                message={item.message}
+                id={item._id}
+                callBackOptionClick={() => handleOptionClick(item._id)}
+              />
+            </div>
+
+            <div className='relative'>
+              <div
+                className={`my-4 max-w-xs rounded-lg bg-blue-200 p-2 ${item.isSpoiled || item.isSpoiled === undefined ? 'show' : 'hide'}`}
+                style={{
+                  fontWeight: item.styles.bold ? 'bold' : 'normal',
+                  fontStyle: item.styles.italic ? 'italic' : 'normal',
+                  textDecoration: item.styles.underline ? 'underline' : 'none',
+                }}
+                onClick={() => handleSpoiledClick(item._id)}
               >
-                <FeatureAI
-                  message={item.message}
-                  id={item._id}
-                  callBackOptionClick={() => handleOptionClick(item._id)}
-                />
-              </div>
-  
-              <div className='relative'>
-                <div
-                  className={`my-4 max-w-xs rounded-lg bg-blue-200 p-2 ${item.isSpoiled || item.isSpoiled === undefined ? 'show' : 'hide'}`}
-                  style={{
-                    fontWeight: item.styles.bold ? 'bold' : 'normal',
-                    fontStyle: item.styles.italic ? 'italic' : 'normal',
-                    textDecoration: item.styles.underline ? 'underline' : 'none',
-                  }}
-                  onClick={() => handleSpoiledClick(item._id)}
-                >
-                  {item.message}
-                </div>
-                {/* Emote */}
-                {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
-                  <div className='absolute right-px z-10' ref={emoteRef}>
-                    <FeatureEmoji
-                      isActive={isEmoteBtnClick}
-                      item={item}
-                      sessionId={sessionId}
-                      handleCallBack={handleEmoteClick}
-                    />
-                  </div>
-                ) : (
-                  <></>
+                {item.messageType === 'image' && (
+                  <img
+                    className='h-auto w-full'
+                    src={item.message}
+                    alt='Uploaded content'
+                    style={{ width: 'auto', height: '200px' }}
+                  />
                 )}
-  
-                <div
-                  className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 rounded-md${
-                    isOptionBtnClick && activeMessageID == item._id
-                      ? 'opacity-100'
-                      : 'opacity-0 group-hover:opacity-100'
-                  }`}
-                  ref={buttonRef}
-                  onClick={() => handleEmoteClick(item._id)}
-                >
-                  {/* show react emote  */}
-                  {item.emojiBy.length != 0 ? (
+                {item.messageType === 'audio' && (
+                  <audio className='w-full' controls src={item.message} />
+                )}
+                {item.messageType === 'video' && (
+                  <video
+                    className='w-full'
+                    controls
+                    src={item.message}
+                    style={{ width: 'auto', height: '400px' }}
+                  />
+                )}
+                {item.messageType === 'file' && (
+                  <a href={item.message} download>
+                    <img
+                      src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAzHuAroNuDhtPXeGxXfL-Idoctgcv2wPggA&s'
+                      alt='image file'
+                      style={{ width: '100px', height: 'auto' }}
+                    />
+                  </a>
+                )}
+                {item.messageType == 'text' && item.message}
+              </div>
+              {/* Emote */}
+              {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
+                <div className='absolute right-px z-10' ref={emoteRef}>
+                  <FeatureEmoji
+                    isActive={isEmoteBtnClick}
+                    item={item}
+                    sessionId={sessionId}
+                    handleCallBack={handleEmoteClick}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+
+              <div
+                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 rounded-md${
+                  isOptionBtnClick && activeMessageID == item._id
+                    ? 'opacity-100'
+                    : 'opacity-0 group-hover:opacity-100'
+                }`}
+                ref={buttonRef}
+                onClick={() => handleEmoteClick(item._id)}
+              >
+                {/* show react emote  */}
+                {item.emojiBy.length != 0 ? (
                   item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
                 ) : (
-                      <MdOutlineEmojiEmotions size={14} />
-                    )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div
-              key={index}
-              className='flex'
-              onMouseEnter={() => {
-                handleMessageHoverd(item._id)
-              }}
-            >
-              <div className='relative'>
-                <div className='my-4 max-w-xs rounded-lg bg-gray-300 p-2 text-black'>
-                  {item.message}
-                </div>
-                {/* emote */}
-                <div
-                  className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 rounded-md${
-                    isOptionBtnClick && activeMessageID == item._id
-                      ? 'opacity-100'
-                      : 'opacity-0 group-hover:opacity-100'
-                  }`}
-                  ref={buttonRef}
-                  onClick={() => handleEmoteClick(item._id)}
-                >
-                  {/* show react emote  */}
-                  {item.emojiBy.length != 0 ? (
-                  item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
-                ) : (
-                      <MdOutlineEmojiEmotions size={14} />
-                    )}
-                </div>
-                {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
-                  <div className='absolute z-10' ref={emoteRef}>
-                    <FeatureEmoji
-                     isActive={isEmoteBtnClick}
-                     item={item}
-                     sessionId={sessionId}
-                     handleCallBack={handleEmoteClick}
-                    />
-                  </div>
-                ) : (
-                  <></>
+                  <MdOutlineEmojiEmotions size={14} />
                 )}
               </div>
-  
-              <div
-                className={`${
-                  isOptionSelected && activeMessageOptionID == item._id
-                    ? 'opacity-100'
-                    : isOptionBtnClick && activeMessageID == item._id
-                      ? 'opacity-100'
-                      : 'opacity-0 group-hover:opacity-100'
-                }`}
-                ref={optionRef}
-              >
-                <FeatureAI
-                  message={item.message}
-                  id={item._id}
-                  callBackOptionClick={() => handleOptionClick(item._id)}
-                />
-              </div>
             </div>
-          ),
-        )}
-      
+          </div>
+        ) : (
+          <div
+            key={index}
+            className='flex'
+            onMouseEnter={() => {
+              handleMessageHoverd(item._id)
+            }}
+          >
+            <div className='relative'>
+              <div className='my-4 max-w-xs rounded-lg bg-gray-300 p-2 text-black'>
+                {item.messageType === 'image' && (
+                  <img
+                    className='h-auto w-full'
+                    src={item.message}
+                    alt='Uploaded content'
+                    style={{ width: 'auto', height: '200px' }}
+                  />
+                )}
+                {item.messageType === 'audio' && (
+                  <audio className='w-full' controls src={item.message} />
+                )}
+                {item.messageType === 'video' && (
+                  <video
+                    className='w-full'
+                    controls
+                    src={item.message}
+                    style={{ width: 'auto', height: '400px' }}
+                  />
+                )}
+                {item.messageType === 'file' && (
+                  <a href={item.message} download>
+                    <img
+                      src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAzHuAroNuDhtPXeGxXfL-Idoctgcv2wPggA&s'
+                      alt='image file'
+                      style={{ width: '100px', height: 'auto' }}
+                    />
+                  </a>
+                )}
+                {item.messageType == 'text' && item.message}
+              </div>
+              {/* emote */}
+              <div
+                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 rounded-md${
+                  isOptionBtnClick && activeMessageID == item._id
+                    ? 'opacity-100'
+                    : 'opacity-0 group-hover:opacity-100'
+                }`}
+                ref={buttonRef}
+                onClick={() => handleEmoteClick(item._id)}
+              >
+                {/* show react emote  */}
+                {item.emojiBy.length != 0 ? (
+                  item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
+                ) : (
+                  <MdOutlineEmojiEmotions size={14} />
+                )}
+              </div>
+              {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
+                <div className='absolute z-10' ref={emoteRef}>
+                  <FeatureEmoji
+                    isActive={isEmoteBtnClick}
+                    item={item}
+                    sessionId={sessionId}
+                    handleCallBack={handleEmoteClick}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+
+            <div
+              className={`${
+                isOptionSelected && activeMessageOptionID == item._id
+                  ? 'opacity-100'
+                  : isOptionBtnClick && activeMessageID == item._id
+                    ? 'opacity-100'
+                    : 'opacity-0 group-hover:opacity-100'
+              }`}
+              ref={optionRef}
+            >
+              <FeatureAI
+                message={item.message}
+                id={item._id}
+                callBackOptionClick={() => handleOptionClick(item._id)}
+              />
+            </div>
+          </div>
+        ),
+      )}
     </div>
   )
 }
