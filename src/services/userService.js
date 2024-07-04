@@ -56,6 +56,15 @@ const sendFriendRequest = async (receiverId) => {
   }
 }
 
+const getAddFriendRequestNotification = async () => {
+  try {
+    const response = await axiosClient.get('/friends/addFriendRequestNotification')
+    return response.data
+  } catch (error) {
+    console.error('Failed to get add friend request notifcation', error)
+  }
+}
+
 const deleteFriendRequestHasBeenSent = async (requestId) => {
   try {
     const response = await axiosClient.delete(`/friends/friendRequestHasBeenSent?id=${requestId}`)
@@ -121,6 +130,7 @@ export default {
   getFriendRequestHasBeenSent,
   deleteFriendRequestHasBeenSent,
   acceptFriendRequest,
+  getAddFriendRequestNotification,
   rejectFriendRequest,
   getAddFriendRequest,
   getUserById,

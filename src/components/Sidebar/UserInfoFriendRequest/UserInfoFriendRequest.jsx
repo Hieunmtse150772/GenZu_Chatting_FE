@@ -3,7 +3,7 @@ import userService from '../../../services/userService'
 import { setToastMessage } from '../../../redux/Slice/userSlice'
 import { useDispatch } from 'react-redux'
 
-const UserInfoFriendRequest = ({ userInfo, onRequestHandled }) => {
+const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
 
@@ -12,7 +12,7 @@ const UserInfoFriendRequest = ({ userInfo, onRequestHandled }) => {
     try {
       const response = await userService.acceptFriendRequest(requestId)
       dispatch(setToastMessage('Friend request accepted successfully!'))
-      onRequestHandled(userInfo?.requestId)
+      onRequestHandled(userInfo?._id)
     } catch (error) {
       console.error('Failed to accept friend request', error)
       dispatch(setToastMessage('Failed to accept friend request'))
@@ -26,7 +26,7 @@ const UserInfoFriendRequest = ({ userInfo, onRequestHandled }) => {
     try {
       const response = await userService.deleteFriendRequestHasBeenSent(requestId)
       dispatch(setToastMessage('Friend request has declined!'))
-      onRequestHandled(userInfo?.requestId)
+      onRequestHandled(userInfo?._id)
       return response
     } catch (error) {
       console.error('Failed to cancel friend request', error)
@@ -41,6 +41,7 @@ const UserInfoFriendRequest = ({ userInfo, onRequestHandled }) => {
       key={userInfo?._id}
       className='flex items-center justify-between rounded-lg bg-white p-4 shadow-md dark:bg-gray-800'
     >
+      {console.log(requestId)}
       <img
         src={userInfo?.picture}
         alt='user avatar'
@@ -54,14 +55,14 @@ const UserInfoFriendRequest = ({ userInfo, onRequestHandled }) => {
           <button
             className='rounded border-b-2 border-b-blue-500 px-3 py-1 text-blue-500 hover:bg-red-600 hover:text-white'
             onClick={() => {
-              handleCancelFriendRequest(userInfo?.requestId)
+              handleCancelFriendRequest(requestId)
             }}
           >
             {isLoading ? 'Loading...' : 'Cancel'}
           </button>
           <button
             className='rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
-            onClick={() => handleAcceptFriendRequest(userInfo?.requestId)}
+            onClick={() => handleAcceptFriendRequest(requestId)}
             disabled={isLoading}
           >
             {isLoading ? 'Loading...' : 'Accept'}

@@ -32,7 +32,7 @@ axiosClient.interceptors.response.use(
     if (
       error.response?.status === 401 ||
       (error?.response?.status === 403 && !originalRequest._retry) ||
-      error.response.status === 500
+      error.response?.data?.status === 500
     ) {
       originalRequest._retry = true
 
