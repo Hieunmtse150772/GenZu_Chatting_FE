@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import userService from '@/services/userService'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getIdConversation } from '@/redux/Slice/userSlice'
 
 const LoginForm = (props) => {
   const [email, setEmail] = useState('')
@@ -9,6 +11,8 @@ const LoginForm = (props) => {
   const [loading, setLoading] = useState(false)
   const [rememberme, SetRememberme] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const idConversation = useSelector((state) => state.user.idConversation)
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -17,7 +21,7 @@ const LoginForm = (props) => {
     try {
       const user = await userService.signIn(email, password, rememberme)
       if (user) {
-        navigate(`chat/${user?.user?._id}`)
+        dispatch(getIdConversation())
       }
       // Handle successful login here (e.g., save token, redirect)
     } catch (err) {
@@ -27,7 +31,11 @@ const LoginForm = (props) => {
       setLoading(false)
     }
   }
-
+  useEffect(() => {
+    if (idConversation !== null) {
+      navigate(`/chat/${idConversation}`)
+    }
+  }, [idConversation])
   return (
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>

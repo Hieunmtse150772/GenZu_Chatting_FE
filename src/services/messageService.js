@@ -4,9 +4,16 @@ export const getConversations = () => {
   return axiosClient.get('/conversations')
 }
 
-export const getMessages = (messageId) => {
-  console.log(messageId)
-  return axiosClient.get(`/messages/${messageId}`)
+export const getMessages = async (messageId) => {
+  try {
+    console.log(messageId)
+    const response = await axiosClient.get(`/messages/${messageId}`)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error('Lỗi khi gửi tin nhắn qua API:', error)
+    throw error // Ném lỗi để saga có thể bắt
+  }
 }
 export const sendMessageApi = async (message, id) => {
   console.log(message)

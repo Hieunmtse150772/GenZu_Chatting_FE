@@ -66,7 +66,7 @@ function* fetchMessages(action) {
     const response = yield call(() => {
       return getMessages(action.payload.idConversation)
     })
-    const lsMessage = response.data.data
+    const lsMessage = response.data
     yield put(setMessage(lsMessage))
     console.log(lsMessage)
   } catch (error) {

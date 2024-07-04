@@ -7,11 +7,11 @@ import {
   setLsPersonalChats,
 } from '@/redux/Slice/userSlice'
 import { getConversations } from '@/services/messageService'
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 
 // Export hàm `fetchIdConversation`
 function* fetchIdConversation() {
-  console.log('checl chel')
+  console.log('firstConversationId')
   try {
     const response = yield call(getConversations)
     const firstConversationId = response?.data[0]?._id
@@ -38,7 +38,7 @@ function* fetchConversation() {
 }
 
 function* authSaga() {
-  yield takeLatest('user/getIdConversation', fetchIdConversation)
+  yield takeEvery('user/getIdConversation', fetchIdConversation)
   yield takeLatest('user/getLsConversation', fetchConversation)
 }
 

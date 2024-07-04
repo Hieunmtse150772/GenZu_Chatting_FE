@@ -12,7 +12,6 @@ export default function Home() {
   useLayoutEffect(() => {
     if (checkCookie()) {
       dispatch(getIdConversation())
-      
     }
     // !checkCookie() ?: navigate('/chat/123456')
   }, [dispatch, navigate])
@@ -20,10 +19,9 @@ export default function Home() {
     if (idConversation !== null) {
       navigate(`/chat/${idConversation}`)
     }
-  }, [idConversation, navigate])
+  }, [idConversation])
   return (
     <div>
-      {checkCookie() ? <Login /> : ''}
       <Login />
     </div>
   )
