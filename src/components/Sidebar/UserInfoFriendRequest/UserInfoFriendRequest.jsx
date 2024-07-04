@@ -1,20 +1,21 @@
 import { useState } from 'react'
 import userService from '../../../services/userService'
-import ToastMessage from './ToastMessage/ToastMessage'
+import { setToastMessage } from '../../../redux/Slice/userSlice'
+import { useDispatch } from 'react-redux'
 
 const UserInfoFriendRequest = ({ userInfo, onRequestHandled }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [message, setMessage] = useState('')
+  const dispatch = useDispatch()
 
   const handleAcceptFriendRequest = async (requestId) => {
     setIsLoading(true)
     try {
       const response = await userService.acceptFriendRequest(requestId)
-      setMessage('Friend request accepted successfully!')
-      onRequestHandled(response?.data?._id)
+      dispatch(setToastMessage('Friend request accepted successfully!'))
+      onRequestHandled(userInfo?.requestId)
     } catch (error) {
       console.error('Failed to accept friend request', error)
-      setMessage('Failed to accept friend request')
+      dispatch(setToastMessage('Failed to accept friend request'))
     } finally {
       setIsLoading(false)
     }
@@ -24,13 +25,12 @@ const UserInfoFriendRequest = ({ userInfo, onRequestHandled }) => {
     setIsLoading(true)
     try {
       const response = await userService.deleteFriendRequestHasBeenSent(requestId)
-      console.log(response)
-      setMessage('Friend request has declined!')
-      onRequestHandled(requestId)
+      dispatch(setToastMessage('Friend request has declined!'))
+      onRequestHandled(userInfo?.requestId)
       return response
     } catch (error) {
       console.error('Failed to cancel friend request', error)
-      setMessage('Failed to cancel friend request')
+      dispatch(setToastMessage('Failed to cancel friend request'))
     } finally {
       setIsLoading(false)
     }
@@ -67,7 +67,7 @@ const UserInfoFriendRequest = ({ userInfo, onRequestHandled }) => {
             {isLoading ? 'Loading...' : 'Accept'}
           </button>
         </div>
-        {message && <ToastMessage message={message} />}
+        {/* {message && <ToastMessage message={message} />} */}
       </div>
     </li>
   )

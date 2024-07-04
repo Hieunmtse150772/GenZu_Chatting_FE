@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import ChatBody from '../../components/ChatPage/ChatBody/ChatBody'
+import ToastMessage from '../../components/ToastMessage/ToastMessage'
 import InformationConversation from '../../components/ChatPage/InformationConversation/InformationConversation'
 import { useDispatch } from 'react-redux'
 
 import { useParams } from 'react-router-dom'
 import { getMessagesById } from '../../redux/Slice/messageSlice'
 import {
-  getIdConversation,
-  getLsConversation,
-  setConversation,
+  clearToastMessage,
   setIdConversation,
-} from '@/redux/Slice/userSlice'
+  getLsConversation,
+} from '../../redux/Slice/userSlice'
+import { useSelector } from 'react-redux'
 import { connectSocket } from '@/redux/Slice/chatSlice'
 
 export default function Chat() {
   const [showInfo, setShowInfo] = useState(false)
   const dispatch = useDispatch()
+  const toastMessage = useSelector((state) => state?.user?.toastMessage)
+
   const toggleInfo = () => {
     setShowInfo(!showInfo)
   }
@@ -30,9 +33,18 @@ export default function Chat() {
     dispatch(setIdConversation(idConversation.idConversation))
   })
 
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        dispatch(clearToastMessage()) // Clear the toast message after 2 seconds
+      }, 2000)
+      return () => clearTimeout(timer) // Cleanup the timer on unmount
+    }
+  }, [dispatch, toastMessage])
+
   return (
     <div className='fixed w-full'>
-      <div className='Login'>
+      <div className='Login relative'>
         <main className='flex'>
           <Sidebar />
           <ChatBody toggleInfo={toggleInfo} />
@@ -42,6 +54,7 @@ export default function Chat() {
             </div>
           )}
         </main>
+        {toastMessage && <ToastMessage message={toastMessage} />}
       </div>
     </div>
   )

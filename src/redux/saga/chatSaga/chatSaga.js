@@ -14,6 +14,7 @@ import {
   updateEmoji,
   deleteEmoji,
 } from '@/services/messageService'
+import { setFriendRequestNotification } from '../../Slice/userSlice'
 import { eventChannel } from 'redux-saga'
 import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects'
 import { io } from 'socket.io-client'
@@ -30,6 +31,10 @@ function createSocketChannel(socket, idConversation) {
       if (message.conversation._id == idConversation) {
         emit(setNewMessage(message))
       }
+    })
+    socket.on('received request', (newRequest) => {
+      console.log(newRequest)
+      emit(setFriendRequestNotification(newRequest))
     })
     return () => {
       socket.off('connected')

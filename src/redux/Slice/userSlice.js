@@ -74,6 +74,8 @@ const initialState = {
   editUser: false,
   idConversation: null,
   conversation: null,
+  toastMessage: '',
+  friendRequestNotification: [],
 }
 
 const userSlice = createSlice({
@@ -126,7 +128,16 @@ const userSlice = createSlice({
         lsPersonalChats: action.payload,
       }
     },
+    setToastMessage: (state, action) => {
+      state.toastMessage = action.payload
+    },
+    clearToastMessage: (state) => {
+      state.toastMessage = null
+    },
     alertFriendRequest: (state, action) => {},
+    setFriendRequestNotification: (state, action) => {
+      state.friendRequestNotification = action.payload
+    },
     setConversation: (state, action) => {
       console.log(action.payload)
       return {
@@ -149,6 +160,9 @@ export const {
   setLsGroupChat,
   setLsPersonalChats,
   alertFriendRequest,
+  setFriendRequestNotification,
   setConversation,
+  setToastMessage,
+  clearToastMessage,
 } = userSlice.actions
 export default userSlice.reducer
