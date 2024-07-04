@@ -75,21 +75,18 @@ function* sendAddFriendRequest(action) {
   yield call([socket, 'emit'], 'friend request', action.payload)
 }
 function* sendMessageSaga(action) {
+  console.log(action.payload)
   const inforChat = {
     message: action.payload.message,
     isSpoiled: action.payload.isSpoiled,
-    messageType: 'string',
+    messageType: action.payload.messageType ? action.payload.messageType : 'text',
     styles: action.payload.styles,
   }
   console.log(inforChat)
 
   try {
     yield call([socket, 'emit'], 'stop_typing', action.payload.idConversation.idConversation)
-    const data = yield call(
-      sendMessageApi,
-      inforChat.message,
-      action.payload.idConversation.idConversation,
-    )
+    const data = yield call(sendMessageApi, inforChat, action.payload.idConversation.idConversation)
     yield call([socket, 'emit'], 'new message', data)
     yield put(setNewMessage(data.newMessage))
     console.log(data)

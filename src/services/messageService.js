@@ -9,9 +9,9 @@ export const getMessages = (messageId) => {
   return axiosClient.get(`/messages/${messageId}`)
 }
 export const sendMessageApi = async (message, id) => {
+  console.log(message)
   try {
-        const response = await axiosClient.post(`/messages/send?id=${id}`, { message })
-    console.log(response)
+    const response = await axiosClient.post(`/messages/send?id=${id}`, message)
     return response.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)
@@ -20,13 +20,13 @@ export const sendMessageApi = async (message, id) => {
 }
 
 export const addEmoji = async (messageId, emoji) => {
-  try{
+  try {
     console.log(messageId, emoji)
     const response = await axiosClient.post(`/messages/emoji?id=${messageId}`, {
-                                              emoji
-                                            })
+      emoji,
+    })
     return response.data
-  } catch( error){
+  } catch (error) {
     console.error('lỗi add emoji vao db', error)
     throw error
   }
@@ -35,7 +35,7 @@ export const addEmoji = async (messageId, emoji) => {
 export const updateEmoji = (emojiId, newEmoji) => {
   console.log(emojiId, newEmoji)
   return axiosClient.patch(`/messages/emoji?id=${emojiId}`, {
-    newEmoji
+    newEmoji,
   })
 }
 

@@ -28,6 +28,7 @@ const messageSlice = createSlice({
   reducers: {
     sendMessage: (state, action) => {},
     setMessage: (state, action) => {
+      console.log(action.payload)
       return {
         ...state,
         message: action.payload.map((value) => ({
@@ -39,7 +40,7 @@ const messageSlice = createSlice({
           updatedAt: value.updatedAt,
           styles: {},
           isSpoiled: true,
-          message_type: value.message_type,
+          messageType: value.messageType == null ? 'text' : value.messageType,
           readBy: value.readBy,
           emojiBy: value.emojiBy,
         })),

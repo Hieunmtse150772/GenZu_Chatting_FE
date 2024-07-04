@@ -193,6 +193,7 @@ const ChatFooter = () => {
           },
           isSpoiled: isSpoiled,
           idConversation: param,
+          messageType: selectedFile.type,
         }
         dispatch(sendMessage(messageData))
         setPreviewUrl(null)
