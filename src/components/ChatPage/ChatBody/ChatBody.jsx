@@ -1,7 +1,6 @@
 import ChatHeader from '../ChatHeader/ChatHeader'
 import ChatFooter from '../ChatFooter/ChatFooter'
 import DetailMessage from './DetailMessage/DetailMessage'
-import { useSelector } from 'react-redux'
 
 function ChatBody({ toggleInfo }) {
   return (
