@@ -135,6 +135,7 @@ const userSlice = createSlice({
       state.toastMessage = null
     },
     alertFriendRequest: (state, action) => {},
+    setReadNotification: (state, action) => {},
     setFriendRequestNotification: (state, action) => {
       state.friendRequestNotification = action.payload
     },
