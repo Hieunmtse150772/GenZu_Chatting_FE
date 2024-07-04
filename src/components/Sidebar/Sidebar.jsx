@@ -30,7 +30,7 @@ const Sidebar = () => {
   // Friend request notification
   const friendRequestNotfication = useSelector((state) => state?.user.friendRequestNotification)
   const friendRequestArray = Object.entries(friendRequestNotfication)
-  const pendingRequestsCount =
+  let pendingRequestsCount =
     friendRequestArray.filter((item) => item[0] === 'status' && item[1] === 'pending').length || 0
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible)

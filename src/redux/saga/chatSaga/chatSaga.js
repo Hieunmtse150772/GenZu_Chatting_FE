@@ -36,6 +36,9 @@ function createSocketChannel(socket, idConversation) {
       console.log(newRequest)
       emit(setFriendRequestNotification(newRequest))
     })
+    socket.on('isRead', (read) => {
+      console.log(read)
+    })
     return () => {
       socket.off('connected')
       socket.off('typing')
@@ -74,6 +77,11 @@ function* fetchMessages(action) {
 function* sendAddFriendRequest(action) {
   yield call([socket, 'emit'], 'friend request', action.payload)
 }
+
+function* sendReadNotification(action) {
+  yield call([socket, 'emit'], 'read request', action.payload)
+}
+
 function* sendMessageSaga(action) {
   const inforChat = {
     message: action.payload.message,
@@ -136,6 +144,7 @@ function* setEmoji(action) {
 }
 
 export default function* chatSaga() {
+  yield takeLatest('user/setReadNotification', sendReadNotification)
   yield takeLatest('user/alertFriendRequest', sendAddFriendRequest)
   yield takeLatest('message/translationMessage', translationTextSaga)
   yield takeLatest('chat/connectSocket', handleSocketConnect)
