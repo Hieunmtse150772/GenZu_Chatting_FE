@@ -2,6 +2,7 @@ import { useState } from 'react'
 import UserCard from '../UserCard/UserCard'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import UserCardSkeleton from '../UserCard/UserCardSkeleton/UserCardSkeleton'
 
 const UserList = () => {
   const [activeTab, setActiveTab] = useState('personal')
@@ -16,6 +17,7 @@ const UserList = () => {
 
   return (
     <section className='h-full w-full'>
+      {console.log(lsChats, groupChats)}
       <div className='mt-4 flex'>
         <button
           onClick={() => setActiveTab('personal')}
@@ -39,24 +41,30 @@ const UserList = () => {
         </button>
       </div>
       <div className='mt-4 h-full overflow-y-auto'>
-        {activeTab === 'personal' &&
-          lsChats.map((item) => (
-            <UserCard
-              user={item}
-              key={item._id}
-              isActive={activeUserID === item._id}
-              onUserCardClick={() => handleUserClick(item._id)}
-            />
-          ))}
-        {activeTab === 'group' &&
-          groupChats.map((item) => (
-            <UserCard
-              user={item}
-              key={item._id}
-              isActive={activeUserID === item._id}
-              onUserCardClick={() => handleUserClick(item._id)}
-            />
-          ))}
+        {lsChats.length == 0 && groupChats.length == 0 ? (
+          <UserCardSkeleton />
+        ) : (
+          <>
+            {activeTab === 'personal' &&
+              lsChats.map((item) => (
+                <UserCard
+                  user={item}
+                  key={item._id}
+                  isActive={activeUserID === item._id}
+                  onUserCardClick={() => handleUserClick(item._id)}
+                />
+              ))}
+            {activeTab === 'group' &&
+              groupChats.map((item) => (
+                <UserCard
+                  user={item}
+                  key={item._id}
+                  isActive={activeUserID === item._id}
+                  onUserCardClick={() => handleUserClick(item._id)}
+                />
+              ))}
+          </>
+        )}
       </div>
     </section>
   )

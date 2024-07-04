@@ -102,7 +102,7 @@ const Sidebar = () => {
       )}
       <div
         ref={sidebarRef}
-        className={`fixed inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out md:relative md:block md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 h-screen transform transition-transform duration-300 ease-in-out md:relative md:block md:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

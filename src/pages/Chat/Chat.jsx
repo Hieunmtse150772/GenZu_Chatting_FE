@@ -39,9 +39,10 @@ export default function Chat() {
 
   useLayoutEffect(() => {
     if (lsConversation) {
+      console.log('check set conversation')
       dispatch(setConversation(idConversation))
     }
-  }, [lsConversation])
+  }, [idConversation])
 
   useEffect(() => {
     if (toastMessage) {
