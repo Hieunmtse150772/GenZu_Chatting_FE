@@ -21,5 +21,10 @@ export default function Home() {
       navigate(`/chat/${idConversation}`)
     }
   }, [idConversation])
-  return <div>{idConversation !== null ? <Login /> : <LoadingSpinner />}</div>
+  return (
+    <div>
+      {console.log(checkCookie)}
+      {checkCookie ? <Login /> : <LoadingSpinner />}
+    </div>
+  )
 }

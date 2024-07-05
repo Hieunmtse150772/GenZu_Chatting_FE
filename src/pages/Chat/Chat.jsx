@@ -5,7 +5,7 @@ import ToastMessage from '../../components/ToastMessage/ToastMessage'
 import InformationConversation from '../../components/ChatPage/InformationConversation/InformationConversation'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getMessagesById } from '../../redux/Slice/messageSlice'
 import {
   clearToastMessage,
@@ -16,12 +16,13 @@ import {
 import { connectSocket } from '@/redux/Slice/chatSlice'
 import ChatHeaderSkeleton from '@/components/ChatPage/ChatHeader/ChatHeaderSkeleton/ChatHeaderSkeleton'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
+import { checkCookie } from '@/services/Cookies'
 
 export default function Chat() {
   const [showInfo, setShowInfo] = useState(false)
   const dispatch = useDispatch()
   const toastMessage = useSelector((state) => state?.user?.toastMessage)
-
+  const navigate = useNavigate()
   const toggleInfo = () => {
     setShowInfo(!showInfo)
   }
@@ -54,6 +55,11 @@ export default function Chat() {
       return () => clearTimeout(timer) // Cleanup the timer on unmount
     }
   }, [dispatch, toastMessage])
+  useLayoutEffect(() => {
+    if (checkCookie) {
+      navigate('/')
+    }
+  }, [])
 
   return (
     <div className='fixed w-full'>
