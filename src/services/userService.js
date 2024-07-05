@@ -4,8 +4,8 @@ import { setCookie } from './Cookies'
 const signIn = async (email, password, rememberMe) => {
   try {
     const response = await axiosClient.post('/auth/sign-in', { email, password })
-
-    const { accessToken, refreshToken, user } = response.data
+    console.log(response)
+    const { accessToken, refreshToken, user } = response.data.data
 
     const userData = {
       accessToken,
