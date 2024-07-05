@@ -59,8 +59,8 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
         <h3 className='truncate text-sm font-semibold'>
           {!user.isGroupChat
             ? user.users[0]._id == JSON.parse(getCookie('userLogin')).user._id
-              ? user.users[1].fullName
-              : user.users[0].fullName
+              ? user.users[1]?.fullName
+              : user.users[0]?.fullName
             : user.chatName}
         </h3>
         <p className='truncate text-sm text-gray-500 dark:text-slate-500'>
