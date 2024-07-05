@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import Login from './Login/Login'
 import { useDispatch, useSelector } from 'react-redux'
 import { getIdConversation } from '@/redux/Slice/userSlice'
+import LoadingSpinner from './Chat/ChatSkeleton/ChatSkeleton'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -20,9 +21,5 @@ export default function Home() {
       navigate(`/chat/${idConversation}`)
     }
   }, [idConversation])
-  return (
-    <div>
-      <Login />
-    </div>
-  )
+  return <div>{idConversation !== null ? <Login /> : <LoadingSpinner />}</div>
 }

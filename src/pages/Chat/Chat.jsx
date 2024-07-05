@@ -14,6 +14,8 @@ import {
   setIdConversation,
 } from '@/redux/Slice/userSlice'
 import { connectSocket } from '@/redux/Slice/chatSlice'
+import ChatHeaderSkeleton from '@/components/ChatPage/ChatHeader/ChatHeaderSkeleton/ChatHeaderSkeleton'
+import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 
 export default function Chat() {
   const [showInfo, setShowInfo] = useState(false)
@@ -58,7 +60,7 @@ export default function Chat() {
       <div className='Login relative'>
         <main className='flex'>
           <Sidebar />
-          {conversation && <ChatBody toggleInfo={toggleInfo} />}
+          {conversation ? <ChatBody toggleInfo={toggleInfo} /> : <LoadingSpinner />}
           {showInfo && (
             <div className='w-1/3'>
               <InformationConversation />
