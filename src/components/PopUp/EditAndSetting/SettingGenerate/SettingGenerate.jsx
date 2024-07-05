@@ -7,8 +7,8 @@ import { PiStickerLight } from 'react-icons/pi'
 import { LuFileQuestion } from 'react-icons/lu'
 import { MdOutlineWorkspacePremium } from 'react-icons/md'
 import GeneralSettings from './SettingItems/GeneralSettings/GeneralSettings'
-import { MdOutlinePolicy } from 'react-icons/md'
-
+import FriendList from './SettingItems/FriendList/FriendList'
+import { RiUser5Line } from 'react-icons/ri'
 import SettingItems from './SettingItems/SettingItems'
 import { useState } from 'react'
 
@@ -18,6 +18,8 @@ export default function SettingGenerate() {
   const handleItemClick = (label) => {
     if (label === 'General settings') {
       setView('general')
+    } else if (label === 'Friend lists') {
+      setView('friends')
     }
   }
 
@@ -46,12 +48,22 @@ export default function SettingGenerate() {
             <SettingItems icon={PiStickerLight} size={24} label={'Stickers and Emoji'} />
             <SettingItems icon={LuFileQuestion} size={24} label={'Ask a question'} />
             <SettingItems icon={MdOutlineWorkspacePremium} size={24} label={'Get Premium'} />
-            <SettingItems icon={MdOutlinePolicy} size={24} label={'Privacy policy'} />
+            <SettingItems
+              icon={RiUser5Line}
+              size={24}
+              label={'Friend lists'}
+              onSettingItemClick={handleItemClick}
+            />
           </>
         )}
         {view === 'general' && (
-          <div className='absolute inset-0 left-0 top-0 z-10 h-full w-full translate-x-0 transform bg-white transition-transform duration-300 ease-in-out'>
+          <div className='translate-x-01 absolute inset-0 left-0 top-0 z-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out'>
             <GeneralSettings onBack={handleBack} />
+          </div>
+        )}
+        {view === 'friends' && (
+          <div className='translate-x-01 absolute inset-0 left-0 top-0 z-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out'>
+            <FriendList onBack={handleBack} />
           </div>
         )}
       </div>

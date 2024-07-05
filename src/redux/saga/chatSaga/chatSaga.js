@@ -34,12 +34,12 @@ function createSocketChannel(socket, idConversation) {
       }
     })
     socket.on('received request', (newRequest) => {
-      console.log(newRequest)
-      if (newRequest?.status === 'pending') {
-        emit(setFriendRequestNotification(newRequest))
-      } else {
-        emit(setFriendRequestReply(newRequest))
-      }
+      emit(setFriendRequestNotification(newRequest))
+    })
+
+    socket.on('received reply', (newReply) => {
+      console.log('new reply:', newReply)
+      emit(setFriendRequestReply(newReply))
     })
 
     socket.on('isRead', (read) => {

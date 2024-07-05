@@ -36,7 +36,7 @@ const updateUser = async (id_user, formData) => {
 const getAllFriends = async () => {
   try {
     const response = await axiosClient.get('/friends')
-    return response.data
+    return response.data.data
   } catch (error) {
     console.error('Failed to get all friends', error)
   }
@@ -131,6 +131,15 @@ const getUserById = async (userID) => {
   }
 }
 
+const deleteFriend = async (userID) => {
+  try {
+    const response = await axiosClient.delete(`/friends/deleteFriend?id=${userID}`)
+    return response.data
+  } catch (error) {
+    console.error('Failed to delete friend', error)
+  }
+}
+
 export default {
   signIn,
   updateUser,
@@ -144,4 +153,5 @@ export default {
   getAddFriendRequest,
   getUserById,
   getAllFriends,
+  deleteFriend,
 }
