@@ -33,6 +33,15 @@ const updateUser = async (id_user, formData) => {
   }
 }
 
+const getAllFriends = async () => {
+  try {
+    const response = await axiosClient.get('/friends')
+    return response.data
+  } catch (error) {
+    console.error('Failed to get all friends', error)
+  }
+}
+
 const searchUser = async (search) => {
   try {
     const response = await axiosClient.get('/users/searchUsers', { params: { search } })
@@ -134,4 +143,5 @@ export default {
   rejectFriendRequest,
   getAddFriendRequest,
   getUserById,
+  getAllFriends,
 }

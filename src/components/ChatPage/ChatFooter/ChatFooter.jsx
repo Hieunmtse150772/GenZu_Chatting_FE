@@ -35,6 +35,8 @@ const ChatFooter = () => {
   const [underlineActive, setUnderlineActive] = useState(false)
   const [isAiSuggestionClick, setIsAiSuggestionClick] = useState(true)
   const [showAnswerSuggestion, setShowAnswerSuggestion] = useState(false)
+  const [indexAnswerText, setIndexAnswerText] = useState()
+
   const [answerArray, setAnswerArray] = useState([])
   const [selectedFile, setSelectedFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
@@ -50,6 +52,11 @@ const ChatFooter = () => {
     video: useRef(null),
     audio: useRef(null),
   }
+
+  const answerSuggRefs ={
+    answerText: useRef(null),
+  }
+
   const audioContainerRef = useRef(null)
   const param = useParams()
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
@@ -121,6 +128,7 @@ const ChatFooter = () => {
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
       handleSendMsg()
+      setShowAnswerSuggestion(!showAnswerSuggestion)
     }
   }
 
@@ -282,6 +290,12 @@ const ChatFooter = () => {
     setInputStr(e.target.value)
   }
 
+  const handleAnswerTextClick = (answerText,index) => {
+    setInputStr(answerText)
+    const element = document.getElementById(`${index}`);
+    element.classList.add("hidden");
+  }
+
   return (
     <>
       {showAnswerSuggestion && (
@@ -295,7 +309,7 @@ const ChatFooter = () => {
                   <h1
                     key={index}
                     className='cursor-pointer rounded-lg bg-[#93c5fd] px-3 py-1 text-[15px] text-white shadow-lg shadow-gray-500/50 active:scale-[.97]'
-                    onClick={() => setInputStr(answerText)}
+                    onClick={() => handleAnswerTextClick(answerText, index)}
                   >
                     {answerText}
                   </h1>

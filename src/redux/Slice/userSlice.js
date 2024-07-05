@@ -136,6 +136,7 @@ const userSlice = createSlice({
     },
     alertFriendRequest: (state, action) => {},
     setReadNotification: (state, action) => {},
+    setFriendRequestReply: (state, action) => {},
     setFriendRequestNotification: (state, action) => {
       state.friendRequestNotification = action.payload
     },
@@ -171,5 +172,6 @@ export const {
   setConversationFirst,
   setToastMessage,
   clearToastMessage,
+  setFriendRequestReply,
 } = userSlice.actions
 export default userSlice.reducer
