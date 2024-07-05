@@ -54,7 +54,10 @@ const ChatFooter = () => {
   }
 
   const answerSuggRefs ={
-    answerText: useRef(null),
+    '0': useRef(null),
+    '1': useRef(null),
+    '2': useRef(null),
+    '3': useRef(null),
   }
 
   const audioContainerRef = useRef(null)
@@ -72,9 +75,7 @@ const ChatFooter = () => {
   useEffect(() => {
     answerSuggestionAI.map((answer, index) => {
       if (answer.answerSuggestion) {
-        let checkMutiAnswer = answer.answerSuggestion.startsWith('*')
-          ? answer.answerSuggestion.split(/(?<=[.?!])\s+/)
-          : answer.answerSuggestion
+        let checkMutiAnswer = answer.answerSuggestion.split(/(?<=[.?!])\s+/)
         let answerText = typeof checkMutiAnswer === 'string' ? [checkMutiAnswer] : checkMutiAnswer
         setAnswerArray(answerText)
         // setInputStr(checkMutiAnswer)
@@ -82,6 +83,7 @@ const ChatFooter = () => {
         checkMutiAnswer != null
           ? setShowAnswerSuggestion(answer.isAnswerAI)
           : setShowAnswerSuggestion(false)
+        setIndexAnswerText()
       }
       setIsAiSuggestionClick(answer.isAnswerAI)
     })
@@ -128,7 +130,6 @@ const ChatFooter = () => {
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
       handleSendMsg()
-      setShowAnswerSuggestion(!showAnswerSuggestion)
     }
   }
 
@@ -155,6 +156,7 @@ const ChatFooter = () => {
       setItalicActive(false)
       setUnderlineActive(false)
       setIsSpoiled(true)
+      setShowAnswerSuggestion(!showAnswerSuggestion)
     }
   }
 
@@ -292,30 +294,37 @@ const ChatFooter = () => {
 
   const handleAnswerTextClick = (answerText,index) => {
     setInputStr(answerText)
-    const element = document.getElementById(`${index}`);
-    element.classList.add("hidden");
+    answerSuggRefs[index].current.click()
+    setIndexAnswerText(index)
+  }
+  const onClose = (e) =>{
+    setShowAnswerSuggestion(!showAnswerSuggestion)
   }
 
   return (
     <>
       {showAnswerSuggestion && (
-        <div className='flex w-full select-none items-center justify-center font-mono'>
-          <div
-            className={`grid p-2 ${answerArray.length >= 4 ? 'grid-cols-4 gap-4' : `grid-cols-${answerArray.length} gap-${answerArray.length}`}`}
-          >
-            {answerArray.map(
+        <div className='relative flex w-full space-x-2 select-none items-center justify-center font-mono'>
+          <button
+                  className='absolute right-8 top-0 text-gray-500 hover:text-gray-700'
+                  onClick={onClose}>
+              &times;
+          </button>
+          {answerArray.map(
               (answerText, index) =>
                 index < 4 && (
-                  <h1
-                    key={index}
-                    className='cursor-pointer rounded-lg bg-[#93c5fd] px-3 py-1 text-[15px] text-white shadow-lg shadow-gray-500/50 active:scale-[.97]'
-                    onClick={() => handleAnswerTextClick(answerText, index)}
-                  >
-                    {answerText}
-                  </h1>
+                  indexAnswerText != index && (
+                    <h1
+                      key={index}
+                      ref={answerSuggRefs[index]}
+                      className='cursor-pointer rounded-lg bg-[#93c5fd] px-3 py-1 text-[15px] text-white shadow-lg shadow-gray-500/50 active:scale-[.97]'
+                      onClick={() => handleAnswerTextClick(answerText, index)}
+                    >
+                      {answerText}
+                    </h1>
+                  )
                 ),
             )}
-          </div>
         </div>
       )}
       <div>
