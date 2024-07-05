@@ -1,21 +1,36 @@
+import axios from 'axios'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export default function ChangeForgotPassword() {
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [rememberme, SetRememberme] = useState(false)
   const navigate = useNavigate()
-  const handleLogin = async (e) => {
+  const token = useParams()
+  const handleChangePassword = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-
+    console.log(token.id)
     if (password == rePassword) {
-      console.log('changepass')
+      try {
+        const response = await axios.post(
+          'https://genzu-chatting-be.onrender.com/auth/verify-forgot-password',
+          {
+            token: token.id,
+            newPassword: password,
+          },
+        )
+
+        console.log('Password reset email sent:', response.data)
+        navigate('/')
+        // Handle success: show message or redirect user
+      } catch (error) {
+        console.error('Password reset request failed:', error)
+        // Handle error: show error message to the user
+      }
     } else {
       setError('Password not match')
       setLoading(false)
@@ -28,22 +43,10 @@ export default function ChangeForgotPassword() {
         <div>
           <img className='mx-auto h-12 w-auto' src='/your-logo.svg' alt='Workflow' />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
-            Sign in to your account
+            Enter your new password
           </h2>
-          <p className='mt-2 text-center text-sm text-gray-600'>
-            Or
-            <a
-              onClick={() => {
-                navigate('/login/signup')
-              }}
-              href='#'
-              className='font-medium text-indigo-600 hover:text-indigo-500'
-            >
-              Sign Up your account
-            </a>
-          </p>
         </div>
-        <form className='mt-8 space-y-6' onSubmit={handleLogin}>
+        <form className='mt-8 space-y-6' onSubmit={handleChangePassword}>
           <div className='-space-y-px rounded-md shadow-sm'>
             <div>
               <label htmlFor='password' className='sr-only'>

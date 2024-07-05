@@ -16,7 +16,7 @@ import {
 import { connectSocket } from '@/redux/Slice/chatSlice'
 import ChatHeaderSkeleton from '@/components/ChatPage/ChatHeader/ChatHeaderSkeleton/ChatHeaderSkeleton'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
-import { checkCookie } from '@/services/Cookies'
+import { checkCookie, checkCookie } from '@/services/Cookies'
 
 export default function Chat() {
   const [showInfo, setShowInfo] = useState(false)
@@ -55,11 +55,6 @@ export default function Chat() {
       return () => clearTimeout(timer) // Cleanup the timer on unmount
     }
   }, [dispatch, toastMessage])
-  useLayoutEffect(() => {
-    if (checkCookie) {
-      navigate('/')
-    }
-  }, [])
 
   return (
     <div className='fixed w-full'>

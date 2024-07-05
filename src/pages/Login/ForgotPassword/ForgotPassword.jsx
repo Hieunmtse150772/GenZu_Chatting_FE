@@ -91,6 +91,7 @@ const ForgotPassword = () => {
 
           <div>
             <button
+              onClick={(e) => handleResetPassword(e)}
               type='submit'
               className={`group relative flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white ${loading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
               disabled={loading}

@@ -9,9 +9,11 @@ import LoadingSpinner from './Chat/ChatSkeleton/ChatSkeleton'
 export default function Home() {
   const navigate = useNavigate()
   const idConversation = useSelector((state) => state.user.idConversation)
+  const [isLoading, SetIsLoading] = useState(false)
   const dispatch = useDispatch()
   useLayoutEffect(() => {
     if (checkCookie()) {
+      SetIsLoading(true)
       dispatch(getIdConversation())
     }
     // !checkCookie() ?: navigate('/chat/123456')
@@ -21,10 +23,5 @@ export default function Home() {
       navigate(`/chat/${idConversation}`)
     }
   }, [idConversation])
-  return (
-    <div>
-      {console.log(checkCookie)}
-      {checkCookie ? <Login /> : <LoadingSpinner />}
-    </div>
-  )
+  return <div>{!isLoading ? <Login /> : <LoadingSpinner />}</div>
 }
