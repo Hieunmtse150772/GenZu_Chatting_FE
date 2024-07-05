@@ -4,19 +4,20 @@ import { SlOptions } from 'react-icons/sl'
 import { MdOutlineGTranslate } from 'react-icons/md'
 import DropdownInfoItem from './DropdownInfoItem'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
-import { useLayoutEffect, useState } from 'react'
-import { checkCookie, getCookie } from '@/services/Cookies'
+import { useState } from 'react'
+import { getCookie } from '@/services/Cookies'
+import { useSelector } from 'react-redux'
 
 function InformationConversation() {
   const [isViewProfileClick, setIsViewProfileClick] = useState(false)
   
-  const [user, setUser] = useState({
-    name: { value: 'Hoang Ba Thien', isDisable: true },
-    email: { value: 'thienhoang241299@gmail.com', isDisable: true },
-    password: { value: '********', isDisable: true },
-    phoneNumber: { value: '0345678912', isDisable: true },
-    dob: { value: '24/12/1999', isDisable: true },
-  })
+  // const [user, setUser] = useState({
+  //   name: { value: 'Hoang Ba Thien', isDisable: true },
+  //   email: { value: 'thienhoang241299@gmail.com', isDisable: true },
+  //   password: { value: '********', isDisable: true },
+  //   phoneNumber: { value: '0345678912', isDisable: true },
+  //   dob: { value: '24/12/1999', isDisable: true },
+  // })
   const cookie = getCookie('userLogin')
   const [token, SetToken] = useState('')
 
@@ -24,19 +25,14 @@ function InformationConversation() {
     setIsViewProfileClick(!isViewProfileClick)
   }
 
-  useLayoutEffect(() => {
-      if (checkCookie) {
-        if (getCookie('userLogin')) {
-          const userLogin = JSON.parse(getCookie('userLogin'))
-          SetToken(userLogin.accessToken)
-          setUser(userLogin.user)
-        } else {
-          const userLogin = JSON.parse(sessionStorage.getItem('userLogin'))
-          SetToken(userLogin.accessToken)
-          setUser(userLogin.user)
-        }
-      }
-  }, [cookie])
+  const personalChat = useSelector((state) => state.user.conversation)
+    const [user, setUser] = useState(!personalChat.isGroupChat 
+                                            ? personalChat.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
+                                                ? personalChat.users[1]
+                                                : personalChat.users[0]
+                                            : personalChat.avatar != null
+                                                ? personalChat.avatar
+                                                : '')
 
   
   return (

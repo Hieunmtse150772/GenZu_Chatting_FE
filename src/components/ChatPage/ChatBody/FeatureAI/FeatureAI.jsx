@@ -14,6 +14,8 @@ export default function FeatureAI(props) {
   const dispatch = useDispatch()
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const [isAnswerSuggClick, setIsAnswerSuggClick] = useState(true)
+  const [typeAnswered, setTypeAnswered] = useState('')
+
 
   const handleMoreClick = (e) => {
     e.preventDefault()
@@ -34,19 +36,31 @@ export default function FeatureAI(props) {
   }
 
   const handleClickAnswer = () => {
-    dispatch(setAnswerClick(false))
+    if (isAnswerSuggClick) {
+      dispatch(setAnswerClick(false))
+    }
+    if(typeAnswered == 'error'){
+      dispatch(setAnswerClick(true))
+    }
+    
   }
   const handleAnswerQuestion = async (message) => {
-    const answer = await answerSuggestion(message)
-    const itemAnswer = {
-      message: answer,
-      isAIClick: true,
+    try{
+      const answer = await answerSuggestion(message)
+      const itemAnswer = {
+        message: answer,
+        isAIClick: true,
+      }
+      console.log('itemAnswer', itemAnswer)
+      setTypeAnswered('success')
+      setIsAnswerSuggClick(true)
+      console.log('isAnswerSuggClick1', isAnswerSuggClick)
+      dispatch(setAnswerSuggestion(itemAnswer))
+    }catch(error){
+      console.log(error)
+      setTypeAnswered('error')
+      throw error
     }
-    console.log('itemAnswer', itemAnswer)
-
-    setIsAnswerSuggClick(true)
-    console.log('isAnswerSuggClick1', isAnswerSuggClick)
-    dispatch(setAnswerSuggestion(itemAnswer))
   }
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -74,9 +88,8 @@ export default function FeatureAI(props) {
             id='setting'
             className='rounded-md p-1 hover:bg-blue-400'
             onClick={() => {
-              if (isAnswerSuggClick) {
-                handleClickAnswer()
-              }
+              
+              handleClickAnswer()
               handleAnswerQuestion(props.message)
             }}
           >
