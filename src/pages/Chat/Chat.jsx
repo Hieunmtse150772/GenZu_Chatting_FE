@@ -16,7 +16,6 @@ import {
 import { connectSocket } from '@/redux/Slice/chatSlice'
 import ChatHeaderSkeleton from '@/components/ChatPage/ChatHeader/ChatHeaderSkeleton/ChatHeaderSkeleton'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
-import { checkCookie, checkCookie } from '@/services/Cookies'
 
 export default function Chat() {
   const [showInfo, setShowInfo] = useState(false)
