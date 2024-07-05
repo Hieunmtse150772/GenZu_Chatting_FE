@@ -30,6 +30,7 @@ function createSocketChannel(socket, idConversation) {
       console.log(message.conversation)
       console.log('message recived new ')
       if (message.conversation._id == idConversation) {
+        console.log(message)
         emit(setNewMessage(message))
       }
     })

@@ -22,7 +22,7 @@ export default function Login() {
             },
           })
           .then((response) => {
-            SetLinkLoginGoogle(response.data.link)
+            SetLinkLoginGoogle(response.data.data)
           })
           .catch((error) => {
             console.error('Google sign in failed:', error)
