@@ -14,7 +14,11 @@ import {
   updateEmoji,
   deleteEmoji,
 } from '@/services/messageService'
-import { setFriendRequestNotification, setFriendRequestReply } from '../../Slice/userSlice'
+import {
+  setFriendRequestNotification,
+  setFriendRequestReply,
+  setNewFriendRequestNotification,
+} from '../../Slice/userSlice'
 import { eventChannel } from 'redux-saga'
 import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects'
 import { io } from 'socket.io-client'
@@ -35,12 +39,13 @@ function createSocketChannel(socket, idConversation) {
       }
     })
     socket.on('received request', (newRequest) => {
+      console.log('received request', newRequest)
       emit(setFriendRequestNotification(newRequest))
     })
 
     socket.on('received reply', (newReply) => {
       console.log('new reply:', newReply)
-      emit(setFriendRequestReply(newReply))
+      emit(setNewFriendRequestNotification(newReply))
     })
 
     socket.on('isRead', (read) => {
@@ -81,6 +86,7 @@ function* fetchMessages(action) {
 }
 
 function* sendAddFriendRequest(action) {
+  console.log('send add friend')
   yield call([socket, 'emit'], 'friend request', action.payload)
 }
 
@@ -89,6 +95,7 @@ function* sendReadNotification(action) {
 }
 
 function* replyAddFriendRequest(action) {
+  console.log('accepted')
   yield call([socket, 'emit'], 'accept request', action.payload)
 }
 
@@ -152,7 +159,7 @@ function* setEmoji(action) {
 
 export default function* chatSaga() {
   yield takeLatest('user/setReadNotification', sendReadNotification)
-  yield takeLatest('user/setFriendRequestReply', replyAddFriendRequest)
+  yield takeLatest('user/setFriendRequestNotification', replyAddFriendRequest)
   yield takeLatest('user/alertFriendRequest', sendAddFriendRequest)
   yield takeLatest('message/translationMessage', translationTextSaga)
   yield takeLatest('chat/connectSocket', handleSocketConnect)

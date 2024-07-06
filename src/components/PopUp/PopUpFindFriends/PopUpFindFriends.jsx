@@ -60,7 +60,6 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
           ...prevRequests,
           [userID]: { _id: friendRequestID, status: 'pending' },
         }))
-        console.log(response?.data?.data)
         dispatch(alertFriendRequest(response?.data?.data))
         setTimeout(() => setMessage({ text: '', isSuccess: true }), 2000)
       }

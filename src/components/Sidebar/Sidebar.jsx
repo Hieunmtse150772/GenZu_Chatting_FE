@@ -59,7 +59,6 @@ const Sidebar = () => {
   const handleRequestHandled = useCallback((requestId) => {
     setFriendRequests((prevRequests) => {
       const updatedRequests = prevRequests.filter((request) => request.id !== requestId)
-      console.log('Updated friend requests:', updatedRequests)
       return updatedRequests
     })
     pendingRequestsCount.current -= 1
@@ -69,7 +68,6 @@ const Sidebar = () => {
     const fetchFriendRequests = async () => {
       try {
         const response = await userService.getAddFriendRequestNotification()
-        console.log(response.data)
         if (response) {
           const newFriendsRequest = response.data.filter((request) => request.status === 'pending')
           pendingRequestsCount.current = newFriendsRequest.length
