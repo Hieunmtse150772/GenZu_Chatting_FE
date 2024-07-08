@@ -29,11 +29,11 @@ function InformationConversation() {
   const personalChat = useSelector((state) => state.user.conversation)
   const [user, setUser] = useState(
     !personalChat?.isGroupChat
-      ? personalChat.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
-        ? personalChat.users[1]
-        : personalChat.users[0]
-      : personalChat.avatar != null
-        ? personalChat.avatar
+      ? personalChat.users[0]?._id == JSON.parse(getCookie('userLogin'))?.user?._id
+        ? personalChat?.users[1]
+        : personalChat?.users[0]
+      : personalChat?.avatar != null
+        ? personalChat?.avatar
         : '',
   )
 

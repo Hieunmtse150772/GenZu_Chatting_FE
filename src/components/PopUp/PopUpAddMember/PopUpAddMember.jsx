@@ -88,7 +88,10 @@ export default function PopUpAddMember({ isVisible, onClose }) {
   return (
     <>
       <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-        <div ref={popupRef} className='relative w-full max-w-lg rounded-lg bg-white p-6 shadow-lg'>
+        <div
+          ref={popupRef}
+          className='relative w-full max-w-lg rounded-lg bg-white p-6 shadow-lg dark:bg-[#1E1E1E]'
+        >
           <button
             className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
             onClick={onClose}
@@ -96,7 +99,9 @@ export default function PopUpAddMember({ isVisible, onClose }) {
             &times;
           </button>
           <div className='mb-6 text-center'>
-            <h1 className='text-2xl font-semibold text-mainBlue'>Find Your Friend</h1>
+            <h1 className='text-2xl font-semibold text-mainBlue dark:text-[#E1F1FF]'>
+              Find Your Friend
+            </h1>
             <div className='mt-4 flex justify-center'>
               <input
                 onChange={handleChangeInput}
@@ -113,7 +118,10 @@ export default function PopUpAddMember({ isVisible, onClose }) {
           </div>
           <ul className='space-y-4'>
             {filteredFriends.map((friend) => (
-              <li key={friend.id} className='flex items-center rounded-lg bg-gray-100 p-4 shadow'>
+              <li
+                key={friend.id}
+                className='flex items-center rounded-lg bg-gray-100 p-4 shadow dark:bg-[#2A2A2A] dark:text-white'
+              >
                 <img
                   src={friend.avatar}
                   alt={friend.name}
@@ -125,7 +133,7 @@ export default function PopUpAddMember({ isVisible, onClose }) {
                 </div>
                 <button
                   onClick={() => handleAddToGroup(friend.id)}
-                  className='rounded-lg bg-mainBlue px-4 py-2 text-white'
+                  className='rounded-lg bg-mainBlue px-4 py-2 text-white dark:bg-blue-500'
                 >
                   Add to Group
                 </button>

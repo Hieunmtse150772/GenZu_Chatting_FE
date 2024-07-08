@@ -38,17 +38,17 @@ function ChatHeader({ toggleInfo }) {
             </div>
           </div>
           <div className='flex space-x-2 md:space-x-6'>
-            <button className='rounded-md p-2 hover:bg-blue-400 dark:hover:opacity-85'>
+            <button className='rounded-md p-2 hover:bg-blue-400 dark:hover:bg-[#357ABD]'>
               <MdPhone size={22} />
             </button>
-            <button className='rounded-md p-2 hover:bg-blue-400 dark:hover:opacity-85'>
+            <button className='rounded-md p-2 hover:bg-blue-400 dark:hover:bg-[#357ABD]'>
               <MdVideocam size={22} />
             </button>
             <button
-              className='rounded-md p-2 hover:bg-blue-400 dark:hover:opacity-85'
+              className='rounded-md p-2 hover:bg-blue-400 dark:hover:bg-[#357ABD]'
               onClick={toggleInfo}
             >
-              <SlOptions size={22} />
+              <SlOptions size={22} color='' />
             </button>
           </div>
         </header>
