@@ -79,6 +79,7 @@ const userSlice = createSlice({
     },
     alertFriendRequest: (state, action) => {},
     setReadNotification: (state, action) => {},
+    sendReplyFriendRequest: (state, action) => {},
     setFriendRequestNotification: (state, action) => {
       state.friendRequestNotification = action.payload
     },
@@ -120,6 +121,7 @@ export const {
   setLsGroupChat,
   setLsPersonalChats,
   alertFriendRequest,
+  sendReplyFriendRequest,
   setFriendRequestNotification,
   setNewFriendRequestNotification,
   setConversation,

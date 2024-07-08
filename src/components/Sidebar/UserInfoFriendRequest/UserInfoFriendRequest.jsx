@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import userService from '../../../services/userService'
-import { setToastMessage, setNewFriendRequestNotification } from '../../../redux/Slice/userSlice'
+import {
+  setToastMessage,
+  setNewFriendRequestNotification,
+  sendReplyFriendRequest,
+} from '../../../redux/Slice/userSlice'
 import { useDispatch } from 'react-redux'
 
 const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
@@ -11,7 +15,7 @@ const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
     setIsLoading(true)
     try {
       const response = await userService.acceptFriendRequest(requestId)
-      dispatch(setNewFriendRequestNotification(response?.data))
+      dispatch(sendReplyFriendRequest(response?.data))
       dispatch(setToastMessage('Friend request accepted successfully!'))
       onRequestHandled(userInfo?._id)
     } catch (error) {

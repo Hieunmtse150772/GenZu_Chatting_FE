@@ -32,7 +32,7 @@ axiosClient.interceptors.response.use(
     if (
       error.response?.status === 401 ||
       (error?.response?.status === 403 && !originalRequest._retry) ||
-      error.response?.data?.status === 500
+      error.response?.status === 500
     ) {
       originalRequest._retry = true
 
@@ -51,12 +51,12 @@ axiosClient.interceptors.response.use(
           {},
           {
             headers: {
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${refreshToken}`,
             },
           },
         )
-        console.log(data)
-
+        console.log('new response data', data)
         // Update the accessToken and refreshToken in cookies or global state
         setCookie(
           'userLogin',

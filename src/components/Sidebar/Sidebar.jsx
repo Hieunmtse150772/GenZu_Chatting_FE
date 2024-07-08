@@ -73,7 +73,6 @@ const Sidebar = () => {
         if (response) {
           const newFriendsRequest = response.data.filter((request) => request.status === 'pending')
           pendingRequestsCount.current = newFriendsRequest.length
-          console.log(pendingRequestsCount)
           setFriendRequests(newFriendsRequest)
         }
       } catch (error) {
