@@ -21,6 +21,9 @@ export default function Chat() {
   const [showInfo, setShowInfo] = useState(false)
   const dispatch = useDispatch()
   const toastMessage = useSelector((state) => state?.user?.toastMessage)
+  const getStatusFriendRequest = useSelector((state) => state?.user?.friendRequestNotification).at(
+    -1,
+  )
   const navigate = useNavigate()
   const idConversation = useParams()
   const conversation = useSelector((state) => state.user.conversation)
@@ -59,6 +62,7 @@ export default function Chat() {
     <div className='fixed w-full'>
       <div className='Login relative'>
         <main className='flex'>
+          {console.log('get last status', getStatusFriendRequest)}
           <Sidebar />
           {conversation ? <ChatBody toggleInfo={toggleInfo} /> : <LoadingSpinner />}
           {showInfo && (

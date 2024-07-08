@@ -238,7 +238,8 @@ function* setEmoji(action) {
 export default function* chatSaga() {
   // Sử dụng takeLatest để chỉ xử lý action cuối cùng được dispatch.
   yield takeLatest('user/setReadNotification', sendReadNotification)
-  yield takeLatest('user/setFriendRequestNotification', replyAddFriendRequest)
+  yield takeLatest('user/setFriendRequestNotification', sendAddFriendRequest)
+  yield takeLatest('user/setNewFriendRequestNotification', replyAddFriendRequest)
   yield takeLatest('user/alertFriendRequest', sendAddFriendRequest)
   yield takeLatest('message/translationMessage', translationTextSaga)
   yield takeLatest('chat/connectSocket', handleSocketConnect)
