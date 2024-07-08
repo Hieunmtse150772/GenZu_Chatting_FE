@@ -29,6 +29,7 @@ import { io } from 'socket.io-client'
 // Import các effect từ redux-saga để xử lý logic bất đồng bộ.
 import { eventChannel } from 'redux-saga'
 import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects'
+import { BsEmojiDizzyFill } from 'react-icons/bs'
 
 // Biến toàn cục để lưu trữ socket connection.
 var socket
@@ -41,7 +42,7 @@ var socket
  */
 function createSocketChannel(socket, idConversation) {
   return eventChannel((emit) => {
-    // Đăng ký lắng nghe các sự kiện socket.io.
+// Đăng ký lắng nghe các sự kiện socket.io.
     socket.on('connected', () => emit(setSocketConnected(true)))
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
@@ -55,20 +56,20 @@ function createSocketChannel(socket, idConversation) {
 
     // Lắng nghe các sự kiện liên quan đến lời mời kết bạn.
     socket.on('received request', (newRequest) => {
-      emit(setFriendRequestNotification(newRequest))
-    })
+              emit(setFriendRequestNotification(newRequest))
+      })
     socket.on('received reply', (newReply) => {
-      emit(setNewFriendRequestNotification(newReply))
-    })
+              emit(setNewFriendRequestNotification(newReply))
+          })
     // Lắng nghe các sự kiện liên quan tới emoji
     socket.on('emoji received', (emoji) => {
-      console.log('co emoji moi')
+      console.log('co emoji moi', emoji)
+      emit(setEmojiOnMessage(emoji))
     })
     // Lắng nghe sự kiện đã đọc thông báo.
     socket.on('isRead', (read) => {
       console.log(read)
     })
-
     // Trả về hàm unsubscribe để hủy đăng ký lắng nghe các sự kiện khi event channel bị đóng.
     return () => {
       socket.off('connected')
@@ -84,7 +85,7 @@ function createSocketChannel(socket, idConversation) {
  * @param {object} action - Redux action.
  */
 function* handleSocketConnect(action) {
-  // Tạo kết nối socket.io.
+// Tạo kết nối socket.io.
   socket = io(import.meta.env.VITE_ENDPOINT)
 
   // Lấy thông tin người dùng từ cookie.
@@ -110,11 +111,11 @@ function* handleSocketConnect(action) {
  */
 function* fetchMessages(action) {
   try {
-    // Gọi API để lấy danh sách tin nhắn.
+// Gọi API để lấy danh sách tin nhắn.
     const response = yield call(() => {
       return getMessages(action.payload.idConversation)
     })
-
+    
     // Dispatch action để cập nhật state với danh sách tin nhắn.
     yield put(setMessage(response.data))
   } catch (error) {
@@ -127,7 +128,7 @@ function* fetchMessages(action) {
  * @param {object} action - Redux action.
  */
 function* sendAddFriendRequest(action) {
-  // Gửi sự kiện 'friend request' đến server.
+// Gửi sự kiện 'friend request' đến server.
   yield call([socket, 'emit'], 'friend request', action.payload)
 }
 
@@ -136,7 +137,7 @@ function* sendAddFriendRequest(action) {
  * @param {object} action - Redux action.
  */
 function* sendReadNotification(action) {
-  // Gửi sự kiện 'read request' đến server.
+// Gửi sự kiện 'read request' đến server.
   yield call([socket, 'emit'], 'read request', action.payload)
 }
 
@@ -145,7 +146,7 @@ function* sendReadNotification(action) {
  * @param {object} action - Redux action.
  */
 function* replyAddFriendRequest(action) {
-  // Gửi sự kiện 'accept request' đến server.
+// Gửi sự kiện 'accept request' đến server.
   yield call([socket, 'emit'], 'accept request', action.payload)
 }
 
@@ -160,10 +161,11 @@ function* sendMessageSaga(action) {
     isSpoiled: action.payload.isSpoiled,
     messageType: action.payload.messageType ? action.payload.messageType : 'text',
     styles: action.payload.styles,
-  }
-
+    emojiBy: action.payload.emojiBy
+      }
+  
   try {
-    // Gửi sự kiện 'stop_typing' đến server.
+// Gửi sự kiện 'stop_typing' đến server.
     yield call([socket, 'emit'], 'stop_typing', action.payload.idConversation.idConversation)
 
     // Gọi API để gửi tin nhắn.
@@ -171,7 +173,7 @@ function* sendMessageSaga(action) {
 
     // Gửi sự kiện 'new message' đến server.
     yield call([socket, 'emit'], 'new message', data.data)
-
+    
     // Dispatch action để cập nhật state với tin nhắn mới.
     yield put(setNewMessage(data.data))
   } catch (error) {
@@ -184,8 +186,8 @@ function* sendMessageSaga(action) {
  * @param {object} action - Redux action.
  */
 function* translationTextSaga(action) {
-  try {
-    // Gọi service để dịch văn bản.
+    try {
+// Gọi service để dịch văn bản.
     const message = yield call(() => {
       return translateText(action.payload.message, 'en')
     })
@@ -210,24 +212,29 @@ function* setEmoji(action) {
     // Dùng switch-case để chọn API call dựa trên "type"
     switch (type) {
       case 'ADD':
-        apiCall = call(addEmoji, rest.id_message, rest.emoji)
-        yield call([socket, 'emit'], 'add emoji', apiCall)
+        apiCall = yield call(addEmoji, rest.id_message, rest.emoji)
+        yield call([socket, 'emit'], 'add emoji', apiCall.data)
         break
       case 'UPDATE':
-        apiCall = call(updateEmoji, rest.id_emoji, rest.emoji)
-        yield call([socket, 'emit'], 'edit emoji', apiCall)
+        apiCall = yield call(updateEmoji, rest.id_emoji, rest.emoji)
+        apiCall.data.data.conversation = { idConversation: action.payload.idConversation}
+        yield call([socket, 'emit'], 'edit emoji', apiCall.data.data)
         break
       default: // Default là "DELETE"
-        apiCall = call(deleteEmoji, rest.id_message, rest.id_emoji)
-        yield call([socket, 'emit'], 'delete emoji', apiCall)
+        apiCall = yield call(deleteEmoji, rest.id_message, rest.id_emoji)
+        yield call([socket, 'emit'], 'delete emoji', apiCall.data.data)
     }
 
     // Gọi API một lần duy nhất
-    const { data } = yield apiCall
-
+    const { data } = apiCall
+    data.type = action.payload.type
+    if(action.payload.type === 'UPDATE' || action.payload.type === 'DELETE'){
+      data._id = action.payload.id_message
+      data.data.sender = { _id: data.data.sender}
+    }
     // Dispatch action với payload ban đầu
-    yield put(setEmojiOnMessage(action.payload))
-  } catch (error) {
+    yield put(setEmojiOnMessage(data))
+      } catch (error) {
     console.error('Lỗi khi xử lý emoji:', error)
   }
 }
@@ -236,7 +243,7 @@ function* setEmoji(action) {
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
  */
 export default function* chatSaga() {
-  // Sử dụng takeLatest để chỉ xử lý action cuối cùng được dispatch.
+// Sử dụng takeLatest để chỉ xử lý action cuối cùng được dispatch.
   yield takeLatest('user/setReadNotification', sendReadNotification)
   yield takeLatest('user/setFriendRequestNotification', sendAddFriendRequest)
   yield takeLatest('user/setNewFriendRequestNotification', replyAddFriendRequest)

@@ -146,6 +146,7 @@ const ChatFooter = () => {
           italic: italicActive,
           underline: underlineActive,
         },
+        emojiBy: [],
         isSpoiled: isSpoiled,
         idConversation: param,
       }
@@ -202,6 +203,7 @@ const ChatFooter = () => {
             italic: false,
             underline: false,
           },
+          emojiBy: [],
           isSpoiled: isSpoiled,
           idConversation: param,
           messageType: selectedFile.type,
