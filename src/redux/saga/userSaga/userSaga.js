@@ -9,7 +9,7 @@ import {
 } from '@/redux/Slice/userSlice'
 import { getConversations } from '@/services/messageService'
 import userService from '@/services/userService'
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
+import { call, put, takeLatest } from 'redux-saga/effects'
 
 // Export hàm `fetchIdConversation`
 function* fetchIdConversation() {
@@ -42,7 +42,7 @@ function* fetchLsFriends() {
   try {
     const response = yield call(userService.getAllFriends)
     console.log(response)
-    yield put(setFriends(response.data))
+    yield put(setFriends(response))
   } catch (error) {
     console.log('error fetch friends in Saga', error)
   }

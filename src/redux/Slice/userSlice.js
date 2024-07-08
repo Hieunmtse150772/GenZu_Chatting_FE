@@ -3,7 +3,7 @@ import Fuse from 'fuse.js'
 import userIcon from '../../assets/user_icon.jpg'
 const initialState = {
   lsFriends: [],
-  lsSearchUser: [],
+  lsSearchFriends: [],
   lsPersonalChats: [],
   lsGroupChats: [],
   lsConversation: [],
@@ -21,15 +21,15 @@ const userSlice = createSlice({
     setUser: (state) => {
       return { ...state }
     },
-    searchUser: (state, action) => {
+    searchFriends: (state, action) => {
       const fuse = new Fuse(state.lsFriends, {
-        keys: ['phoneNumber', 'email'],
+        keys: ['fullName', 'email'],
         threshold: 0.5, // Ngưỡng tìm kiếm mờ
       })
       const result = fuse.search(action.payload)
       return {
         ...state,
-        lsSearchUser: result.map((res) => res.item),
+        lsSearchFriends: result.map((res) => res.item),
       }
     },
     setFriends: (state, action) => {
@@ -108,7 +108,7 @@ const userSlice = createSlice({
 export const {
   setUser,
   setUserInfo,
-  searchUser,
+  searchFriends,
   updateUser,
   setIdConversation,
   getIdConversation,

@@ -1,11 +1,12 @@
 import { useDispatch } from 'react-redux'
 import './PopUpAddMember.scss'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { searchUser } from '../../../redux/Slice/userSlice'
+
 import { MdOutlineSavedSearch } from 'react-icons/md'
 import axios from 'axios'
 import { getCookie } from '@/services/Cookies'
 import Fuse from 'fuse.js'
+import { searchFriends } from '@/redux/Slice/userSlice'
 
 export default function PopUpAddMember({ isVisible, onClose }) {
   const [input, setInput] = useState('')
@@ -36,7 +37,7 @@ export default function PopUpAddMember({ isVisible, onClose }) {
   }
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
-      dispatch(searchUser(input))
+      dispatch(searchFriends(input))
       console.log(input)
       setInput('') // Clear input field after dispatch
     }

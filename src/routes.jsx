@@ -1,7 +1,6 @@
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Login from './pages/Login/Login'
 import Home from './pages/Home'
-import PopUpFindFriends from './components/PopUp/PopUpFindFriends/PopUpFindFriends'
 import Chat from './pages/Chat/Chat'
 import LoginGoogle from './pages/Login/LoginGoogle/LoginGoogle'
 

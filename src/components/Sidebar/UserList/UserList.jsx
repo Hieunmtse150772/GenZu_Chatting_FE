@@ -3,7 +3,7 @@ import UserCard from '../UserCard/UserCard'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import UserCardSkeleton from '../UserCard/UserCardSkeleton/UserCardSkeleton'
-import { useDispatch } from 'react-redux' 
+import { useDispatch } from 'react-redux'
 import { setConversation } from '@/redux/Slice/userSlice'
 
 const UserList = () => {
@@ -12,7 +12,7 @@ const UserList = () => {
   const navigate = useNavigate()
   const groupChats = useSelector((state) => state.user.lsGroupChats)
   const lsChats = useSelector((state) => state.user.lsPersonalChats)
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const handleUserClick = (id) => {
     navigate(`/chat/${id}`)
     setActiveUserID(id)
@@ -21,7 +21,6 @@ const UserList = () => {
 
   return (
     <section className='h-full w-full'>
-      {console.log(lsChats, groupChats)}
       <div className='mt-4 flex'>
         <button
           onClick={() => setActiveTab('personal')}
