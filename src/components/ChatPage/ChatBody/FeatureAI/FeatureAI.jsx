@@ -1,79 +1,96 @@
-import { RiTranslate } from 'react-icons/ri'
-import { MdOutlineQuickreply } from 'react-icons/md'
-import { SlOptions } from 'react-icons/sl'
-import DropdownOption from './DropdownOption/DropdownOption'
-import { setAnswerSuggestion, translationMessage } from '../../../../redux/Slice/messageSlice'
-import { setAnswerClick } from '../../../../redux/Slice/messageSlice'
-import { answerSuggestion } from '@/utils/answerSuggestion'
-import { useDispatch } from 'react-redux'
-import { useRef, useState, useEffect } from 'react'
+import { RiTranslate } from 'react-icons/ri' // Import icon Dịch
+import { MdOutlineQuickreply } from 'react-icons/md' // Import icon Trả lời nhanh
+import { SlOptions } from 'react-icons/sl' // Import icon Thêm tùy chọn
+import DropdownOption from './DropdownOption/DropdownOption' // Import component DropdownOption
+import { setAnswerSuggestion, translationMessage } from '../../../../redux/Slice/messageSlice' // Import actions Redux cho việc dịch và trả lời tin nhắn
+import { setAnswerClick } from '../../../../redux/Slice/messageSlice' // Import action Redux cho việc cập nhật trạng thái click của nút "Trả lời nhanh"
+import { answerSuggestion } from '@/utils/answerSuggestion' // Import hàm xử lý logic trả lời câu hỏi tự động
+import { useDispatch } from 'react-redux' // Import useDispatch để gửi actions Redux
+import { useRef, useState, useEffect, memo } from 'react' // Import các hooks từ React
 
-export default function FeatureAI(props) {
-  const buttonRef = useRef(null)
-  const dropdownRef = useRef(null)
-  const dispatch = useDispatch()
-  const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
-  const [isAnswerSuggClick, setIsAnswerSuggClick] = useState(true)
-  const [typeAnswered, setTypeAnswered] = useState('')
+const FeatureAI = memo(function FeatureAI(props) {
+  // Refs
+  const buttonRef = useRef(null) // Ref cho nút "Thêm tùy chọn"
+  const dropdownRef = useRef(null) // Ref cho dropdown menu
 
+  // Redux
+  const dispatch = useDispatch() // Khởi tạo dispatch để gửi actions Redux
 
+  // States
+  const [isOptionBtnClick, setIsOptionBtnClick] = useState(false) // State quản lý hiển thị/ẩn dropdown menu
+  const [isAnswerSuggClick, setIsAnswerSuggClick] = useState(true) // State quản lý trạng thái click của nút "Trả lời nhanh"
+  const [typeAnswered, setTypeAnswered] = useState('') // State lưu trữ trạng thái trả lời câu hỏi (thành công hoặc lỗi)
+
+  // Hàm xử lý sự kiện click vào nút "Thêm tùy chọn"
   const handleMoreClick = (e) => {
-    e.preventDefault()
-    setIsOptionBtnClick(!isOptionBtnClick)
-    props.callBackOptionClick()
-    // props.isActiveOption(!isOptionBtnClick);
+    e.preventDefault() // Ngăn chặn hành vi mặc định của thẻ <button>
+    setIsOptionBtnClick(!isOptionBtnClick) // Toggle state hiển thị/ẩn dropdown menu
+    props.callBackOptionClick() // Gọi callback function từ component cha (nếu có)
+    // props.isActiveOption(!isOptionBtnClick); // (Đoạn code này bị comment out, có thể là code cũ không dùng nữa)
   }
 
+  // Hàm xử lý sự kiện click bên ngoài dropdown menu và nút "Thêm tùy chọn"
   const handleClickOutside = (e) => {
+    // Kiểm tra xem click có nằm ngoài dropdown menu và nút "Thêm tùy chọn" hay không
     if (
       dropdownRef.current &&
       !dropdownRef.current.contains(e.target) &&
       buttonRef.current &&
       !buttonRef.current.contains(e.target)
     ) {
-      setIsOptionBtnClick(false)
+      setIsOptionBtnClick(false) // Ẩn dropdown menu
     }
   }
 
+  // Hàm xử lý sự kiện click vào nút "Trả lời nhanh"
   const handleClickAnswer = () => {
     if (isAnswerSuggClick) {
-      dispatch(setAnswerClick(false))
+      dispatch(setAnswerClick(false)) // Cập nhật state đã click của nút "Trả lời nhanh" thành false
     }
-    if(typeAnswered == 'error'){
-      dispatch(setAnswerClick(true))
+    if (typeAnswered === 'error') {
+      dispatch(setAnswerClick(true)) // Cập nhật state đã click của nút "Trả lời nhanh" thành true nếu trạng thái trả lời là lỗi
     }
-    
   }
+
+  // Hàm xử lý logic trả lời câu hỏi tự động
   const handleAnswerQuestion = async (message) => {
-    try{
-      const answer = await answerSuggestion(message)
+    try {
+      const answer = await answerSuggestion(message) // Gọi hàm answerSuggestion để nhận câu trả lời gợi ý
       const itemAnswer = {
         message: answer,
         isAIClick: true,
       }
       console.log('itemAnswer', itemAnswer)
-      setTypeAnswered('success')
-      setIsAnswerSuggClick(true)
-      console.log('isAnswerSuggClick1', isAnswerSuggClick)
-      dispatch(setAnswerSuggestion(itemAnswer))
-    }catch(error){
+      setTypeAnswered('success') // Cập nhật trạng thái trả lời là thành công
+      setIsAnswerSuggClick(true) // Cập nhật state đã click của nút "Trả lời nhanh" thành true
+      console.log('isAnswerSuggClick1', isAnswerSuggClick) // In ra state isAnswerSuggClick
+      dispatch(setAnswerSuggestion(itemAnswer)) // Gửi action Redux để hiển thị câu trả lời gợi ý
+    } catch (error) {
       console.log(error)
-      setTypeAnswered('error')
-      throw error
+      setTypeAnswered('error') // Cập nhật trạng thái trả lời là lỗi
+      throw error // Ném lỗi để xử lý ở cấp độ cao hơn
     }
   }
+
+  // useEffect để thêm và xóa event listener cho việc click bên ngoài dropdown menu
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside) // Thêm event listener khi component được mount
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('mousedown', handleClickOutside) // Xóa event listener khi component bị unmount
     }
   }, [])
+
+  // Hàm xử lý sự kiện click vào nút "Dịch"
   const handleTranslation = () => {
-    dispatch(translationMessage({ message: props.message, id: props.id }))
+    dispatch(translationMessage({ message: props.message, id: props.id })) // Gửi action Redux để dịch nội dung tin nhắn
   }
+
+  // Render component
   return (
     <div className='relative'>
+      {console.log(props)}
       <ul className='mr-4 hidden overflow-x-hidden font-semibold md:flex md:items-center'>
+        {/* Nút "Dịch" */}
         <li className='mr-1 p-1'>
           <button
             id='setting'
@@ -83,12 +100,12 @@ export default function FeatureAI(props) {
             <RiTranslate size={14} />
           </button>
         </li>
+        {/* Nút "Trả lời nhanh" */}
         <li className='mr-1 p-1'>
           <button
             id='setting'
             className='rounded-md p-1 hover:bg-blue-400'
             onClick={() => {
-              
               handleClickAnswer()
               handleAnswerQuestion(props.message)
             }}
@@ -96,6 +113,7 @@ export default function FeatureAI(props) {
             <MdOutlineQuickreply size={14} />
           </button>
         </li>
+        {/* Nút "Thêm tùy chọn" */}
         <li className='mr-1 p-1'>
           <button
             id='setting'
@@ -107,9 +125,12 @@ export default function FeatureAI(props) {
           </button>
         </li>
       </ul>
+      {/* Dropdown menu */}
       <div className='' ref={dropdownRef}>
         {isOptionBtnClick && <DropdownOption />}
       </div>
     </div>
   )
-}
+})
+
+export default FeatureAI

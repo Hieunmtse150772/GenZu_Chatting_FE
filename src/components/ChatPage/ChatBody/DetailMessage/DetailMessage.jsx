@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, memo, useCallback } from 'react'
 import FeatureAI from '../FeatureAI/FeatureAI'
 import { useSelector } from 'react-redux'
 import { MdOutlineEmojiEmotions } from 'react-icons/md'
@@ -11,20 +11,17 @@ import { IoMdArrowRoundDown } from 'react-icons/io'
 import RenderMessage from './RenderFIle/RenderFIle'
 
 /* eslint-disable react/prop-types */
-function DetailMessage(props) {
+const DetailMessage = memo(function DetailMessage(props) {
   // State để kiểm tra xem nút option của tin nhắn có đang được click hay không
-  const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   // State để kiểm tra xem nút emoji của tin nhắn có đang được click hay không
   const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
   // State để kiểm tra xem option của tin nhắn có đang được chọn hay không
   const [isOptionSelected, setIsOptionSelected] = useState(false)
-
-  // State để lưu trữ id của tin nhắn đang được active
-  const [activeMessageID, setActiveMessageID] = useState(null)
   // State để lưu trữ id của option đang được active
   const [activeMessageOptionID, setActiveMessageOptionID] = useState(null)
   // State để lưu trữ id của emoji đang được active
   const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
+  const [hoveredMessage, setHoveredMessage] = useState(null)
 
   // Sử dụng useDispatch để dispatch action
   const dispatch = useDispatch()
@@ -32,10 +29,6 @@ function DetailMessage(props) {
   const messages = useSelector((state) => state.message.message)
 
   // Hàm xử lý khi click vào user
-  const handleUserClick = (id_message) => {
-    // Cập nhật state activeMessageID
-    setActiveMessageID(id_message)
-  }
 
   // Hàm xử lý khi click vào emote của user
   const handleUserEmoteClick = (id_message) => {
@@ -62,11 +55,9 @@ function DetailMessage(props) {
   })[2]
 
   // Hàm xử lý khi di chuột qua tin nhắn
-  const handleMessageHoverd = (id_message) => {
+  const handleMessageHover = (id_message) => {
     // Hiển thị nút option
-    setIsOptionBtnClick(true)
-    // Cập nhật state activeMessageID
-    handleUserClick(id_message)
+    setHoveredMessage(id_message)
   }
 
   // Hàm xử lý khi click vào nút emoji
@@ -78,12 +69,12 @@ function DetailMessage(props) {
   }
 
   // Hàm xử lý khi click vào option
-  const handleOptionClick = (id_message) => {
+  const handleOptionClick = useCallback((id_message) => {
     // Chuyển đổi trạng thái hiển thị/ẩn của component FeatureAI
     setIsOptionSelected(!isOptionSelected)
     // Cập nhật state activeMessageOptionID
     handleUserOptionClick(id_message)
-  }
+  }, [])
 
   // Hàm xử lý khi click outside
   const handleClickOutside = (e) => {
@@ -138,14 +129,15 @@ function DetailMessage(props) {
           <div
             key={index}
             className='flex justify-end'
-            onMouseEnter={() => handleMessageHoverd(item._id)}
+            onMouseEnter={() => handleMessageHover(item._id)}
+            onMouseLeave={() => handleMessageHover(null)}
           >
             {/* Component FeatureAI */}
             <div
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
                   ? 'opacity-100'
-                  : isOptionBtnClick && activeMessageID == item._id
+                  : hoveredMessage == item._id
                     ? 'opacity-100'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
@@ -154,7 +146,7 @@ function DetailMessage(props) {
               <FeatureAI
                 message={item.message}
                 id={item._id}
-                callBackOptionClick={() => handleOptionClick(item._id)}
+                callBackOptionClick={handleOptionClick}
               />
             </div>
 
@@ -189,9 +181,7 @@ function DetailMessage(props) {
               {/* Nút emoji */}
               <div
                 className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 rounded-md${
-                  isOptionBtnClick && activeMessageID == item._id
-                    ? 'opacity-100'
-                    : 'opacity-0 group-hover:opacity-100'
+                  hoveredMessage == item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                 }`}
                 ref={buttonRef}
                 onClick={() => handleEmoteClick(item._id)}
@@ -211,8 +201,9 @@ function DetailMessage(props) {
             key={index}
             className='flex'
             onMouseEnter={() => {
-              handleMessageHoverd(item._id)
+              handleMessageHover(item._id)
             }}
+            onMouseLeave={() => handleMessageHover(null)}
           >
             {/* Tin nhắn */}
             <div className='relative'>
@@ -223,9 +214,7 @@ function DetailMessage(props) {
               {/* Nút emoji */}
               <div
                 className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 rounded-md${
-                  isOptionBtnClick && activeMessageID == item._id
-                    ? 'opacity-100'
-                    : 'opacity-0 group-hover:opacity-100'
+                  hoveredMessage == item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                 }`}
                 ref={buttonRef}
                 onClick={() => handleEmoteClick(item._id)}
@@ -257,7 +246,7 @@ function DetailMessage(props) {
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
                   ? 'opacity-100'
-                  : isOptionBtnClick && activeMessageID == item._id
+                  : hoveredMessage == item._id
                     ? 'opacity-100'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
@@ -266,7 +255,7 @@ function DetailMessage(props) {
               <FeatureAI
                 message={item.message}
                 id={item._id}
-                callBackOptionClick={() => handleOptionClick(item._id)}
+                callBackOptionClick={handleOptionClick}
               />
             </div>
           </div>
@@ -274,6 +263,6 @@ function DetailMessage(props) {
       )}
     </div>
   )
-}
+})
 
-export default React.memo(DetailMessage)
+export default DetailMessage
