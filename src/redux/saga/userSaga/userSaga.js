@@ -1,12 +1,14 @@
 import {
   setConversation,
   setConversationFirst,
+  setFriends,
   setIdConversation,
   setLsConversation,
   setLsGroupChat,
   setLsPersonalChats,
 } from '@/redux/Slice/userSlice'
 import { getConversations } from '@/services/messageService'
+import userService from '@/services/userService'
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 
 // Export hàm `fetchIdConversation`
@@ -36,10 +38,19 @@ function* fetchConversation() {
     console.error('Lỗi khi lấy idConversation:', error)
   }
 }
-
+function* fetchLsFriends() {
+  try {
+    const response = yield call(userService.getAllFriends)
+    console.log(response)
+    yield put(setFriends(response.data))
+  } catch (error) {
+    console.log('error fetch friends in Saga', error)
+  }
+}
 function* authSaga() {
-  yield takeEvery('user/getIdConversation', fetchIdConversation)
+  yield takeLatest('user/getIdConversation', fetchIdConversation)
   yield takeLatest('user/getLsConversation', fetchConversation)
+  yield takeLatest('user/getFriends', fetchLsFriends)
 }
 
 export default authSaga

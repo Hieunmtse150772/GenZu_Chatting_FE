@@ -32,6 +32,13 @@ const userSlice = createSlice({
         lsSearchUser: result.map((res) => res.item),
       }
     },
+    setFriends: (state, action) => {
+      return {
+        ...state,
+        lsFriends: action.payload,
+      }
+    },
+    getFriends: (state, action) => {},
     updateUser: (state, action) => {
       return {
         ...state,
@@ -116,5 +123,7 @@ export const {
   setToastMessage,
   clearToastMessage,
   setFriendRequestReply,
+  setFriends,
+  getFriends,
 } = userSlice.actions
 export default userSlice.reducer

@@ -9,12 +9,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { getMessagesById } from '../../redux/Slice/messageSlice'
 import {
   clearToastMessage,
+  getFriends,
   getLsConversation,
   setConversation,
   setIdConversation,
 } from '@/redux/Slice/userSlice'
 import { connectSocket } from '@/redux/Slice/chatSlice'
-import ChatHeaderSkeleton from '@/components/ChatPage/ChatHeader/ChatHeaderSkeleton/ChatHeaderSkeleton'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 
 export default function Chat() {
@@ -22,17 +22,18 @@ export default function Chat() {
   const dispatch = useDispatch()
   const toastMessage = useSelector((state) => state?.user?.toastMessage)
   const navigate = useNavigate()
+  const idConversation = useParams()
+  const conversation = useSelector((state) => state.user.conversation)
+  const lsConversation = useSelector((state) => state.user.lsConversation)
   const toggleInfo = () => {
     setShowInfo(!showInfo)
   }
-  const idConversation = useParams()
   useEffect(() => {
     dispatch(connectSocket(idConversation))
   }, [dispatch, idConversation])
-  const conversation = useSelector((state) => state.user.conversation)
-  const lsConversation = useSelector((state) => state.user.lsConversation)
   useLayoutEffect(() => {
     dispatch(getLsConversation())
+    dispatch(getFriends())
   }, [])
   useLayoutEffect(() => {
     dispatch(getMessagesById(idConversation))
@@ -41,7 +42,6 @@ export default function Chat() {
 
   useEffect(() => {
     if (lsConversation) {
-      console.log('check set conversation')
       dispatch(setConversation(idConversation))
     }
   }, [lsConversation, idConversation])
