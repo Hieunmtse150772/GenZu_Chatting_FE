@@ -197,8 +197,9 @@ const ChatFooter = () => {
           italic: italicActive,
           underline: underlineActive,
         },
-        isSpoiled: isSpoiled, // Trạng thái tin nhắn "spoiled"
-        idConversation: param, // ID cuộc trò chuyện
+        emojiBy: [],
+        isSpoiled: isSpoiled,
+        idConversation: param,
       }
       // Dispatch action gửi tin nhắn
       dispatch(sendMessage(messageData))
@@ -297,9 +298,10 @@ const ChatFooter = () => {
             italic: false,
             underline: false,
           },
-          isSpoiled: isSpoiled, // Trạng thái tin nhắn "spoiled"
-          idConversation: param, // ID cuộc trò chuyện
-          messageType: selectedFile.type, // Loại file
+          emojiBy: [],
+          isSpoiled: isSpoiled,
+          idConversation: param,
+          messageType: selectedFile.type,
         }
         // Dispatch action gửi tin nhắn
         dispatch(sendMessage(messageData))

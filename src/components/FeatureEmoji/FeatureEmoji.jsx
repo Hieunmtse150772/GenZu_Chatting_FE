@@ -10,13 +10,13 @@ function FeatureEmoji(props) {
   const onEmojiClick = (event) => {
     let id_emoji
     props.item.emojiBy.map((emote) => {
-      if(emote.sender._id == props.item.sender._id){
+      if(emote.sender._id == props.sessionId){
         id_emoji = emote._id
       }
     })
     const itemMessage = {
       id_emoji,
-      id_user: props.item.sender != null ? props.item.sender._id : props.sessionId,
+      id_user: props.sessionId,
       id_message: props.item._id,
       emoji: event.emoji,
       idConversation: props.item.conversation._id
