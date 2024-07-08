@@ -8,6 +8,7 @@ import { setMessageSpoiled } from '../../../../redux/Slice/messageSlice'
 import './DetailMessage.css'
 import { getCookie } from '@/services/Cookies'
 import { IoMdArrowRoundDown } from 'react-icons/io'
+import RenderMessage from './RenderFIle/RenderFIle'
 
 /* eslint-disable react/prop-types */
 function DetailMessage(props) {
@@ -169,35 +170,7 @@ function DetailMessage(props) {
                 onClick={() => handleSpoiledClick(item._id)}
               >
                 {/* Hiển thị nội dung tin nhắn dựa vào messageType */}
-                {item.messageType === 'image' && (
-                  <img
-                    className='h-auto w-full'
-                    src={item.message}
-                    alt='Uploaded content'
-                    style={{ width: 'auto', height: '200px' }}
-                  />
-                )}
-                {item.messageType === 'audio' && (
-                  <audio className='w-full' controls src={item.message} />
-                )}
-                {item.messageType === 'video' && (
-                  <video
-                    className='w-full'
-                    controls
-                    src={item.message}
-                    style={{ width: 'auto', height: '400px' }}
-                  />
-                )}
-                {item.messageType === 'file' && (
-                  <a href={item.message} download>
-                    <img
-                      src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAzHuAroNuDhtPXeGxXfL-Idoctgcv2wPggA&s'
-                      alt='image file'
-                      style={{ width: '100px', height: 'auto' }}
-                    />
-                  </a>
-                )}
-                {item.messageType == 'text' && item.message}
+                <RenderMessage item={item} />
               </div>
               {/* Component FeatureEmoji */}
               {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
@@ -245,35 +218,7 @@ function DetailMessage(props) {
             <div className='relative'>
               <div className='my-4 max-w-xs rounded-lg bg-gray-300 p-2 text-black'>
                 {/* Hiển thị nội dung tin nhắn dựa vào messageType */}
-                {item.messageType === 'image' && (
-                  <img
-                    className='h-auto w-full'
-                    src={item.message}
-                    alt='Uploaded content'
-                    style={{ width: 'auto', height: '200px' }}
-                  />
-                )}
-                {item.messageType === 'audio' && (
-                  <audio className='w-full' controls src={item.message} />
-                )}
-                {item.messageType === 'video' && (
-                  <video
-                    className='w-full'
-                    controls
-                    src={item.message}
-                    style={{ width: 'auto', height: '400px' }}
-                  />
-                )}
-                {item.messageType === 'file' && (
-                  <a href={item.message} download>
-                    <img
-                      src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAzHuAroNuDhtPXeGxXfL-Idoctgcv2wPggA&s'
-                      alt='image file'
-                      style={{ width: '100px', height: 'auto' }}
-                    />
-                  </a>
-                )}
-                {item.messageType == 'text' && item.message}
+                <RenderMessage item={item} />
               </div>
               {/* Nút emoji */}
               <div

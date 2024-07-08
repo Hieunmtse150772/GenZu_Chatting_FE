@@ -23,7 +23,7 @@ const userSlice = createSlice({
     },
     searchFriends: (state, action) => {
       const fuse = new Fuse(state.lsFriends, {
-        keys: ['fullName', 'email'],
+        keys: ['infor.fullName', 'infor.email'],
         threshold: 0.5, // Ngưỡng tìm kiếm mờ
       })
       const result = fuse.search(action.payload)

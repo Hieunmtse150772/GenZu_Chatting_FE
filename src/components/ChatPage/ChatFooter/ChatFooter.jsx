@@ -3,7 +3,7 @@ import 'regenerator-runtime'
 import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-icons/md'
 import { LuSend } from 'react-icons/lu'
 import { FaFile, FaImage, FaVideo } from 'react-icons/fa'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { sendMessage, deleteEmoji } from '../../../redux/Slice/messageSlice'
 import AttachmentButton from '../../Button/AttachmentButton'
 import { VscBold } from 'react-icons/vsc'
@@ -11,7 +11,6 @@ import { GoItalic } from 'react-icons/go'
 import { BsTypeUnderline } from 'react-icons/bs'
 import { AudioRecorder } from 'react-audio-voice-recorder'
 import { BiHide } from 'react-icons/bi'
-import { useSelector } from 'react-redux'
 import EmojiMessage from '../../FeatureEmoji/EmojiMessage'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import './ChatFooter.css'
@@ -19,76 +18,118 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { storage } from '@/utils/firebaseConfig'
 import { useParams } from 'react-router-dom'
 import { TiDeleteOutline } from 'react-icons/ti'
-const ChatFooter = () => {
-  const [showAttachments, setShowAttachments] = useState(false)
-  const [isEmojiMsgClick, setIsEmojiMsgClick] = useState(false)
-  const [isRecording, setIsRecording] = useState(false)
-  const [audioBlob, setAudioBlob] = useState(null)
-  const buttonRef = useRef(null)
-  const emoteRef = useRef(null)
-  const [isTextSelected, setIsTextSelected] = useState(false)
-  const [selectedText, setSelectedInput] = useState('')
-  const [inputStr, setInputStr] = useState('')
-  const [isSpoiled, setIsSpoiled] = useState(true)
-  const [boldActive, setBoldActive] = useState(false)
-  const [italicActive, setItalicActive] = useState(false)
-  const [underlineActive, setUnderlineActive] = useState(false)
-  const [isAiSuggestionClick, setIsAiSuggestionClick] = useState(true)
-  const [showAnswerSuggestion, setShowAnswerSuggestion] = useState(false)
-  const [indexAnswerText, setIndexAnswerText] = useState()
 
+const ChatFooter = () => {
+  // Trạng thái hiển thị menu đính kèm
+  const [showAttachments, setShowAttachments] = useState(false)
+  // Trạng thái hiển thị bảng chọn emoji
+  const [isEmojiMsgClick, setIsEmojiMsgClick] = useState(false)
+  // Trạng thái đang ghi âm
+  const [isRecording, setIsRecording] = useState(false)
+  // Blob dữ liệu âm thanh đã ghi
+  const [audioBlob, setAudioBlob] = useState(null)
+  // Trạng thái văn bản được chọn trong input
+  const [isTextSelected, setIsTextSelected] = useState(false)
+  // Nội dung văn bản được chọn
+  const [selectedText, setSelectedInput] = useState('')
+  // Nội dung văn bản trong input
+  const [inputStr, setInputStr] = useState('')
+  // Trạng thái tin nhắn "spoiled" (ẩn nội dung)
+  const [isSpoiled, setIsSpoiled] = useState(true)
+  // Trạng thái định dạng văn bản in đậm
+  const [boldActive, setBoldActive] = useState(false)
+  // Trạng thái định dạng văn bản in nghiêng
+  const [italicActive, setItalicActive] = useState(false)
+  // Trạng thái định dạng văn bản gạch chân
+  const [underlineActive, setUnderlineActive] = useState(false)
+  // Trạng thái gợi ý AI đang được kích hoạt
+  const [isAiSuggestionClick, setIsAiSuggestionClick] = useState(true)
+  // Trạng thái hiển thị gợi ý trả lời từ AI
+  const [showAnswerSuggestion, setShowAnswerSuggestion] = useState(false)
+  // Chỉ số của câu trả lời được chọn từ gợi ý AI
+  const [indexAnswerText, setIndexAnswerText] = useState()
+  // Mảng chứa các câu trả lời được gợi ý từ AI
   const [answerArray, setAnswerArray] = useState([])
+  // Đối tượng chứa file được chọn và loại file (hình ảnh, video, file)
   const [selectedFile, setSelectedFile] = useState(null)
+  // URL xem trước của file được chọn
   const [previewUrl, setPreviewUrl] = useState('')
+  // URL tải xuống của file đã tải lên Firebase Storage
   const [downloadURL, SetDownloadURL] = useState('')
-  const dispatch = useDispatch()
-  const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
-  const answerSuggestionAI = useSelector((state) => state.message.answerAI)
-  console.log('answerSuggestionAI', answerSuggestionAI)
-  const inputRef = useRef(null)
+
+  // Tham chiếu đến các thành phần DOM
+  const buttonRef = useRef(null) // Nút emoji
+  const emoteRef = useRef(null) // Bảng chọn emoji
+  const inputRef = useRef(null) // Input nhập liệu
+  // Tham chiếu đến các input file ẩn
   const fileInputRefs = {
     file: useRef(null),
     image: useRef(null),
     video: useRef(null),
     audio: useRef(null),
   }
-
-  const answerSuggRefs ={
-    '0': useRef(null),
-    '1': useRef(null),
-    '2': useRef(null),
-    '3': useRef(null),
+  // Tham chiếu đến các câu trả lời gợi ý từ AI
+  const answerSuggRefs = {
+    0: useRef(null),
+    1: useRef(null),
+    2: useRef(null),
+    3: useRef(null),
   }
-
+  // Tham chiếu đến container chứa các bản ghi âm
   const audioContainerRef = useRef(null)
-  const param = useParams()
-  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
-    useSpeechRecognition()
 
+  // Lấy useDispatch từ react-redux để dispatch actions
+  const dispatch = useDispatch()
+  // Lấy danh sách emoji đã chọn từ store Redux
+  const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
+  // Lấy gợi ý trả lời từ AI từ store Redux
+  const answerSuggestionAI = useSelector((state) => state.message.answerAI)
+  // Lấy tham số từ URL
+  const param = useParams()
+
+  // Sử dụng useSpeechRecognition hook để chuyển đổi giọng nói thành văn bản
+  const {
+    transcript, // Văn bản được chuyển đổi từ giọng nói
+    listening, // Trạng thái đang nghe
+    resetTranscript, // Hàm reset văn bản được chuyển đổi
+    browserSupportsSpeechRecognition, // Kiểm tra trình duyệt có hỗ trợ Speech Recognition hay không
+  } = useSpeechRecognition()
+
+  // useEffect hook để cập nhật input field với văn bản được chuyển đổi từ giọng nói
   useEffect(() => {
+    // Kiểm tra nếu có văn bản được chuyển đổi và trạng thái không phải đang nghe
     if (transcript && !listening) {
       setInputStr((prevInput) => prevInput.trim() + ' ' + transcript.trim())
+      // Reset văn bản được chuyển đổi sau khi cập nhật input
       resetTranscript()
     }
   }, [transcript, listening, resetTranscript])
 
+  // useEffect hook để xử lý và hiển thị các gợi ý trả lời từ AI
   useEffect(() => {
+    // Duyệt qua từng phần tử trong answerSuggestionAI
     answerSuggestionAI.map((answer, index) => {
+      // Kiểm tra nếu có gợi ý trả lời
       if (answer.answerSuggestion) {
+        // Tách câu trả lời thành mảng các câu dựa trên dấu chấm, hỏi, chấm than
         let checkMutiAnswer = answer.answerSuggestion.split(/(?<=[.?!])\s+/)
+        // Kiểm tra nếu checkMutiAnswer là chuỗi thì chuyển thành mảng, ngược lại giữ nguyên
         let answerText = typeof checkMutiAnswer === 'string' ? [checkMutiAnswer] : checkMutiAnswer
+        // Cập nhật mảng câu trả lời
         setAnswerArray(answerText)
-        // setInputStr(checkMutiAnswer)
-        console.log('checkMutiAnswer', answerText)
+        // Hiển thị gợi ý nếu có câu trả lời
         checkMutiAnswer != null
           ? setShowAnswerSuggestion(answer.isAnswerAI)
           : setShowAnswerSuggestion(false)
+        // Reset chỉ số câu trả lời được chọn
         setIndexAnswerText()
       }
+      // Cập nhật trạng thái AI suggestion
       setIsAiSuggestionClick(answer.isAnswerAI)
     })
   }, [answerSuggestionAI])
 
+  // useEffect hook để cập nhật input field với emoji được chọn
   useEffect(() => {
     if (selectedEmojis.length > 0) {
       setInputStr((prev) => prev + selectedEmojis.join(''))
@@ -96,6 +137,7 @@ const ChatFooter = () => {
     }
   }, [selectedEmojis, dispatch])
 
+  // Hàm thêm thẻ audio vào DOM để phát bản ghi âm
   const addAudioElement = (blob) => {
     const url = URL.createObjectURL(blob)
     const audioWrapper = document.createElement('div')
@@ -121,45 +163,61 @@ const ChatFooter = () => {
     }
   }
 
+  // Hàm xóa tất cả các thẻ audio trong DOM
   const clearAudioElements = () => {
     if (audioContainerRef.current) {
       audioContainerRef.current.innerHTML = ''
     }
   }
 
+  // Xử lý sự kiện nhấn phím Enter trong input field
   const handleKeyPress = (e) => {
+    // Kiểm tra nếu phím Enter được nhấn
     if (e.keyCode === 13) {
+      // Gửi tin nhắn
       handleSendMsg()
     }
   }
 
+  // Hàm xử lý gửi tin nhắn
   const handleSendMsg = () => {
+    // Nếu có file được chọn, tiến hành gửi file
     if (selectedFile?.file) {
       handleSendFile()
     }
+    // Kiểm tra inputStr khác null, undefined và rỗng
     if (inputStr != null && inputStr != undefined && inputStr != '') {
+      // Tạo object messageData chứa thông tin tin nhắn
       const messageData = {
-        message: inputStr,
+        message: inputStr, // Nội dung tin nhắn
         styles: {
+          // Định dạng văn bản
           fontSize: 10,
           bold: boldActive,
           italic: italicActive,
           underline: underlineActive,
         },
-        isSpoiled: isSpoiled,
-        idConversation: param,
+        isSpoiled: isSpoiled, // Trạng thái tin nhắn "spoiled"
+        idConversation: param, // ID cuộc trò chuyện
       }
+      // Dispatch action gửi tin nhắn
       dispatch(sendMessage(messageData))
+      // Xóa emoji đã chọn
       dispatch(deleteEmoji())
-      setInputStr('') // Clear input field after dispatch
+      // Xóa nội dung input field sau khi gửi
+      setInputStr('')
+      // Reset định dạng văn bản
       setBoldActive(false)
       setItalicActive(false)
       setUnderlineActive(false)
+      // Reset trạng thái tin nhắn "spoiled"
       setIsSpoiled(true)
+      // Ẩn gợi ý trả lời từ AI
       setShowAnswerSuggestion(!showAnswerSuggestion)
     }
   }
 
+  // Hàm xử lý chuyển đổi định dạng văn bản (in đậm, in nghiêng, gạch chân)
   const toggleInlineStyle = (style) => {
     switch (style) {
       case 'bold':
@@ -176,85 +234,137 @@ const ChatFooter = () => {
     }
   }
 
+  // Hàm xử lý khi chọn file đính kèm
   const handleFileChange = async (event, type) => {
     const file = event.target.files[0]
+    // Nếu không có file được chọn, thoát khỏi hàm
     if (!file) return
-    /// GỬi upload lên server và nhận url
+
+    // Kiểm tra kích thước file dựa trên loại file
     if (file) {
+      switch (type) {
+        case 'image':
+          if (file.size > 3 * 1048576) {
+            // Nếu file ảnh quá lớn, hiển thị thông báo lỗi
+            alert('Hình ảnh quá lớn, vui lòng chọn ảnh khác')
+            return
+          }
+          break
+        case 'audio':
+          if (file.size > 3 * 1048576) {
+            // Nếu file audio quá lớn, hiển thị thông báo lỗi
+            alert('File audio quá lớn, vui lòng chọn file khác')
+            return
+          }
+          break
+        case 'video':
+          if (file.size > 30 * 1048576) {
+            // Nếu file video quá lớn, hiển thị thông báo lỗi
+            alert('File video quá lớn, vui lòng chọn file khác')
+            return
+          }
+          break
+        default:
+          break
+      }
+      // Cập nhật state selectedFile với file được chọn và loại file
       setSelectedFile({ file: file, type: type })
-      console.log(type)
-      setPreviewUrl({ url: URL.createObjectURL(file), type: type }) // Tạo URL xem trước
+      // Tạo URL xem trước cho file
+      setPreviewUrl({ url: URL.createObjectURL(file), type: type })
     }
   }
+
+  // Hàm xử lý gửi file đính kèm
   const handleSendFile = async () => {
+    // Tạo đường dẫn lưu trữ trên Firebase Storage
     const storageRef = ref(storage, `${selectedFile.type}/${selectedFile.file.name}`)
+    // Tải file lên Firebase Storage
     uploadBytes(storageRef, selectedFile.file)
       .then((snapshot) => {
+        // Lấy URL tải xuống của file sau khi tải lên thành công
         return getDownloadURL(snapshot.ref)
       })
       .then((downloadURL) => {
+        // Cập nhật state downloadURL
         SetDownloadURL(downloadURL)
+        // Tạo object messageData chứa thông tin tin nhắn
         const messageData = {
-          message: downloadURL,
+          message: downloadURL, // URL tải xuống của file
           styles: {
+            // Định dạng văn bản (không sử dụng cho file)
             fontSize: 10,
             bold: false,
             italic: false,
             underline: false,
           },
-          isSpoiled: isSpoiled,
-          idConversation: param,
-          messageType: selectedFile.type,
+          isSpoiled: isSpoiled, // Trạng thái tin nhắn "spoiled"
+          idConversation: param, // ID cuộc trò chuyện
+          messageType: selectedFile.type, // Loại file
         }
+        // Dispatch action gửi tin nhắn
         dispatch(sendMessage(messageData))
+        // Reset state previewUrl và selectedFile sau khi gửi thành công
         setPreviewUrl(null)
         setSelectedFile(null)
       })
       .catch((error) => {
+        // Xử lý lỗi khi tải file lên
         console.error('Error uploading file:', error)
       })
   }
+
+  // Hàm xử lý khi click vào nút đính kèm
   const handleFileButtonClick = (type) => {
+    // Kích hoạt sự kiện click vào input file tương ứng với loại file
     fileInputRefs[type].current.click()
+    // Ẩn menu đính kèm
     setShowAttachments(false)
   }
 
+  // Hàm xử lý hiển thị/ẩn menu đính kèm
   const toggleAttachments = () => {
     setShowAttachments(!showAttachments)
   }
 
+  // Hàm xử lý chuyển đổi trạng thái tin nhắn "spoiled"
   const handleSpoiledClick = () => {
     setIsSpoiled(!isSpoiled)
   }
 
+  // Hàm xử lý khi bắt đầu ghi âm
   const startRecording = () => {
+    // Kiểm tra trình duyệt có hỗ trợ Speech Recognition hay không
     if (!browserSupportsSpeechRecognition) {
-      console.error('Browser does not support speech recognition.')
+      console.error('Trình duyệt không hỗ trợ Speech Recognition.')
       return
     }
+    // Cập nhật trạng thái đang ghi âm
     setIsRecording(true)
+    // Bắt đầu ghi âm
     SpeechRecognition.startListening({ continuous: true })
   }
 
+  // Hàm xử lý khi dừng ghi âm
   const stopRecording = () => {
+    // Cập nhật trạng thái đang ghi âm
     setIsRecording(false)
+    // Dừng ghi âm
     SpeechRecognition.stopListening()
   }
 
-  // const handleEmoteClick = (e) => {
-  //   e.preventDefault()
-  //   setEmoteBtnClick(!isEmoteBtnClick)
-  // }
-
+  // Hàm xử lý khi click vào nút emoji
   const handleEmojiMsgClick = (e) => {
     e.preventDefault()
     setIsEmojiMsgClick(!isEmojiMsgClick)
   }
 
+  // Hàm xử lý khi dữ liệu âm thanh được ghi
   const onDataRecorded = (data) => {
+    // Cập nhật state audioBlob
     setAudioBlob(data.blob)
   }
 
+  // Hàm xử lý khi click chuột ra ngoài vùng emoji picker và menu đính kèm
   const handleClickOutside = (e) => {
     if (
       emoteRef.current &&
@@ -262,75 +372,101 @@ const ChatFooter = () => {
       buttonRef.current &&
       !buttonRef.current.contains(e.target)
     ) {
+      // Ẩn emoji picker
       setIsEmojiMsgClick(false)
     }
   }
 
+  // Hàm xử lý khi focus vào input field
   const handleFocus = () => {
+    // Thêm event listener để theo dõi sự thay đổi selection
     document.addEventListener('selectionchange', checkSelection)
   }
 
+  // Hàm kiểm tra vùng văn bản được chọn trong input field
   const checkSelection = () => {
+    // Lấy vùng văn bản được chọn
     const selection = window.getSelection()
+    // Kiểm tra nếu có vùng văn bản được chọn
     if (selection && selection.toString()) {
+      // Cập nhật trạng thái văn bản được chọn
       setIsTextSelected(true)
+      // Cập nhật nội dung văn bản được chọn
       setSelectedInput(selection.toString())
     } else {
+      // Cập nhật trạng thái văn bản được chọn
       setIsTextSelected(false)
+      // Reset nội dung văn bản được chọn
       setSelectedInput('')
     }
   }
 
+  // useEffect hook để thêm và xóa event listener
   useEffect(() => {
+    // Thêm event listener khi component được mount
     document.addEventListener('mousedown', handleClickOutside)
+    // Xóa event listener khi component unmount
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
 
+  // Hàm xử lý khi nội dung input field thay đổi
   const handleChangeInput = (e) => {
     setInputStr(e.target.value)
   }
 
-  const handleAnswerTextClick = (answerText,index) => {
+  // Hàm xử lý khi click vào câu trả lời gợi ý từ AI
+  const handleAnswerTextClick = (answerText, index) => {
+    // Cập nhật nội dung input field với câu trả lời được chọn
     setInputStr(answerText)
+    // Kích hoạt sự kiện click vào tham chiếu của câu trả lời
     answerSuggRefs[index].current.click()
+    // Cập nhật chỉ số câu trả lời được chọn
     setIndexAnswerText(index)
   }
-  const onClose = (e) =>{
+
+  // Hàm xử lý đóng gợi ý trả lời từ AI
+  const onClose = (e) => {
+    // Ẩn gợi ý trả lời
     setShowAnswerSuggestion(!showAnswerSuggestion)
   }
 
   return (
     <>
+      {/* Hiển thị gợi ý trả lời từ AI */}
       {showAnswerSuggestion && (
-        <div className='relative flex w-full space-x-2 select-none items-center justify-center font-mono'>
+        <div className='relative flex w-full select-none items-center justify-center space-x-2 font-mono'>
           <button
-                  className='absolute right-8 top-0 text-gray-500 hover:text-gray-700'
-                  onClick={onClose}>
-              &times;
+            className='absolute right-8 top-0 text-gray-500 hover:text-gray-700'
+            onClick={onClose}
+          >
+            ×
           </button>
+          {/* Hiển thị tối đa 4 câu trả lời */}
           {answerArray.map(
-              (answerText, index) =>
-                index < 4 && (
-                  indexAnswerText != index && (
-                    <h1
-                      key={index}
-                      ref={answerSuggRefs[index]}
-                      className='cursor-pointer rounded-lg bg-[#93c5fd] px-3 py-1 text-[15px] text-white shadow-lg shadow-gray-500/50 active:scale-[.97]'
-                      onClick={() => handleAnswerTextClick(answerText, index)}
-                    >
-                      {answerText}
-                    </h1>
-                  )
-                ),
-            )}
+            (answerText, index) =>
+              index < 4 &&
+              indexAnswerText != index && (
+                <h1
+                  key={index}
+                  ref={answerSuggRefs[index]}
+                  className='cursor-pointer rounded-lg bg-[#93c5fd] px-3 py-1 text-[15px] text-white shadow-lg shadow-gray-500/50 active:scale-[.97]'
+                  onClick={() => handleAnswerTextClick(answerText, index)}
+                >
+                  {answerText}
+                </h1>
+              ),
+          )}
         </div>
       )}
+
+      {/* Hiển thị xem trước file được chọn */}
       <div>
         {previewUrl && (
           <div className='bg-white px-6 dark:bg-[#6c8ea3]'>
             <div className='relative inline-block'>
+              {/* Hiển thị xem trước hình ảnh */}
               {previewUrl.type == 'image' && (
                 <img
                   src={previewUrl.url}
@@ -338,6 +474,7 @@ const ChatFooter = () => {
                   style={{ width: '100px', height: 'auto' }}
                 />
               )}
+              {/* Hiển thị xem trước video */}
               {previewUrl.type == 'video' && (
                 <video
                   src={previewUrl.url}
@@ -345,6 +482,7 @@ const ChatFooter = () => {
                   style={{ width: '100px', height: 'auto' }}
                 />
               )}
+              {/* Hiển thị icon cho file */}
               {previewUrl.type == 'file' && (
                 <a href={previewUrl.url} download>
                   <img
@@ -358,6 +496,7 @@ const ChatFooter = () => {
               <button
                 className='absolute -right-3 -top-3'
                 onClick={() => {
+                  // Xóa xem trước và file đã chọn
                   setPreviewUrl(null)
                   setSelectedFile(null)
                 }}
@@ -367,13 +506,11 @@ const ChatFooter = () => {
             </div>
           </div>
         )}
-        <div className='relative flex items-center rounded-lg bg-white px-4 pb-4 pt-1 dark:bg-[#6c8ea3]'>
-          {/*  */}
 
+        {/* Input nhập liệu và các nút chức năng */}
+        <div className='relative flex items-center rounded-lg bg-white px-4 pb-4 pt-1 dark:bg-[#6c8ea3]'>
+          {/* Hiển thị input field hoặc trạng thái đang tải */}
           {!isAiSuggestionClick ? (
-            // <div>Loading</div>
-            // <div className="bg-[#cbd5dd] border py-2 px-5 flex items-center flex-col z-50 w-screen justify-center" >
-            // </div>
             <div className='loader-dots relative mt-2 h-5 w-10/12'>
               <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
               <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
@@ -382,13 +519,15 @@ const ChatFooter = () => {
             </div>
           ) : (
             <input
-              placeholder='Type your message...'
+              placeholder='Nhập tin nhắn...'
               onChange={handleChangeInput}
               onKeyDown={handleKeyPress}
               onFocus={handleFocus}
               ref={inputRef}
               value={inputStr}
-              className={`flex-1 rounded-full border px-4 py-2 focus:outline-none ${isSpoiled ? 'show' : 'hide'}`}
+              className={`flex-1 rounded-full border px-4 py-2 focus:outline-none ${
+                isSpoiled ? 'show' : 'hide'
+              }`}
               style={{
                 fontWeight: boldActive ? 'bold' : 'normal',
                 fontStyle: italicActive ? 'italic' : 'normal',
@@ -397,10 +536,13 @@ const ChatFooter = () => {
             />
           )}
 
+          {/* Hiển thị menu định dạng văn bản */}
           {isTextSelected && (
             <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
               <button
-                className={`tool-btn ${isSpoiled ? 'hover:bg-neutral-300' : 'bg-blue-500 text-white'}`}
+                className={`tool-btn ${
+                  isSpoiled ? 'hover:bg-neutral-300' : 'bg-blue-500 text-white'
+                }`}
                 onClick={handleSpoiledClick}
               >
                 <BiHide size={22} />
@@ -409,35 +551,46 @@ const ChatFooter = () => {
               <button onClick={() => toggleInlineStyle('bold')}>
                 <VscBold
                   size={22}
-                  className={`tool-btn ${boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+                  className={`tool-btn ${
+                    boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
+                  }`}
                 />
               </button>
               <button onClick={() => toggleInlineStyle('italic')}>
                 <GoItalic
                   size={22}
-                  className={`tool-btn ${italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+                  className={`tool-btn ${
+                    italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
+                  }`}
                 />
               </button>
               <button onClick={() => toggleInlineStyle('underline')}>
                 <BsTypeUnderline
                   size={22}
-                  className={`tool-btn ${underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'}`}
+                  className={`tool-btn ${
+                    underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
+                  }`}
                 />
               </button>
             </div>
           )}
+
+          {/* Hiển thị bảng chọn emoji */}
           <div
             className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
             ref={emoteRef}
           >
             {isEmojiMsgClick && <EmojiMessage />}
           </div>
+
+          {/* Các nút chức năng: đính kèm, emoji, gửi */}
           <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
             <div className='flex items-center justify-between'>
+              {/* Ghi âm giọng nói */}
               <AudioRecorder
                 onRecordingComplete={addAudioElement}
                 record={isRecording}
-                title={'Record your message'}
+                title={'Ghi âm tin nhắn'}
                 onStop={(data) => onDataRecorded(data)}
                 audioURL={(audioBlob && URL.createObjectURL(audioBlob)) || ''}
               />
@@ -445,12 +598,14 @@ const ChatFooter = () => {
                 ref={audioContainerRef}
                 className={audioContainerRef === null ? 'hidden' : 'mx-1 flex items-center'}
               ></div>
+              {/* Nút đính kèm file */}
               <button
                 className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
                 onClick={toggleAttachments}
               >
                 <MdAttachFile size={24} />
               </button>
+              {/* Nút chọn emoji */}
               <button
                 className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
                 ref={buttonRef}
@@ -458,6 +613,7 @@ const ChatFooter = () => {
               >
                 <MdInsertEmoticon size={24} />
               </button>
+              {/* Nút gửi tin nhắn */}
               <button
                 className='mx-auto rounded-full bg-slate-200 p-4 text-sky-500 hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'
                 onClick={handleSendMsg}
@@ -466,6 +622,8 @@ const ChatFooter = () => {
               </button>
             </div>
           </div>
+
+          {/* Menu đính kèm */}
           <div
             className={`absolute bottom-20 right-20 flex flex-col space-y-2 transition-transform duration-300 ease-in-out ${
               showAttachments
@@ -488,6 +646,7 @@ const ChatFooter = () => {
               color={'red'}
               onAttachBtnClick={() => handleFileButtonClick('video')}
             />
+            {/* Nút ghi âm giọng nói */}
             <button
               className={`mx-auto rounded-full p-3 focus:outline-none dark:text-white ${
                 listening ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'
@@ -500,7 +659,8 @@ const ChatFooter = () => {
               <MdOutlineKeyboardVoice size={22} />
             </button>
           </div>
-          {/* Input fields for file selection */}
+
+          {/* Input file ẩn */}
           <input
             type='file'
             accept='.zip,.rar,.7z,.tar,.pdf,.doc,.docx,.xls,.xlsx,.txt'

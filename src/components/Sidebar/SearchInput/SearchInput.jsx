@@ -32,6 +32,9 @@ const SearchInput = ({ setSearchResults }) => {
 
   const handleSearchInput = (e) => {
     setSearchQuery(e.target.value)
+    console.log(e)
+    // if (e.target.keyCode == 13) {
+    // }
   }
 
   return (
