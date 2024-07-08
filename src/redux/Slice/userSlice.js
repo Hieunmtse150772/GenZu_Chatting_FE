@@ -101,6 +101,7 @@ const userSlice = createSlice({
     setConversationFirst: (state, action) => {
       console.log(action.payload)
     },
+    clearUserSlice: () => initialState,
   },
 })
 
@@ -125,5 +126,6 @@ export const {
   setFriendRequestReply,
   setFriends,
   getFriends,
+  clearUserSlice,
 } = userSlice.actions
 export default userSlice.reducer

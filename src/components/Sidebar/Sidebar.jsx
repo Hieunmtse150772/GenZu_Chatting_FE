@@ -1,6 +1,6 @@
 import { CiSettings } from 'react-icons/ci'
 import { IoIosLogOut, IoIosMenu } from 'react-icons/io'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IoIosNotificationsOutline } from 'react-icons/io'
 import userIcon from '@/assets/user_icon.jpg'
 import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
@@ -16,6 +16,7 @@ import PopUpFindFriends from '../PopUp/PopUpFindFriends/PopUpFindFriends'
 import PopUpAddMenber from '../PopUp/PopUpAddMember/PopUpAddMember'
 import userService from '../../services/userService'
 import UserInfoFriendRequest from './UserInfoFriendRequest/UserInfoFriendRequest'
+import { clearUserSlice } from '@/redux/Slice/userSlice'
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -30,6 +31,7 @@ const Sidebar = () => {
   // Friend request notification
   const friendRequestNotfication = useSelector((state) => state?.user.friendRequestNotification)
   const friendRequestArray = Object.entries(friendRequestNotfication)
+  const dispatch = useDispatch()
   let pendingRequestsCount = useRef(
     friendRequestArray.filter((item) => item[0] === 'status' && item[1] === 'pending').length || 0,
   )
@@ -190,9 +192,10 @@ const Sidebar = () => {
             <Switcher />
             <PiSignOutBold
               onClick={() => {
-                navigate('/')
                 removeCookie('userLogin')
                 sessionStorage.removeItem('userLogin')
+                dispatch(clearUserSlice())
+                navigate('/')
               }}
               className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white'
             />
