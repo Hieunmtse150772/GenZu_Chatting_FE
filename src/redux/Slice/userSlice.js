@@ -79,15 +79,18 @@ const userSlice = createSlice({
     },
     alertFriendRequest: (state, action) => {},
     setReadNotification: (state, action) => {},
-    setFriendRequestReply: (state, action) => {},
     setFriendRequestNotification: (state, action) => {
       state.friendRequestNotification = action.payload
     },
     setNewFriendRequestNotification: (state, action) => {
-      return {
-        ...state,
-        friendRequestNotification: [...state.friendRequestNotification, action.payload],
+      // return {
+      //   ...state,
+      //   friendRequestNotification: [...state.friendRequestNotification, action.payload],
+      // }
+      if (!Array.isArray(state.friendRequestNotification)) {
+        state.friendRequestNotification = []
       }
+      state.friendRequestNotification.push(action.payload)
     },
     setConversation: (state, action) => {
       console.log(action.payload, state.lsConversation)
