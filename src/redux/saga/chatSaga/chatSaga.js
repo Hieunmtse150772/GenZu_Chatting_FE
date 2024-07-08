@@ -213,25 +213,30 @@ function* setEmoji(action) {
     switch (type) {
       case 'ADD':
         apiCall = yield call(addEmoji, rest.id_message, rest.emoji)
+        apiCall.data.type = type
         yield call([socket, 'emit'], 'add emoji', apiCall.data)
         break
       case 'UPDATE':
         apiCall = yield call(updateEmoji, rest.id_emoji, rest.emoji)
-        apiCall.data.data.conversation = { idConversation: action.payload.idConversation}
-        yield call([socket, 'emit'], 'edit emoji', apiCall.data.data)
+        // set du lieu cho viec gui xu kien update len server
+        apiCall.data.type = type
+        apiCall.data.conversation = action.payload.idConversation
+        apiCall.data._id = action.payload.id_message
+        apiCall.data.data.sender = { _id: apiCall.data.data.sender}
+        yield call([socket, 'emit'], 'edit emoji', apiCall.data)
         break
       default: // Default là "DELETE"
         apiCall = yield call(deleteEmoji, rest.id_message, rest.id_emoji)
-        yield call([socket, 'emit'], 'delete emoji', apiCall.data.data)
+        // set du lieu cho viec gui xu kien delete len server
+        apiCall.data.type = type
+        apiCall.data.conversation = action.payload.idConversation
+        apiCall.data._id = action.payload.id_message
+        apiCall.data.data.sender = { _id: apiCall.data.data.sender}
+        yield call([socket, 'emit'], 'delete emoji', apiCall.data)
     }
 
     // Gọi API một lần duy nhất
     const { data } = apiCall
-    data.type = action.payload.type
-    if(action.payload.type === 'UPDATE' || action.payload.type === 'DELETE'){
-      data._id = action.payload.id_message
-      data.data.sender = { _id: data.data.sender}
-    }
     // Dispatch action với payload ban đầu
     yield put(setEmojiOnMessage(data))
       } catch (error) {
@@ -253,5 +258,4 @@ export default function* chatSaga() {
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
-  // yield takeLatest('message/setEmojiOnMessage', fetchMessages) // Xem xét lại việc gọi fetchMessages sau khi setEmojiOnMessage, có thể cần thiết hoặc không.
 }
