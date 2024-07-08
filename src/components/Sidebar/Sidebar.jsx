@@ -163,7 +163,7 @@ const Sidebar = () => {
               />
             </div>
           </div>
-          <div className='flex-grow'>
+          <div className='flex-grow h-3/6'>
             {searchResults.user ? (
               <ul className='mt-2 h-screen overflow-y-auto'>
                 {searchResults.user.map((result) => (
