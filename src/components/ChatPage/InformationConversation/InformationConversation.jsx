@@ -55,7 +55,9 @@ function InformationConversation() {
             </h3>
             <span className='text-sm text-gray-500 dark:text-gray-400'>Active 20m ago</span>
             <a
-              className='my-4 inline-flex items-center rounded-lg bg-black px-8 py-4 text-center text-sm font-medium text-white hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800'
+              className='my-4 inline-flex items-center rounded-lg bg-black px-8 py-4 text-center text-sm font-medium text-white hover:bg-gray-400 
+                        focus:ring-4 focus:ring-gray-300 dark:bg-gray-600
+                        dark:hover:bg-gray-700 dark:focus:ring-gray-800 cursor-pointer'
               onClick={togglePopupViewProfile}
             >
               View profile
