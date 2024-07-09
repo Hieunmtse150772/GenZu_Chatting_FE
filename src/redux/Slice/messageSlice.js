@@ -93,8 +93,8 @@ const messageSlice = createSlice({
 
       const message = state.message.find((msg) => msg._id === id_message)
       const emojiBy = message.emojiBy.find((emote) => emote.sender._id === id_user)
-      if(message){
-        if(emojiBy){
+      if (message) {
+        if (emojiBy) {
           action.payload.type = emojiBy.emoji == emoji ? 'DELETE' : 'UPDATE'
         }
       }
@@ -103,25 +103,23 @@ const messageSlice = createSlice({
       console.log('action:', action.payload)
 
       let message = state.message.find((msg) => msg._id === action.payload._id)
-      // hanh dong update/delete emoji tren tin nhan 
+      // hanh dong update/delete emoji tren tin nhan
       // lay emoji
       let emojiBy = message.emojiBy.find((emoji) => emoji._id === action.payload.data._id)
 
-    switch(action.payload.type){
-      case 'ADD':
-        message.emojiBy = action.payload.emojiBy;
-        break;
-      case 'UPDATE':
-        emojiBy = [action.payload.data]
-        message.emojiBy = emojiBy
-        break;
-      case 'DELETE':
-        emojiBy = []
-        message.emojiBy = emojiBy
-        break;
-    }
-    
-
+      switch (action.payload.type) {
+        case 'ADD':
+          message.emojiBy = action.payload.emojiBy
+          break
+        case 'UPDATE':
+          emojiBy = [action.payload.data]
+          message.emojiBy = emojiBy
+          break
+        case 'DELETE':
+          emojiBy = []
+          message.emojiBy = emojiBy
+          break
+      }
     },
     getMessagesById: (state, action) => {},
     setNewMessage: (state, action) => {
@@ -130,7 +128,6 @@ const messageSlice = createSlice({
       return {
         ...state,
         message: [
-          ...state.message,
           {
             sender: newMs.sender,
             _id: newMs._id,
@@ -145,6 +142,7 @@ const messageSlice = createSlice({
             readBy: newMs.readBy,
             emojiBy: newMs.emojiBy,
           },
+          ...state.message,
         ],
       }
     },

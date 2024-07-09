@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux'
 import { setMessageSpoiled } from '../../../../redux/Slice/messageSlice'
 import './DetailMessage.css'
 import { getCookie } from '@/services/Cookies'
-import { IoMdArrowRoundDown } from 'react-icons/io'
 import RenderMessage from './RenderFIle/RenderFIle'
 
 /* eslint-disable react/prop-types */
@@ -122,7 +121,7 @@ const DetailMessage = memo(function DetailMessage(props) {
 
   // Render component
   return (
-    <div id='messages' className='mx-2'>
+    <div id='messages' className='mx-2 flex flex-col-reverse'>
       {messages.map((item, index) =>
         // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
         item.sender != null && sessionId == item.sender._id ? (

@@ -3,6 +3,7 @@ import Login from './pages/Login/Login'
 import Home from './pages/Home'
 import Chat from './pages/Chat/Chat'
 import LoginGoogle from './pages/Login/LoginGoogle/LoginGoogle'
+import Verify from './pages/Login/Verify/Verify'
 
 function AppRoutes() {
   // const navigate = useNavigate()
@@ -17,6 +18,7 @@ function AppRoutes() {
       <Route path='/chat/:idConversation' element={<Chat />} />
       {/* <Route path='/test' element={<EditProfile />} /> */}
       <Route path='/verify-login-google' element={<LoginGoogle />} />
+      <Route path='/verify/:id' element={<Verify />} />
 
       {/* <Route path="/register" element={<SignUpComponent />} /> */}
     </Routes>
