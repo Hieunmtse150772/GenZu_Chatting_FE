@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux'
 import './PopUpAddMember.scss'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import { MdOutlineSavedSearch } from 'react-icons/md'
+import { MdOutlineSavedSearch, MdOutlinePhotoCamera } from 'react-icons/md'
 import axios from 'axios'
 import { getCookie } from '@/services/Cookies'
 import Fuse from 'fuse.js'
@@ -99,7 +99,29 @@ export default function PopUpAddMember({ isVisible, onClose }) {
             &times;
           </button>
           <div className='mb-6 text-center'>
-            <h1 className='text-2xl font-semibold text-mainBlue dark:text-[#E1F1FF]'>
+            <div className='mb-4 flex flex-row items-center justify-center'>
+              <div className='mr-4 h-12 w-12 rounded-full border border-indigo-500 bg-white p-3 shadow-md backdrop-blur-2xl'>
+                <label htmlFor='upload' className='flex cursor-pointer flex-col items-center gap-2'>
+                  <MdOutlinePhotoCamera size={24} />
+                </label>
+                <input id='upload' type='file' className='hidden' />
+              </div>
+              <div className='mr-6 mt-4 flex flex-col items-center'>
+                <label htmlFor='groupName' className='text-lg font-bold dark:text-white'>
+                  Nhập tên nhóm của bạn
+                </label>
+                <input
+                  id='groupName'
+                  onChange={handleChangeInput}
+                  onKeyDown={handleKeyPress}
+                  value={input}
+                  type='text'
+                  placeholder='Nhập tên nhóm của bạn'
+                  className='mt-2 w-64 rounded-lg border border-gray-400 px-4 py-2 focus:outline-none'
+                />
+              </div>
+            </div>
+            <h1 className='text-2xl font-semibold text-black dark:text-[#E1F1FF]'>
               Find Your Friend
             </h1>
             <div className='mt-4 flex justify-center'>
@@ -133,7 +155,7 @@ export default function PopUpAddMember({ isVisible, onClose }) {
                 </div>
                 <button
                   onClick={() => handleAddToGroup(friend.id)}
-                  className='rounded-lg bg-mainBlue px-4 py-2 text-white dark:bg-blue-500'
+                  className='rounded-lg bg-blue-500 px-4 py-2 text-white dark:bg-blue-500'
                 >
                   Add to Group
                 </button>

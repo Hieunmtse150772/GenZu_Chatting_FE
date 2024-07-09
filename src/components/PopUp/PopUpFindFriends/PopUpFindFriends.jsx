@@ -5,7 +5,7 @@ import { getCookie } from '../../../services/Cookies'
 import { MdPersonSearch } from 'react-icons/md'
 import { IoPersonAdd } from 'react-icons/io5'
 import { RiUserSharedFill } from 'react-icons/ri'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { alertFriendRequest } from '../../../redux/Slice/userSlice'
 import userService from '@/services/userService'
 
@@ -14,6 +14,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
   const [searchResult, setSearchResult] = useState([])
   const [message, setMessage] = useState({ text: '', isSuccess: true })
   const [sentRequests, setSentRequests] = useState({})
+  const friendLists = useSelector((state) => state?.user?.lsFriends) || []
   const popupRef = useRef()
   const dispatch = useDispatch()
 
@@ -146,7 +147,13 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
         <div className='relative mx-auto mt-10 max-w-md rounded-lg bg-white p-6 shadow-xl'>
           {
             <div
-              className={`${message.text !== '' ? 'opacity-100' : 'opacity-0'} absolute -top-10 z-50 my-2 box-content flex justify-between rounded border px-3 py-2 ${message.isSuccess ? 'border-green-400 bg-green-200 text-green-700' : 'border-red-400 bg-red-200 text-red-700'}`}
+              className={`${
+                message.text !== '' ? 'opacity-100' : 'opacity-0'
+              } absolute -top-10 z-50 my-2 box-content flex justify-between rounded border px-3 py-2 ${
+                message.isSuccess
+                  ? 'border-green-400 bg-green-200 text-green-700'
+                  : 'border-red-400 bg-red-200 text-red-700'
+              }`}
               role='alert'
             >
               <span className='block sm:inline'>{message.text}</span>
@@ -168,24 +175,29 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
 
           {searchResult.user && (
             <ul className='mt-4'>
-              {searchResult.user.map((user, index) => (
-                <div
-                  key={index}
-                  className='flex items-center justify-between border-b border-gray-200'
-                >
-                  <div>
-                    <li>{user.fullName}</li>
-                    <li className='py-2'>{user.email}</li>
-                  </div>
-                  <button onClick={() => handleFriendRequest(user._id)}>
-                    {sentRequests[user._id]?.status === 'pending' ? (
-                      <RiUserSharedFill size={24} color='blue' />
-                    ) : (
-                      <IoPersonAdd size={24} color='green' />
+              {searchResult.user.map((user, index) => {
+                const isFriend = friendLists.some((friend) => friend?.info?._id === user._id)
+                return (
+                  <div
+                    key={index}
+                    className='flex items-center justify-between border-b border-gray-200'
+                  >
+                    <div>
+                      <li>{user.fullName}</li>
+                      <li className='py-2'>{user.email}</li>
+                    </div>
+                    {!isFriend && (
+                      <button onClick={() => handleFriendRequest(user._id)}>
+                        {sentRequests[user._id]?.status === 'pending' ? (
+                          <RiUserSharedFill size={24} color='blue' />
+                        ) : (
+                          <IoPersonAdd size={24} color='green' />
+                        )}
+                      </button>
                     )}
-                  </button>
-                </div>
-              ))}
+                  </div>
+                )
+              })}
             </ul>
           )}
         </div>
