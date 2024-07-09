@@ -34,6 +34,12 @@ const userSlice = createSlice({
         lsSearchFriends: result.map((res) => res.item),
       }
     },
+    clearSearchFriends: (state, action) => {
+      return {
+        ...state,
+        lsSearchFriends: [],
+      }
+    },
     setFriends: (state, action) => {
       return {
         ...state,
@@ -115,6 +121,7 @@ const userSlice = createSlice({
 
 export const {
   setUser,
+  clearSearchFriends,
   setUserInfo,
   searchFriends,
   updateUser,

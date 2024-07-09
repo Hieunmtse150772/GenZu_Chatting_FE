@@ -43,12 +43,12 @@ export default function SearchFriends({ user }) {
 
   return (
     <>
-      {user.isChat == false ? (
-        console.log(user.conversation[0])
-      ) : (
+      {user.isChat === false ? (
+        <p>User không trong cuộc trò chuyện</p>
+      ) : user.conversation.length > 0 ? (
         <div
           onClick={() => {
-            handleUserClick()
+            handleUserClick(user.conversation[0]._id)
           }}
           className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
             isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
@@ -56,12 +56,12 @@ export default function SearchFriends({ user }) {
         >
           <img
             src={
-              !user.conversation[0].isGroupChat
+              !user.conversation[0]?.isGroupChat
                 ? user.conversation[0].users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
                   ? user.conversation[0].users[1]?.picture
                   : user.conversation[0].users[0]?.picture
-                : user.conversation[0].avatar != null
-                  ? user.conversation[0].avatar
+                : user.conversation[0]?.avatar != null
+                  ? user.conversation[0]?.avatar
                   : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`
             }
             alt='user avatar'
@@ -137,6 +137,8 @@ export default function SearchFriends({ user }) {
             </div>
           )}
         </div>
+      ) : (
+        <p>Chưa có cuộc trò chuyện nào</p>
       )}
     </>
   )

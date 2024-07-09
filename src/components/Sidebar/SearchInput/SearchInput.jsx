@@ -1,7 +1,7 @@
 import { CiSearch } from 'react-icons/ci'
 import { MdClear } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
-import { searchFriends } from '@/redux/Slice/userSlice'
+import { clearSearchFriends, searchFriends } from '@/redux/Slice/userSlice'
 import { useState } from 'react'
 
 const SearchInput = () => {
@@ -10,6 +10,7 @@ const SearchInput = () => {
 
   const clearInput = () => {
     setSearchQuery('')
+    dispatch(clearSearchFriends())
   }
 
   const handleSearchInput = (e) => {

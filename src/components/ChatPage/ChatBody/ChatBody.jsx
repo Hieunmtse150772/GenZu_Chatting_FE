@@ -24,7 +24,7 @@ function ChatBody({ toggleInfo }) {
     // Kiểm tra vị trí scroll hiện tại của danh sách tin nhắn
     // Nếu vị trí scroll nằm trong khoảng từ 0 đến (chiều cao của danh sách - 1250)
     // thì hiển thị nút "Go To Bottom", ngược lại thì ẩn nút đi
-    if (element.scrollTop >= 0 && element.scrollTop < element.scrollHeight - 700) {
+    if (element.scrollTop >= 0 && element.scrollTop < element.scrollHeight - 1250) {
       elementBottomBtn.classList.remove('hidden')
       elementBottomBtn.classList.add('flex')
     } else {
@@ -39,7 +39,6 @@ function ChatBody({ toggleInfo }) {
       // Gọi API để lấy thêm tin nhắn mới ở đây
       dispatch(getMessagesMore({ idConversation: idConversation.idConversation, page: page }))
       dispatch(setLoadMore(true))
-      console.log('in top')
       setScrollHeight(element.scrollHeight)
       // setTimeout(() => {
       //   const scrollHeightAfterUpdate = element.scrollHeight
@@ -68,12 +67,12 @@ function ChatBody({ toggleInfo }) {
   useEffect(() => {
     if (!loadMore) {
       const element = document.getElementById('messages-list')
-      element.scrollTop = element.scrollTop - scrollHeight
+      element.scrollTop = element.scrollTop - scrollHeight + 200
     }
   }, [loadMore])
   return (
     <div className='mx-0 flex h-screen w-full flex-col shadow-2xl dark:bg-[#587e91] md:mx-2'>
-      <ChatHeader toggleInfo={toggleInfo} /> {console.log(page)}
+      <ChatHeader toggleInfo={toggleInfo} />
       {/* Hiển thị component ChatHeader với props toggleInfo được truyền vào */}
       <div
         id='messages-list'
