@@ -58,9 +58,11 @@ function createSocketChannel(socket, idConversation) {
 
     // Lắng nghe các sự kiện liên quan đến lời mời kết bạn.
     socket.on('received request', (newRequest) => {
+      console.log('new req', newRequest)
       emit(setFriendRequestNotification(newRequest))
     })
     socket.on('received reply', (newReply) => {
+      console.log('new reply', newReply)
       emit(setNewFriendRequestNotification(newReply))
     })
     // Lắng nghe các sự kiện liên quan tới emoji
@@ -133,6 +135,7 @@ function* fetchMessages(action) {
  */
 function* sendAddFriendRequest(action) {
   // Gửi sự kiện 'friend request' đến server.
+  console.log('send add friend req')
   yield call([socket, 'emit'], 'friend request', action.payload)
 }
 
@@ -151,6 +154,7 @@ function* sendReadNotification(action) {
  */
 function* replyAddFriendRequest(action) {
   // Gửi sự kiện 'accept request' đến server.
+  console.log('accepted')
   yield call([socket, 'emit'], 'accept request', action.payload)
 }
 

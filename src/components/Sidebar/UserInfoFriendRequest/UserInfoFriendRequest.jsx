@@ -29,7 +29,7 @@ const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
   const handleCancelFriendRequest = async (requestId) => {
     setIsLoading(true)
     try {
-      const response = await userService.deleteFriendRequestHasBeenSent(requestId)
+      const response = await userService.rejectFriendRequest(requestId)
       dispatch(setNewFriendRequestNotification(response?.data))
       dispatch(setToastMessage('Friend request has declined!'))
       onRequestHandled(userInfo?._id)
