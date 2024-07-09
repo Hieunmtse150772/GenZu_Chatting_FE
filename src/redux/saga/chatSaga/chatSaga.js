@@ -88,7 +88,9 @@ function createSocketChannel(socket, idConversation) {
  */
 function* handleSocketConnect(action) {
   // Tạo kết nối socket.io.
-  socket = io(import.meta.env.VITE_ENDPOINT)
+  socket = io(import.meta.env.VITE_ENDPOINT, {
+    extraHeaders: { Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}` },
+  })
 
   // Lấy thông tin người dùng từ cookie.
   const user = JSON.parse(getCookie('userLogin')).user
@@ -251,11 +253,11 @@ function* setEmoji(action) {
   }
 }
 
-function* deleteHistoryMessage(action){
-  try{
-    const {data} = yield call(deleteConversation, action.payload._id)
+function* deleteHistoryMessage(action) {
+  try {
+    const { data } = yield call(deleteConversation, action.payload._id)
     yield put(setDeleteHistoryMessage(action.payload._id))
-  }catch(error){
+  } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }
 }
@@ -275,5 +277,4 @@ export default function* chatSaga() {
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
-
 }
