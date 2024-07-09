@@ -11,12 +11,13 @@ import {
   clearToastMessage,
   getFriends,
   getLsConversation,
+  loginSlice,
   setConversation,
   setIdConversation,
   setToastMessage,
 } from '@/redux/Slice/userSlice'
 import { connectSocket } from '@/redux/Slice/chatSlice'
-import { getCookie } from '@/services/Cookies'
+import { checkCookie, getCookie } from '@/services/Cookies'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 
 export default function Chat() {
@@ -40,6 +41,7 @@ export default function Chat() {
   const toastRef = useRef(null)
 
   useEffect(() => {
+    console.log(sessionId)
     if (getStatusFriendRequest?.sender?._id === sessionId) {
       if (getStatusFriendRequest?.status === 'accepted' && toastRef.current !== 'accepted') {
         dispatch(setToastMessage('Your friend request was accepted'))
@@ -54,9 +56,7 @@ export default function Chat() {
   const toggleInfo = () => {
     setShowInfo(!showInfo)
   }
-  useEffect(() => {
-    dispatch(connectSocket(idConversation))
-  }, [dispatch, idConversation])
+  //**// */
   useLayoutEffect(() => {
     dispatch(getLsConversation())
     dispatch(getFriends())
@@ -66,12 +66,18 @@ export default function Chat() {
     dispatch(setIdConversation(idConversation.idConversation))
   }, [idConversation])
 
+  //**// */
+  useEffect(() => {
+    dispatch(connectSocket(idConversation))
+    dispatch(loginSlice(JSON.parse(getCookie('userLogin')).user._id))
+  }, [dispatch, idConversation])
+  ///
   useEffect(() => {
     if (lsConversation) {
       dispatch(setConversation(idConversation))
     }
   }, [lsConversation, idConversation])
-
+  ///
   useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => {
@@ -81,7 +87,12 @@ export default function Chat() {
       return () => clearTimeout(timer) // Cleanup the timer on unmount
     }
   }, [dispatch, toastMessage])
-
+  useEffect(() => {
+    if (!checkCookie()) {
+      navigate('/')
+      console.log('hihihih')
+    }
+  })
   return (
     <div className='fixed w-full'>
       <div className='Login relative'>

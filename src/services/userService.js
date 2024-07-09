@@ -14,9 +14,10 @@ const signIn = async (email, password, rememberMe) => {
     }
     if (!rememberMe) {
       sessionStorage.setItem('userLogin', JSON.stringify(userData))
+    } else {
+      setCookie('userLogin', JSON.stringify(userData), 7) // Set cookie with 7 days expiry
     }
-    setCookie('userLogin', JSON.stringify(userData), 7) // Set cookie with 7 days expiry
-
+    setCookie('accessToken', accessToken, 7)
     return userData
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to sign in')

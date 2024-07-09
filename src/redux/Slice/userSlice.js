@@ -22,11 +22,13 @@ const userSlice = createSlice({
       return { ...state }
     },
     searchFriends: (state, action) => {
-      const fuse = new Fuse(state.lsFriends, {
-        keys: ['infor.fullName', 'infor.email'],
+      const lsAllFriends = JSON.parse(JSON.stringify(state.lsFriends))
+      const fuse = new Fuse(lsAllFriends, {
+        keys: ['info.fullName', 'info.email'],
         threshold: 0.5, // Ngưỡng tìm kiếm mờ
       })
       const result = fuse.search(action.payload)
+
       return {
         ...state,
         lsSearchFriends: result.map((res) => res.item),
@@ -105,6 +107,8 @@ const userSlice = createSlice({
       console.log(action.payload)
     },
     clearUserSlice: () => initialState,
+    loginSlice: (state, action) => {},
+    logoutSlice: (state, action) => {},
   },
 })
 
@@ -130,5 +134,7 @@ export const {
   setFriends,
   getFriends,
   clearUserSlice,
+  loginSlice,
+  logoutSlice,
 } = userSlice.actions
 export default userSlice.reducer

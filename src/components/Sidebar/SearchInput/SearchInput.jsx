@@ -1,42 +1,26 @@
 import { CiSearch } from 'react-icons/ci'
 import { MdClear } from 'react-icons/md'
-import userService from '@/services/userService'
-import { useEffect, useState } from 'react'
-import { useDebounce } from 'use-debounce'
+import { useDispatch } from 'react-redux'
+import { searchFriends } from '@/redux/Slice/userSlice'
+import { useState } from 'react'
 
-const SearchInput = ({ setSearchResults }) => {
+const SearchInput = () => {
   const [searchQuery, setSearchQuery] = useState('')
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500)
-
-  useEffect(() => {
-    const fetchSearchUsers = async () => {
-      try {
-        if (debouncedSearchQuery[0]) {
-          const response = await userService.searchUser(debouncedSearchQuery)
-          setSearchResults(response)
-        } else {
-          setSearchResults([])
-        }
-      } catch (error) {
-        console.error('Failed to search users', error)
-      }
-    }
-
-    fetchSearchUsers()
-  }, [debouncedSearchQuery, setSearchResults])
+  const dispatch = useDispatch()
 
   const clearInput = () => {
     setSearchQuery('')
-    setSearchResults([])
   }
 
   const handleSearchInput = (e) => {
     setSearchQuery(e.target.value)
-    console.log(e)
-    // if (e.target.keyCode == 13) {
-    // }
   }
-
+  const handleSearch = (e) => {
+    if (e.keyCode == 13) {
+      console.log(e.keyCode)
+      dispatch(searchFriends(searchQuery))
+    }
+  }
   return (
     <div>
       <form className='flex items-center gap-2' onSubmit={(e) => e.preventDefault()}>
@@ -57,6 +41,7 @@ const SearchInput = ({ setSearchResults }) => {
             className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 px-6 py-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-slate-500 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
             placeholder='Search chats...'
             onChange={handleSearchInput}
+            onKeyDown={(e) => handleSearch(e)}
           />
           {searchQuery && (
             <button

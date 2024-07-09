@@ -88,7 +88,6 @@ const FeatureAI = memo(function FeatureAI(props) {
   // Render component
   return (
     <div className='relative'>
-      {console.log(props)}
       <ul className='mr-4 hidden overflow-x-hidden font-semibold md:flex md:items-center'>
         {/* Nút "Dịch" */}
         <li className='mr-1 p-1'>

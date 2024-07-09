@@ -9,25 +9,26 @@ import UserList from '../Sidebar/UserList/UserList'
 import Switcher from '../Sidebar/Switcher/Switcher'
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { PiSignOutBold } from 'react-icons/pi'
-import { removeCookie } from '../../services/Cookies'
+import { getCookie, removeCookie } from '../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
 import EditAndSetting from '../PopUp/EditAndSetting/EditAndSetting'
 import PopUpFindFriends from '../PopUp/PopUpFindFriends/PopUpFindFriends'
 import PopUpAddMenber from '../PopUp/PopUpAddMember/PopUpAddMember'
 import userService from '../../services/userService'
 import UserInfoFriendRequest from './UserInfoFriendRequest/UserInfoFriendRequest'
-import { clearUserSlice } from '@/redux/Slice/userSlice'
+import { clearUserSlice, logoutSlice } from '@/redux/Slice/userSlice'
+import SearchFriends from './SearchFriends/SearchFriends'
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef(null)
-  const [searchResults, setSearchResults] = useState([])
   const navigate = useNavigate()
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const [isPopupVisibleFindFriends, setIsPopupVisibleFindFriends] = useState(false)
   const [isPopupVisibleAddMember, setIsPopupVisibleAddMember] = useState(false)
   const [friendRequests, setFriendRequests] = useState([])
   const [dropdownNotifyVisible, setDropdownNotifyVisible] = useState(false)
+  const searchResults = useSelector((state) => state.user.lsSearchFriends)
   // Friend request notification
   const friendRequestNotfication = useSelector((state) => state?.user.friendRequestNotification)
   const friendRequestArray = Object.entries(friendRequestNotfication)
@@ -152,7 +153,7 @@ const Sidebar = () => {
             </div>
           </div>
           <div className='flex items-center justify-between'>
-            <SearchInput setSearchResults={setSearchResults} />
+            <SearchInput />
             <div className='ml-4 flex cursor-pointer items-center outline-none'>
               <LiaUserPlusSolid
                 onClick={togglePopupFindFriend}
@@ -165,25 +166,10 @@ const Sidebar = () => {
             </div>
           </div>
           <div className='flex-grow'>
-            {searchResults.user ? (
-              <ul className='mt-2 h-screen overflow-y-auto'>
-                {searchResults.user.map((result) => (
-                  <li
-                    key={result._id}
-                    className='group relative cursor-pointer border-b border-gray-300 p-2'
-                  >
-                    <img
-                      src={result?.image || userIcon}
-                      alt='user avatar'
-                      className='h-12 w-12 rounded-full object-cover'
-                    />
-                    <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
-                      <h3 className='truncate text-sm font-semibold'>{result?.fullName}</h3>
-                      <p className='truncate text-sm text-gray-500 dark:text-slate-500'></p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+            {searchResults.length > 0 ? (
+              searchResults.map((item, index) => {
+                return <SearchFriends key={index} user={item} />
+              })
             ) : (
               <UserList />
             )}
@@ -192,6 +178,7 @@ const Sidebar = () => {
             <Switcher />
             <PiSignOutBold
               onClick={() => {
+                dispatch(logoutSlice(JSON.parse(getCookie('userLogin')).user._id))
                 removeCookie('userLogin')
                 sessionStorage.removeItem('userLogin')
                 dispatch(clearUserSlice())
