@@ -1,3 +1,4 @@
+import { getIdConversation } from '@/redux/Slice/userSlice'
 import axiosClient from '@/utils/axiosClient'
 
 export const getConversations = () => {
@@ -49,4 +50,9 @@ export const updateEmoji = (emojiId, newEmoji) => {
 export const deleteEmoji = (messageId, emojiId) => {
   console.log(messageId, emojiId)
   return axiosClient.delete(`/messages/emoji?emojiId=${emojiId}&messageId=${messageId}`)
+}
+
+export const deleteConversation = (idConversation) =>{
+  console.log(idConversation)
+  return axiosClient.delete(`/conversations?id=${idConversation}`)
 }

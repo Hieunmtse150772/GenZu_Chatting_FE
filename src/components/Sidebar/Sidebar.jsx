@@ -164,7 +164,7 @@ const Sidebar = () => {
               />
             </div>
           </div>
-          <div className='flex-grow'>
+          <div className='flex-grow h-3/6'>
             {searchResults.length > 0 ? (
               searchResults.map((item, index) => {
                 return <SearchFriends key={index} user={item} />

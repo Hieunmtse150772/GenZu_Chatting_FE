@@ -116,11 +116,11 @@ export default function Chat() {
             <main className='flex'>
               <Sidebar />
               {conversation ? <ChatBody toggleInfo={toggleInfo} /> : <LoadingSpinner />}
-              {showInfo && (
+              {showInfo && conversation ? (
                 <div className='w-1/3'>
                   <InformationConversation />
                 </div>
-              )}
+              ) : <></>}
             </main>
             {toastMessage && <ToastMessage message={toastMessage} />}
           </div>

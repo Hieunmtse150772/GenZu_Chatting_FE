@@ -5,11 +5,18 @@ import { MdPhone, MdVideocam, MdBlock, MdOutlineDelete } from 'react-icons/md'
 import { CgProfile } from 'react-icons/cg'
 import DropdownItem from '../DropdownItem/DropdownItem'
 import { getCookie } from '@/services/Cookies'
+import { useDispatch } from 'react-redux'
+import { deleteConversation } from '@/redux/Slice/messageSlice'
 
 const UserCard = ({ user, isActive, onUserCardClick }) => {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
+
+  const dispatch = useDispatch()
+  const handleDeleteBtn = (e) => {
+      dispatch(deleteConversation(user))
+  }
 
   const handleMoreClick = (e) => {
     e.preventDefault()
@@ -118,7 +125,7 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
               label={'Delete chat'}
               dropdownStyle={'p-2'}
               iconStyle={'h-9 w-9 p-2'}
-              onClick={() => {}}
+              onClick={handleDeleteBtn}
             />
           </ul>
         </div>

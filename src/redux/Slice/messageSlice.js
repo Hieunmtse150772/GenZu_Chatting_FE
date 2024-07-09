@@ -166,6 +166,13 @@ const messageSlice = createSlice({
         }),
       }
     },
+    deleteConversation: (state, action) => {},
+    setDeleteHistoryMessage: (state, action) =>{
+      return {
+        ...state,
+        message: []
+      }
+    },
   },
 })
 
@@ -183,5 +190,7 @@ export const {
   setNewMessage,
   translationMessage,
   setTranslationMessage,
+  deleteConversation,
+  setDeleteHistoryMessage
 } = messageSlice.actions
 export default messageSlice.reducer
