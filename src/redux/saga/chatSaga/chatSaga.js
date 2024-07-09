@@ -89,7 +89,11 @@ function createSocketChannel(socket, idConversation) {
  */
 function* handleSocketConnect(action) {
   // Tạo kết nối socket.io.
-  socket = io(import.meta.env.VITE_ENDPOINT)
+  socket = io(import.meta.env.VITE_ENDPOINT, {
+    extraHeaders: {
+      Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).user}`,
+    },
+  })
 
   // Lấy thông tin người dùng từ cookie.
   const user = JSON.parse(getCookie('userLogin')).user
