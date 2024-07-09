@@ -29,51 +29,68 @@ export default function Chat() {
   const getStatusFriendRequest = friendRequestNotification.length
     ? friendRequestNotification.at(-1)
     : null
-  const session = Object.values(JSON.parse(getCookie('userLogin')))
-  // Lấy id của session user
-  const sessionId = Object.keys(session).map((key) => {
-    return session[key]._id
-  })[2]
+  // const session = Object.values(JSON.parse(getCookie('userLogin')))
+  // // Lấy id của session user
+  // const sessionId = Object.keys(session).map((key) => {
+  //   return session[key]._id
+  // })[2]
   const navigate = useNavigate()
   const idConversation = useParams()
   const conversation = useSelector((state) => state.user.conversation)
   const lsConversation = useSelector((state) => state.user.lsConversation)
   const toastRef = useRef(null)
-
+  useLayoutEffect(() => {
+    if (!checkCookie()) {
+      dispatch(setIdConversation(null))
+      window.location.href = '/'
+      console.log('hihihih')
+    }
+  })
   useEffect(() => {
-    console.log(sessionId)
-    if (getStatusFriendRequest?.sender?._id === sessionId) {
-      if (getStatusFriendRequest?.status === 'accepted' && toastRef.current !== 'accepted') {
-        dispatch(setToastMessage('Your friend request was accepted'))
-        toastRef.current = 'accepted'
-      } else if (getStatusFriendRequest?.status === 'declined' && toastRef.current !== 'declined') {
-        dispatch(setToastMessage('Your friend request was declined'))
-        toastRef.current = 'declined'
+    if (checkCookie()) {
+      const sessionId = JSON.parse(getCookie('userLogin')).user._id
+      if (getStatusFriendRequest?.sender?._id === sessionId) {
+        if (getStatusFriendRequest?.status === 'accepted' && toastRef.current !== 'accepted') {
+          dispatch(setToastMessage('Your friend request was accepted'))
+          toastRef.current = 'accepted'
+        } else if (
+          getStatusFriendRequest?.status === 'declined' &&
+          toastRef.current !== 'declined'
+        ) {
+          dispatch(setToastMessage('Your friend request was declined'))
+          toastRef.current = 'declined'
+        }
       }
     }
-  }, [getStatusFriendRequest, dispatch, sessionId])
+  }, [getStatusFriendRequest, dispatch])
 
   const toggleInfo = () => {
     setShowInfo(!showInfo)
   }
   //**// */
   useLayoutEffect(() => {
-    dispatch(getLsConversation())
-    dispatch(getFriends())
+    if (checkCookie()) {
+      dispatch(getLsConversation())
+      dispatch(getFriends())
+    }
   }, [])
   useLayoutEffect(() => {
-    dispatch(getMessagesById(idConversation))
-    dispatch(setIdConversation(idConversation.idConversation))
+    if (checkCookie()) {
+      dispatch(getMessagesById(idConversation))
+      dispatch(setIdConversation(idConversation.idConversation))
+    }
   }, [idConversation])
 
   //**// */
   useEffect(() => {
-    dispatch(connectSocket(idConversation))
-    dispatch(loginSlice(JSON.parse(getCookie('userLogin')).user._id))
+    if (checkCookie()) {
+      dispatch(connectSocket(idConversation))
+      dispatch(loginSlice(JSON.parse(getCookie('userLogin'))?.user._id))
+    }
   }, [dispatch, idConversation])
   ///
   useEffect(() => {
-    if (lsConversation) {
+    if (lsConversation && checkCookie()) {
       dispatch(setConversation(idConversation))
     }
   }, [lsConversation, idConversation])
@@ -88,26 +105,27 @@ export default function Chat() {
       return () => clearTimeout(timer) // Cleanup the timer on unmount
     }
   }, [dispatch, toastMessage])
-  useEffect(() => {
-    if (!checkCookie()) {
-      navigate('/')
-      console.log('hihihih')
-    }
-  })
+
   return (
-    <div className='fixed w-full'>
-      <div className='Login relative'>
-        <main className='flex'>
-          <Sidebar />
-          {conversation ? <ChatBody toggleInfo={toggleInfo} /> : <LoadingSpinner />}
-          {showInfo && (
-            <div className='w-1/3'>
-              <InformationConversation />
-            </div>
-          )}
-        </main>
-        {toastMessage && <ToastMessage message={toastMessage} />}
-      </div>
-    </div>
+    <>
+      {!checkCookie() ? (
+        ''
+      ) : (
+        <div className='fixed w-full'>
+          <div className='Login relative'>
+            <main className='flex'>
+              <Sidebar />
+              {conversation ? <ChatBody toggleInfo={toggleInfo} /> : <LoadingSpinner />}
+              {showInfo && (
+                <div className='w-1/3'>
+                  <InformationConversation />
+                </div>
+              )}
+            </main>
+            {toastMessage && <ToastMessage message={toastMessage} />}
+          </div>
+        </div>
+      )}
+    </>
   )
 }

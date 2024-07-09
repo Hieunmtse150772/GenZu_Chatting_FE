@@ -50,7 +50,7 @@ const DetailMessage = memo(function DetailMessage(props) {
   // Lấy thông tin session user từ cookie
   const session = Object.values(JSON.parse(getCookie('userLogin')))
   // Lấy id của session user
-  const sessionId = Object.keys(session).map((key) => {
+  const sessionId = Object.keys(session)?.map((key) => {
     return session[key]._id
   })[2]
 
@@ -153,7 +153,7 @@ const DetailMessage = memo(function DetailMessage(props) {
             {/* Tin nhắn */}
             <div className='relative'>
               <div
-                className={`my-4 max-w-xs rounded-lg bg-blue-200 p-2 break-words ${item.isSpoiled || item.isSpoiled === undefined ? 'show' : 'hide'}`}
+                className={`my-4 max-w-xs break-words rounded-lg bg-blue-200 p-2 ${item.isSpoiled || item.isSpoiled === undefined ? 'show' : 'hide'}`}
                 style={{
                   fontWeight: item.styles.bold ? 'bold' : 'normal',
                   fontStyle: item.styles.italic ? 'italic' : 'normal',
@@ -207,7 +207,7 @@ const DetailMessage = memo(function DetailMessage(props) {
           >
             {/* Tin nhắn */}
             <div className='relative'>
-              <div className='my-4 max-w-xs rounded-lg bg-gray-300 p-2 break-words text-black'>
+              <div className='my-4 max-w-xs break-words rounded-lg bg-gray-300 p-2 text-black'>
                 {/* Hiển thị nội dung tin nhắn dựa vào messageType */}
                 <RenderMessage item={item} />
               </div>
