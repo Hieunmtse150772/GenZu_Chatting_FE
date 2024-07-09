@@ -103,7 +103,7 @@ const messageSlice = createSlice({
       console.log('action:', action.payload)
 
       let message = state.message.find((msg) => msg._id === action.payload._id)
-      // hanh dong update emoji tren tin nhan 
+      // hanh dong update/delete emoji tren tin nhan 
       // lay emoji
       let emojiBy = message.emojiBy.find((emoji) => emoji._id === action.payload.data._id)
 

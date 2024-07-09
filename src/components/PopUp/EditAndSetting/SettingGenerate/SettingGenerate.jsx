@@ -29,12 +29,12 @@ export default function SettingGenerate() {
 
   return (
     <div
-      className={`${view === 'list' ? 'flex' : ''} w-full flex-col items-center justify-around space-x-2 rounded-lg bg-white p-2`}
+      className={`${view === 'list' ? 'flex' : ''} w-full flex-col items-center justify-around space-x-2 rounded-lg bg-white p-2 dark:bg-[#1E1E1E]`}
     >
       <div className={`w-full rounded-lg ${view === 'list' ? '' : 'relative'}`}>
         {view === 'list' && (
           <>
-            <h3 className='mb-2 ml-2 text-2xl font-semibold'>Settings</h3>
+            <h3 className='mb-2 ml-2 text-2xl font-semibold dark:text-white'>Settings</h3>
             <SettingItems
               icon={CiSettings}
               size={24}

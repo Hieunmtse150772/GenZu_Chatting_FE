@@ -2,15 +2,15 @@ import React from 'react'
 
 const DropdownInfoItem = ({ icon: Icon, label }) => {
   return (
-    <div className='p-4  hover:bg-mainBlue rounded-md'>
+    <div className='rounded-md p-4 hover:bg-mainBlue dark:hover:bg-[#357ABD]'>
       <li>
         <button
           id='setting'
-          className='flex items-center cursor-pointer relative '
+          className='relative flex cursor-pointer items-center dark:text-white'
           style={{ width: '100%' }}
         >
           <Icon size={24} />
-          <span className='ml-3 text-gray-900 text-sm font-medium'>{label}</span>
+          <span className='ml-3 text-sm font-medium text-gray-900 dark:text-white'>{label}</span>
         </button>
       </li>
     </div>

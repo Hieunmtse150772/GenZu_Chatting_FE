@@ -617,7 +617,7 @@ const ChatFooter = () => {
               </button>
               {/* Nút gửi tin nhắn */}
               <button
-                className='mx-auto rounded-full bg-slate-200 p-4 text-sky-500 hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'
+                className='mx-auto rounded-full bg-blue-400 p-4 text-black hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'
                 onClick={handleSendMsg}
               >
                 <LuSend size={18} />

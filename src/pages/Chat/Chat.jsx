@@ -82,7 +82,8 @@ export default function Chat() {
     if (toastMessage) {
       const timer = setTimeout(() => {
         dispatch(clearToastMessage()) // Clear the toast message after 2 seconds
-        toastRef.current = null // Reset the toastRef after clearing the message
+        toastRef.current = null
+        // toastRef.current = null // Reset the toastRef after clearing the message
       }, 2000)
       return () => clearTimeout(timer) // Cleanup the timer on unmount
     }
