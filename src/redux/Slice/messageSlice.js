@@ -122,6 +122,14 @@ const messageSlice = createSlice({
       }
     },
     getMessagesById: (state, action) => {},
+    getMessagesMore: (state, action) => {},
+    setMessagesMore: (state, action) => {
+      console.log(action.payload)
+      return {
+        ...state,
+        message: [...state.message, ...action.payload],
+      }
+    },
     setNewMessage: (state, action) => {
       const newMs = action.payload
       console.log(newMs)
@@ -165,10 +173,10 @@ const messageSlice = createSlice({
       }
     },
     deleteConversation: (state, action) => {},
-    setDeleteHistoryMessage: (state, action) =>{
+    setDeleteHistoryMessage: (state, action) => {
       return {
         ...state,
-        message: []
+        message: [],
       }
     },
   },
@@ -177,6 +185,8 @@ const messageSlice = createSlice({
 export const {
   sendMessage,
   setMessage,
+  getMessagesMore,
+  setMessagesMore,
   selectEmoji,
   deleteEmoji,
   handleEmojiOnMessage,
@@ -189,6 +199,6 @@ export const {
   translationMessage,
   setTranslationMessage,
   deleteConversation,
-  setDeleteHistoryMessage
+  setDeleteHistoryMessage,
 } = messageSlice.actions
 export default messageSlice.reducer

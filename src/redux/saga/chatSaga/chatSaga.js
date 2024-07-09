@@ -1,11 +1,12 @@
 // Import các actions cần thiết để cập nhật state trong Redux store.
-import { setIsTyping, setSocketConnected } from '@/redux/Slice/chatSlice'
+import { plusPage, setIsTyping, setLoadMore, setSocketConnected } from '@/redux/Slice/chatSlice'
 import {
   setMessage,
   setNewMessage,
   setTranslationMessage,
   setEmojiOnMessage,
   setDeleteHistoryMessage,
+  setMessagesMore,
 } from '@/redux/Slice/messageSlice'
 import {
   setFriendRequestNotification,
@@ -124,7 +125,22 @@ function* fetchMessages(action) {
     console.error('Lỗi khi lấy lsMessages:', error)
   }
 }
-
+function* fetchMessagesMore(action) {
+  console.log(action.payload)
+  try {
+    // Gọi API để lấy danh sách tin nhắn.
+    const response = yield call(() => {
+      return getMessages(action.payload.idConversation, action.payload.page)
+    })
+    console.log(response)
+    // Dispatch action để cập nhật state với danh sách tin nhắn.
+    yield put(setMessagesMore(response))
+    yield put(plusPage())
+    yield put(setLoadMore(false))
+  } catch (error) {
+    console.error('Lỗi khi lấy lsMessages:', error)
+  }
+}
 /**
  * Saga để gửi lời mời kết bạn.
  * @param {object} action - Redux action.
@@ -251,11 +267,11 @@ function* setEmoji(action) {
   }
 }
 
-function* deleteHistoryMessage(action){
-  try{
-    const {data} = yield call(deleteConversation, action.payload._id)
+function* deleteHistoryMessage(action) {
+  try {
+    const { data } = yield call(deleteConversation, action.payload._id)
     yield put(setDeleteHistoryMessage(action.payload._id))
-  }catch(error){
+  } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }
 }
@@ -272,8 +288,8 @@ export default function* chatSaga() {
   yield takeLatest('message/translationMessage', translationTextSaga)
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
+  yield takeLatest('message/getMessagesMore', fetchMessagesMore)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
-
 }

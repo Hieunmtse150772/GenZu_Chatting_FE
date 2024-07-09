@@ -6,6 +6,7 @@ export const getConversations = () => {
 }
 
 export const getMessages = async (messageId, page = 1) => {
+  console.log(messageId, page)
   try {
     const response = await axiosClient.get(
       `/messages/getMessagePagination?id=${messageId}&limit=40&page=${page}`,
@@ -53,7 +54,7 @@ export const deleteEmoji = (messageId, emojiId) => {
   return axiosClient.delete(`/messages/emoji?emojiId=${emojiId}&messageId=${messageId}`)
 }
 
-export const deleteConversation = (idConversation) =>{
+export const deleteConversation = (idConversation) => {
   console.log(idConversation)
   return axiosClient.delete(`/conversations?id=${idConversation}`)
 }

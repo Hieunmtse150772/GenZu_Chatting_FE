@@ -16,7 +16,7 @@ import {
   setIdConversation,
   setToastMessage,
 } from '@/redux/Slice/userSlice'
-import { connectSocket } from '@/redux/Slice/chatSlice'
+import { connectSocket, resetChat } from '@/redux/Slice/chatSlice'
 import { checkCookie, getCookie } from '@/services/Cookies'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 
@@ -78,6 +78,7 @@ export default function Chat() {
     if (checkCookie()) {
       dispatch(getMessagesById(idConversation))
       dispatch(setIdConversation(idConversation.idConversation))
+      dispatch(resetChat())
     }
   }, [idConversation])
 
@@ -120,7 +121,9 @@ export default function Chat() {
                 <div className='w-1/3'>
                   <InformationConversation />
                 </div>
-              ) : <></>}
+              ) : (
+                <></>
+              )}
             </main>
             {toastMessage && <ToastMessage message={toastMessage} />}
           </div>
