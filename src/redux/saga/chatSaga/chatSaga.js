@@ -91,7 +91,7 @@ function* handleSocketConnect(action) {
   // Tạo kết nối socket.io.
   socket = io(import.meta.env.VITE_ENDPOINT, {
     extraHeaders: {
-      Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).user}`,
+      Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}`,
     },
   })
 
