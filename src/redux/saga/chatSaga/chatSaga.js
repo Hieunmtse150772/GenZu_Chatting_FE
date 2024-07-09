@@ -5,6 +5,7 @@ import {
   setNewMessage,
   setTranslationMessage,
   setEmojiOnMessage,
+  setDeleteHistoryMessage,
 } from '@/redux/Slice/messageSlice'
 import {
   setFriendRequestNotification,
@@ -21,6 +22,7 @@ import {
   addEmoji,
   updateEmoji,
   deleteEmoji,
+  deleteConversation,
 } from '@/services/messageService'
 
 // Import thư viện socket.io-client để tạo kết nối WebSocket.
@@ -54,9 +56,6 @@ function createSocketChannel(socket, idConversation) {
       }
     })
 
-    socket.on('validation', (responese) => {
-      console.log(responese)
-    })
     // Lắng nghe các sự kiện liên quan đến lời mời kết bạn.
     socket.on('received request', (newRequest) => {
       emit(setFriendRequestNotification(newRequest))
@@ -89,11 +88,7 @@ function createSocketChannel(socket, idConversation) {
  */
 function* handleSocketConnect(action) {
   // Tạo kết nối socket.io.
-  socket = io(import.meta.env.VITE_ENDPOINT, {
-    extraHeaders: {
-      Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}`,
-    },
-  })
+  socket = io(import.meta.env.VITE_ENDPOINT)
 
   // Lấy thông tin người dùng từ cookie.
   const user = JSON.parse(getCookie('userLogin')).user
@@ -255,17 +250,16 @@ function* setEmoji(action) {
     console.error('Lỗi khi xử lý emoji:', error)
   }
 }
-function* loginSocket(action) {
-  try {
-    yield call([socket, 'emit'], 'login', action.payload)
-  } catch (error) {
-    console.error('Login socket error:', error)
+
+function* deleteHistoryMessage(action){
+  try{
+    const {data} = yield call(deleteConversation, action.payload._id)
+    yield put(setDeleteHistoryMessage(action.payload._id))
+  }catch(error){
+    console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }
 }
-function* logoutSocket(action) {
-  console.log(action.payload)
-  yield call([socket, 'emit'], 'logout', action.payload)
-}
+
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
  */
@@ -279,7 +273,7 @@ export default function* chatSaga() {
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/sendMessage', sendMessageSaga)
+  yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
-  yield takeLatest('user/loginSlice', loginSocket)
-  // yield takeLatest('message/setEmojiOnMessage', fetchMessages) // Xem xét lại việc gọi fetchMessages sau khi setEmojiOnMessage, có thể cần thiết hoặc không.
+
 }
