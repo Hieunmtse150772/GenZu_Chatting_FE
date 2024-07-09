@@ -24,7 +24,7 @@ function ChatBody({ toggleInfo }) {
     // Kiểm tra vị trí scroll hiện tại của danh sách tin nhắn
     // Nếu vị trí scroll nằm trong khoảng từ 0 đến (chiều cao của danh sách - 1250)
     // thì hiển thị nút "Go To Bottom", ngược lại thì ẩn nút đi
-    if (element.scrollTop >= 0 && element.scrollTop < element.scrollHeight - 1250) {
+    if (element.scrollTop >= 0 && element.scrollTop < element.scrollHeight - 700) {
       elementBottomBtn.classList.remove('hidden')
       elementBottomBtn.classList.add('flex')
     } else {

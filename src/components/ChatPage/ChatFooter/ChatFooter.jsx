@@ -111,10 +111,14 @@ const ChatFooter = () => {
     answerSuggestionAI.map((answer, index) => {
       // Kiểm tra nếu có gợi ý trả lời
       if (answer.answerSuggestion) {
-        // Tách câu trả lời thành mảng các câu dựa trên dấu chấm, hỏi, chấm than
-        let checkMutiAnswer = answer.answerSuggestion.split(/(?<=[.?!])\s+/)
-        // Kiểm tra nếu checkMutiAnswer là chuỗi thì chuyển thành mảng, ngược lại giữ nguyên
-        let answerText = typeof checkMutiAnswer === 'string' ? [checkMutiAnswer] : checkMutiAnswer
+        console.log(JSON.parse(answer.answerSuggestion))
+        // parse chuỗi json sang array
+        let checkMutiAnswer = JSON.parse(answer.answerSuggestion)
+        // tách giá trị từ key general về list 
+        let answerText = checkMutiAnswer.map((item)=>{
+          return item.general
+        })
+        console.log(answerText)
         // Cập nhật mảng câu trả lời
         setAnswerArray(answerText)
         // Hiển thị gợi ý nếu có câu trả lời
@@ -437,7 +441,7 @@ const ChatFooter = () => {
   return (
     <>
       {/* Hiển thị gợi ý trả lời từ AI */}
-      {showAnswerSuggestion && (
+      {showAnswerSuggestion && isAiSuggestionClick ? (
         <div className='relative flex w-full select-none items-center justify-center space-x-2 font-mono'>
           <button
             className='absolute right-8 top-0 text-gray-500 hover:text-gray-700'
@@ -461,7 +465,7 @@ const ChatFooter = () => {
               ),
           )}
         </div>
-      )}
+      ) : <></>}
 
       {/* Hiển thị xem trước file được chọn */}
       <div>
