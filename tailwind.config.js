@@ -10,7 +10,9 @@ export default {
       colors: {
         mainBlue: '#E1F1FF',
         lightTheme: '#DEE4E7',
-        darkTheme: '#37474F',
+        darkTheme: '#333333',
+        darkBlack: '#262626',
+
       },
       margin: {
         '7px': '7px',

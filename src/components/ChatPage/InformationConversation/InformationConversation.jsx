@@ -39,7 +39,7 @@ function InformationConversation() {
 
   return (
     <>
-      <div className='dark:bg mx-auto h-screen max-w-2xl dark:bg-[#121212] dark:opacity-95'>
+      <div className='dark:bg mx-auto h-screen bg-mainBlue max-w-2xl dark:bg-[#333333] dark:opacity-95'>
         {personalChat?.isGroupChat ? (
           <InfomationGroup conversation={personalChat} />
         ) : (
