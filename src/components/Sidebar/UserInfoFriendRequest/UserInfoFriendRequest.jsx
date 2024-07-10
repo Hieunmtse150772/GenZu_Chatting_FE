@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import userService from '../../../services/userService'
 import {
   setToastMessage,
@@ -9,6 +10,7 @@ import { useDispatch } from 'react-redux'
 
 const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation()
   const dispatch = useDispatch()
 
   const handleAcceptFriendRequest = async (requestId) => {
@@ -16,7 +18,7 @@ const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
     try {
       const response = await userService.acceptFriendRequest(requestId)
       dispatch(sendReplyFriendRequest(response?.data))
-      dispatch(setToastMessage('Friend request accepted successfully!'))
+      dispatch(setToastMessage(t('accept_friend_req')))
       onRequestHandled(userInfo?._id)
     } catch (error) {
       console.error('Failed to accept friend request', error)
@@ -31,7 +33,7 @@ const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
     try {
       const response = await userService.rejectFriendRequest(requestId)
       dispatch(setNewFriendRequestNotification(response?.data))
-      dispatch(setToastMessage('Friend request has declined!'))
+      dispatch(setToastMessage(t('decline_friend_req')))
       onRequestHandled(userInfo?._id)
       return response
     } catch (error) {
@@ -63,14 +65,14 @@ const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
               handleCancelFriendRequest(requestId)
             }}
           >
-            {isLoading ? 'Loading...' : 'Cancel'}
+            {isLoading ? t('loading') : t('cancel')}
           </button>
           <button
             className='rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
             onClick={() => handleAcceptFriendRequest(requestId)}
             disabled={isLoading}
           >
-            {isLoading ? 'Loading...' : 'Accept'}
+            {isLoading ? t('loading') : t('accept')}
           </button>
         </div>
         {/* {message && <ToastMessage message={message} />} */}

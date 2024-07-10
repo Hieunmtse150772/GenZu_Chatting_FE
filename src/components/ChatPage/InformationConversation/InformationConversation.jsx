@@ -7,6 +7,7 @@ import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 import { useState } from 'react'
 import { getCookie } from '@/services/Cookies'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import InfomationGroup from './InfomationGroup/InfomationGroup'
 
 function InformationConversation() {
@@ -19,6 +20,7 @@ function InformationConversation() {
   //   phoneNumber: { value: '0345678912', isDisable: true },
   //   dob: { value: '24/12/1999', isDisable: true },
   // })
+  const { t } = useTranslation()
   const cookie = getCookie('userLogin')
   const [token, SetToken] = useState('')
 
@@ -39,7 +41,7 @@ function InformationConversation() {
 
   return (
     <>
-      <div className='dark:bg mx-auto h-screen bg-mainBlue max-w-2xl dark:bg-[#333333] dark:opacity-95'>
+      <div className='dark:bg mx-auto h-screen max-w-2xl bg-mainBlue dark:bg-[#333333] dark:opacity-95'>
         {personalChat?.isGroupChat ? (
           <InfomationGroup conversation={personalChat} />
         ) : (
@@ -58,14 +60,14 @@ function InformationConversation() {
               className='my-4 inline-flex cursor-pointer items-center rounded-lg bg-black px-8 py-4 text-center text-sm font-medium text-white hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800'
               onClick={togglePopupViewProfile}
             >
-              View profile
+              {t('view_profile')}
             </a>
             <div>
               <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
-                <DropdownInfoItem icon={IoIosSearch} label={'Search chat'} />
-                <DropdownInfoItem icon={FaRegImage} label={'List of images'} />
-                <DropdownInfoItem icon={MdOutlineGTranslate} label={'Auto translate'} />
-                <DropdownInfoItem icon={SlOptions} label={'More Option'} />
+                <DropdownInfoItem icon={IoIosSearch} label={t('search_chat')} />
+                <DropdownInfoItem icon={FaRegImage} label={t('list_images')} />
+                <DropdownInfoItem icon={MdOutlineGTranslate} label={t('auto_translate')} />
+                <DropdownInfoItem icon={SlOptions} label={t('more_options')} />
               </ul>
             </div>
           </div>

@@ -4,10 +4,12 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import UserCardSkeleton from '../UserCard/UserCardSkeleton/UserCardSkeleton'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { setConversation } from '@/redux/Slice/userSlice'
 
 const UserList = () => {
   const [activeTab, setActiveTab] = useState('personal')
+  const { t } = useTranslation()
   const [activeUserID, setActiveUserID] = useState(null)
   const navigate = useNavigate()
   const groupChats = useSelector((state) => state.user.lsGroupChats)
@@ -30,7 +32,7 @@ const UserList = () => {
               : 'border-gray-300 bg-white text-black'
           }`}
         >
-          Cá Nhân
+          {t('personal_chat')}
         </button>
         <button
           onClick={() => setActiveTab('group')}
@@ -40,7 +42,7 @@ const UserList = () => {
               : 'border-gray-300 bg-white text-black'
           }`}
         >
-          Nhóm
+          {t('group_chat')}
         </button>
       </div>
       <div className='mt-4 h-full overflow-y-auto'>

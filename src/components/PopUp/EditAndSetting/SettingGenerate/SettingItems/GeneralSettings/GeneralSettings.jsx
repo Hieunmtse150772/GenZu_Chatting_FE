@@ -1,9 +1,11 @@
 import { IoMdArrowBack } from 'react-icons/io'
 import { CiImageOn } from 'react-icons/ci'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const GeneralSettings = ({ onBack }) => {
   const [textSize, setTextSize] = useState(14)
+  const { t } = useTranslation()
 
   const handleSliderChange = (event) => {
     setTextSize(event.target.value)
@@ -14,9 +16,9 @@ const GeneralSettings = ({ onBack }) => {
         <button onClick={onBack} className='mr-4'>
           <IoMdArrowBack size={22} />
         </button>
-        <h3 className='text-xl font-semibold'>General</h3>
+        <h3 className='text-xl font-semibold'>{t('general')}</h3>
       </div>
-      <h4 className='mt-2 text-base text-slate-500'>Settings</h4>
+      <h4 className='mt-2 text-base text-slate-500'>{t('setting')}</h4>
 
       <div className='flex w-full flex-col rounded-lg'>
         <div className='flex flex-col items-center space-x-4 p-2'>

@@ -37,7 +37,7 @@ const FriendInfo = ({ friendInfo, createdAt, friendShipId, onUnfriend }) => {
   }, [isDropdownVisible])
 
   return (
-    <div className='relative flex items-center rounded-lg bg-white p-4 shadow-md dark:bg-gray-800'>
+    <div className='relative mt-1 flex items-center rounded-lg bg-white p-4 shadow-md dark:bg-gray-800'>
       <img
         src={friendInfo?.picture || userIcon}
         alt='friend avatar'

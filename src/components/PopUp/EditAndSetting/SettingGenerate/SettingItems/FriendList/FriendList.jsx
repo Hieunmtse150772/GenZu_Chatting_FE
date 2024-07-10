@@ -3,10 +3,12 @@ import FriendInfo from './FriendInfo/FriendInfo'
 import userService from '@/services/userService'
 import UserCardSkeleton from '@/components/Sidebar/UserCard/UserCardSkeleton/UserCardSkeleton'
 import { useEffect, useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const FriendList = ({ onBack }) => {
   const [friendLists, setFriendLists] = useState([])
   const [loading, setLoading] = useState(true)
+  const { t } = useTranslation()
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -48,7 +50,7 @@ const FriendList = ({ onBack }) => {
         <button onClick={onBack} className='mr-4'>
           <IoMdArrowBack size={22} />
         </button>
-        <h3 className='text-xl font-semibold'>Friend Lists</h3>
+        <h3 className='text-xl font-semibold'>{t('friend_lists')}</h3>
       </div>
 
       {loading ? (

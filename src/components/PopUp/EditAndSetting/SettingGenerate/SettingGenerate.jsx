@@ -11,17 +11,25 @@ import FriendList from './SettingItems/FriendList/FriendList'
 import { RiUser5Line } from 'react-icons/ri'
 import SettingItems from './SettingItems/SettingItems'
 import ChooseLanguage from './SettingItems/ChooseLanguage/ChooseLanguage'
+import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 
 export default function SettingGenerate() {
+  const { t } = useTranslation()
   const [view, setView] = useState('list')
 
+  const labels = {
+    general: t('general_settings'),
+    friends: t('friend_lists'),
+    language: t('language'),
+  }
+
   const handleItemClick = (label) => {
-    if (label === 'General settings') {
+    if (label === labels.general) {
       setView('general')
-    } else if (label === 'Friend lists') {
+    } else if (label === labels.friends) {
       setView('friends')
-    } else if (label === 'Language') {
+    } else if (label === labels.language) {
       setView('language')
     }
   }
@@ -37,29 +45,29 @@ export default function SettingGenerate() {
       <div className={`w-full rounded-lg ${view === 'list' ? '' : 'relative'}`}>
         {view === 'list' && (
           <>
-            <h3 className='mb-2 ml-2 text-2xl font-semibold dark:text-white'>Settings</h3>
+            <h3 className='mb-2 ml-2 text-2xl font-semibold dark:text-white'>{t('setting')}</h3>
             <SettingItems
               icon={CiSettings}
               size={24}
-              label={'General settings'}
+              label={t('general_settings')}
               onSettingItemClick={handleItemClick}
             />
-            <SettingItems icon={IoIosNotificationsOutline} size={24} label={'Notification'} />
-            <SettingItems icon={GrSecure} size={24} label={'Privacy and security'} />
-            <SettingItems icon={GoDatabase} size={24} label={'Data and Storage'} />
+            <SettingItems icon={IoIosNotificationsOutline} size={24} label={t('notification')} />
+            <SettingItems icon={GrSecure} size={24} label={t('privacy_security')} />
+            <SettingItems icon={GoDatabase} size={24} label={t('data_storage')} />
             <SettingItems
               icon={IoLanguageOutline}
               size={24}
-              label={'Language'}
+              label={t('language')}
               onSettingItemClick={handleItemClick}
             />
-            <SettingItems icon={PiStickerLight} size={24} label={'Stickers and Emoji'} />
-            <SettingItems icon={LuFileQuestion} size={24} label={'Ask a question'} />
-            <SettingItems icon={MdOutlineWorkspacePremium} size={24} label={'Get Premium'} />
+            <SettingItems icon={PiStickerLight} size={24} label={t('stickers_emoji')} />
+            <SettingItems icon={LuFileQuestion} size={24} label={t('ask_question')} />
+            <SettingItems icon={MdOutlineWorkspacePremium} size={24} label={t('get_premium')} />
             <SettingItems
               icon={RiUser5Line}
               size={24}
-              label={'Friend lists'}
+              label={t('friend_lists')}
               onSettingItemClick={handleItemClick}
             />
           </>
