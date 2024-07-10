@@ -10,6 +10,7 @@ import GeneralSettings from './SettingItems/GeneralSettings/GeneralSettings'
 import FriendList from './SettingItems/FriendList/FriendList'
 import { RiUser5Line } from 'react-icons/ri'
 import SettingItems from './SettingItems/SettingItems'
+import ChooseLanguage from './SettingItems/ChooseLanguage/ChooseLanguage'
 import { useState } from 'react'
 
 export default function SettingGenerate() {
@@ -20,6 +21,8 @@ export default function SettingGenerate() {
       setView('general')
     } else if (label === 'Friend lists') {
       setView('friends')
+    } else if (label === 'Language') {
+      setView('language')
     }
   }
 
@@ -44,7 +47,12 @@ export default function SettingGenerate() {
             <SettingItems icon={IoIosNotificationsOutline} size={24} label={'Notification'} />
             <SettingItems icon={GrSecure} size={24} label={'Privacy and security'} />
             <SettingItems icon={GoDatabase} size={24} label={'Data and Storage'} />
-            <SettingItems icon={IoLanguageOutline} size={24} label={'Language'} />
+            <SettingItems
+              icon={IoLanguageOutline}
+              size={24}
+              label={'Language'}
+              onSettingItemClick={handleItemClick}
+            />
             <SettingItems icon={PiStickerLight} size={24} label={'Stickers and Emoji'} />
             <SettingItems icon={LuFileQuestion} size={24} label={'Ask a question'} />
             <SettingItems icon={MdOutlineWorkspacePremium} size={24} label={'Get Premium'} />
@@ -64,6 +72,11 @@ export default function SettingGenerate() {
         {view === 'friends' && (
           <div className='translate-x-01 absolute inset-0 left-0 top-0 z-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out'>
             <FriendList onBack={handleBack} />
+          </div>
+        )}
+        {view === 'language' && (
+          <div className='translate-x-01 absolute inset-0 left-0 top-0 z-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out'>
+            <ChooseLanguage onBack={handleBack} />
           </div>
         )}
       </div>
