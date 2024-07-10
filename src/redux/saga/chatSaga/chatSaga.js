@@ -78,8 +78,8 @@ function createSocketChannel(socket, idConversation) {
       console.log(read)
     })
     socket.on('recall received', (message) => {
-      console.log('hello anh')
       console.log(message)
+      emit(updateMessage(message.data.data))
     })
     // Trả về hàm unsubscribe để hủy đăng ký lắng nghe các sự kiện khi event channel bị đóng.
     return () => {
