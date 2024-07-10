@@ -127,7 +127,7 @@ const DetailMessage = memo(function DetailMessage(props) {
         item.sender != null && sessionId == item.sender._id ? (
           <div
             key={index}
-            className='flex justify-end'
+            className={`flex justify-end ${item.status === 'recalled' ? 'pointer-events-none opacity-50' : ''}`}
             onMouseEnter={() => handleMessageHover(item._id)}
             onMouseLeave={() => handleMessageHover(null)}
           >
@@ -199,7 +199,7 @@ const DetailMessage = memo(function DetailMessage(props) {
           // Nếu người gửi tin nhắn không phải là user hiện tại thì hiển thị tin nhắn ở bên trái
           <div
             key={index}
-            className='flex'
+            className={`flex ${item.status === 'recalled' ? 'pointer-events-none opacity-50' : ''}`}
             onMouseEnter={() => {
               handleMessageHover(item._id)
             }}

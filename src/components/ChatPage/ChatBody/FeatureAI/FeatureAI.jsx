@@ -91,7 +91,6 @@ const FeatureAI = memo(function FeatureAI(props) {
       <ul className='mr-4 hidden overflow-x-hidden font-semibold md:flex md:items-center'>
         {/* Nút "Dịch" */}
         <li className='mr-1 p-1'>
-          {console.log(props)}
           <button
             id='setting'
             className='rounded-md p-1 hover:bg-blue-400'

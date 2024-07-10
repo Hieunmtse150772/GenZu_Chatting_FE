@@ -33,7 +33,6 @@ const chatSlice = createSlice({
       }
     },
     plusPage: (state) => {
-      console.log('helo helo')
       return {
         ...state,
         page: state.page + 1,

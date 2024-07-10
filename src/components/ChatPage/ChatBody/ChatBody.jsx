@@ -7,11 +7,13 @@ import { useEffect, useRef, useState } from 'react' // Import hook useEffect, us
 import { useParams } from 'react-router-dom'
 import { getMessagesMore } from '@/redux/Slice/messageSlice'
 import { setLoadMore } from '@/redux/Slice/chatSlice'
+import LoadMore from './LoadMore/LoadMore'
 
 function ChatBody({ toggleInfo }) {
   // Component ChatBody nhận props toggleInfo
   const page = useSelector((state) => state.chat.page)
   const loadMore = useSelector((state) => state.chat.loadMore)
+  const totalPage = useSelector((state) => state.message.totalPage)
   const idConversation = useParams()
   const dispatch = useDispatch()
   const messagesListRef = useRef(null)
@@ -67,19 +69,20 @@ function ChatBody({ toggleInfo }) {
   useEffect(() => {
     if (!loadMore) {
       const element = document.getElementById('messages-list')
-      element.scrollTop = element.scrollTop - scrollHeight + 200
+      element.scrollTop = element.scrollTop - scrollHeight + 904
     }
   }, [loadMore])
   return (
-    <div className='mx-0 flex h-screen w-full flex-col shadow-2xl dark:bg-darkBlack md:mx-2'>
+    <div className='dark:bg-darkBlack relative mx-0 flex h-screen w-full flex-col shadow-2xl md:mx-2'>
       <ChatHeader toggleInfo={toggleInfo} />
+      {loadMore ? <LoadMore /> : ''}
       {/* Hiển thị component ChatHeader với props toggleInfo được truyền vào */}
       <div
         id='messages-list'
         className='no-scrollbar flex flex-grow flex-col space-y-2 overflow-y-auto'
         onScroll={(e) => {
           showGoToBottomBtn(e)
-          handleScrollToTop(e)
+          page > totalPage ? '' : handleScrollToTop(e)
         }}
         ref={messagesListRef} // Gắn ref cho danh sách tin nhắn
       >
@@ -89,7 +92,7 @@ function ChatBody({ toggleInfo }) {
         <button
           id='to-bottom-button'
           title='Go To Bottom'
-          className='z-90 fixed bottom-20 right-80 hidden items-center space-x-0.5 rounded-full border-0 text-xs font-bold text-blue-600 drop-shadow-md'
+          className='z-90 fixed bottom-20 left-1/2 flex -translate-x-1/2 transform items-center justify-center space-x-0.5 rounded-full border-0 px-4 py-2 text-xs font-bold text-blue-600 drop-shadow-md'
           onClick={goToBottom} // Gọi hàm goToBottom khi nút được click
         >
           <IoMdArrowRoundDown size={12} /> {/* Hiển thị icon mũi tên xuống */}

@@ -21,6 +21,7 @@ const initialState = {
   selectedEmojis: [],
   answerAI: [],
   testMessage: '',
+  totalPage: 1,
 }
 const messageSlice = createSlice({
   name: 'message',
@@ -31,7 +32,8 @@ const messageSlice = createSlice({
       console.log(action.payload)
       return {
         ...state,
-        message: action.payload.map((value) => ({
+        totalPage: action.payload.totalPages,
+        message: action.payload.Messages.map((value) => ({
           sender: value.sender,
           _id: value._id,
           conversation: value.conversation,
@@ -43,14 +45,21 @@ const messageSlice = createSlice({
           messageType: value.messageType == null ? 'text' : value.messageType,
           readBy: value.readBy,
           emojiBy: value.emojiBy,
+          status: value.status,
         })),
       }
     },
     updateMessage: (state, action) => {
       const index = state.message.findIndex((item) => item._id == action.payload._id)
+
       if (index != -1) {
-        state.message[index] = { ...state.message[index], message: 'Tin nhắn đã bị thu hồi' }
+        state.message[index] = {
+          ...state.message[index],
+          message: action.payload.message,
+          status: action.payload.status,
+        }
       }
+      console.log(action.payload.status)
     },
     setDeleteMessageOneSite: (state, action) => {
       const index = state.message.findIndex((item) => item._id == action.payload)
@@ -119,7 +128,7 @@ const messageSlice = createSlice({
       // hanh dong update/delete emoji tren tin nhan
       // lay emoji
       let indexEmoji
-      if(action.payload.type === 'UPDATE' || action.payload.type === 'DELETE'){
+      if (action.payload.type === 'UPDATE' || action.payload.type === 'DELETE') {
         indexEmoji = message.emojiBy.findIndex((emoji) => emoji._id === action.payload.data._id)
       }
 
@@ -138,10 +147,10 @@ const messageSlice = createSlice({
     getMessagesById: (state, action) => {},
     getMessagesMore: (state, action) => {},
     setMessagesMore: (state, action) => {
-      console.log(action.payload)
+      console.log(action.payload.Messages)
       return {
         ...state,
-        message: [...state.message, ...action.payload],
+        message: [...state.message, ...action.payload.Messages],
       }
     },
     setNewMessage: (state, action) => {
@@ -163,6 +172,7 @@ const messageSlice = createSlice({
             messageType: newMs.messageType,
             readBy: newMs.readBy,
             emojiBy: newMs.emojiBy,
+            status: newMs.status,
           },
           ...state.message,
         ],

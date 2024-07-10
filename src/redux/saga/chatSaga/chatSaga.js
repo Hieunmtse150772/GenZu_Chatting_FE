@@ -7,6 +7,7 @@ import {
   setEmojiOnMessage,
   setDeleteHistoryMessage,
   setMessagesMore,
+  updateMessage,
 } from '@/redux/Slice/messageSlice'
 import {
   setFriendRequestNotification,
@@ -77,6 +78,7 @@ function createSocketChannel(socket, idConversation) {
       console.log(read)
     })
     socket.on('recall received', (message) => {
+      console.log('hello anh')
       console.log(message)
     })
     // Trả về hàm unsubscribe để hủy đăng ký lắng nghe các sự kiện khi event channel bị đóng.
@@ -250,7 +252,7 @@ function* setEmoji(action) {
         apiCall.data.type = type
         apiCall.data.conversation = action.payload.idConversation
         apiCall.data._id = action.payload.id_message
-        apiCall.data.data.sender = { _id : apiCall.data.data.sender}
+        apiCall.data.data.sender = { _id: apiCall.data.data.sender }
         yield call([socket, 'emit'], 'edit emoji', apiCall.data)
         break
       default: // Default là "DELETE"
@@ -259,7 +261,7 @@ function* setEmoji(action) {
         apiCall.data.type = type
         apiCall.data.conversation = action.payload.idConversation
         apiCall.data._id = action.payload.id_message
-        apiCall.data.data.sender = { _id : apiCall.data.data.sender}
+        apiCall.data.data.sender = { _id: apiCall.data.data.sender }
         yield call([socket, 'emit'], 'delete emoji', apiCall.data)
     }
 
@@ -286,6 +288,7 @@ function* recallMessageSaga(action) {
     const response = yield call(recallMessage, action.payload)
     console.log(response)
     yield call([socket, 'emit'], 'recall', response)
+    yield put(updateMessage(response.data.data))
   } catch (error) {
     console.log(error)
   }
