@@ -246,7 +246,7 @@ function* setEmoji(action) {
         apiCall.data.type = type
         apiCall.data.conversation = action.payload.idConversation
         apiCall.data._id = action.payload.id_message
-        apiCall.data.data.sender = { _id: apiCall.data.data.sender }
+        apiCall.data.data.sender = apiCall.data.data.sender
         yield call([socket, 'emit'], 'edit emoji', apiCall.data)
         break
       default: // Default là "DELETE"
@@ -255,17 +255,12 @@ function* setEmoji(action) {
         apiCall.data.type = type
         apiCall.data.conversation = action.payload.idConversation
         apiCall.data._id = action.payload.id_message
-        apiCall.data.data.sender = { _id: apiCall.data.data.sender }
+        apiCall.data.data.sender = apiCall.data.data.sender
         yield call([socket, 'emit'], 'delete emoji', apiCall.data)
     }
 
     // Gọi API một lần duy nhất
     const { data } = apiCall
-    data.type = action.payload.type
-    if (action.payload.type === 'UPDATE' || action.payload.type === 'DELETE') {
-      data._id = action.payload.id_message
-      data.data.sender = { _id: data.data.sender }
-    }
     // Dispatch action với payload ban đầu
     yield put(setEmojiOnMessage(data))
   } catch (error) {
