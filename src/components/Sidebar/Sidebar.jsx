@@ -17,10 +17,12 @@ import PopUpAddMenber from '../PopUp/PopUpAddMember/PopUpAddMember'
 import userService from '../../services/userService'
 import UserInfoFriendRequest from './UserInfoFriendRequest/UserInfoFriendRequest'
 import { clearUserSlice, logoutSlice } from '@/redux/Slice/userSlice'
+import { useTranslation } from 'react-i18next'
 import SearchFriends from './SearchFriends/SearchFriends'
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation()
   const sidebarRef = useRef(null)
   const navigate = useNavigate()
   const [isPopupVisible, setIsPopupVisible] = useState(false)
@@ -164,7 +166,7 @@ const Sidebar = () => {
               />
             </div>
           </div>
-          <div className='flex-grow h-3/6'>
+          <div className='h-3/6 flex-grow'>
             {searchResults.length > 0 ? (
               searchResults.map((item, index) => {
                 return <SearchFriends key={index} user={item} />
