@@ -7,7 +7,7 @@ import DropdownItem from '../DropdownItem/DropdownItem'
 import { getCookie } from '@/services/Cookies'
 import { useDispatch } from 'react-redux'
 import { deleteConversation } from '@/redux/Slice/messageSlice'
-
+import { TbPointFilled } from 'react-icons/tb'
 const UserCard = ({ user, isActive, onUserCardClick }) => {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const buttonRef = useRef(null)
@@ -15,7 +15,7 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
 
   const dispatch = useDispatch()
   const handleDeleteBtn = (e) => {
-      dispatch(deleteConversation(user))
+    dispatch(deleteConversation(user))
   }
 
   const handleMoreClick = (e) => {
@@ -48,20 +48,36 @@ const UserCard = ({ user, isActive, onUserCardClick }) => {
         isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
       } mb-1 rounded-lg`}
     >
-      <img
-        src={
-          !user.isGroupChat
-            ? user.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
-              ? user.users[1]?.picture
-              : user.users[0]?.picture
-            : user.avatar != null
-              ? user.avatar
-              : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`
-        }
-        alt='user avatar'
-        className='h-12 w-12 rounded-full object-cover'
-      />
-
+      <div className='relative h-14 w-20'>
+        <img
+          src={
+            !user.isGroupChat
+              ? user.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
+                ? user.users[1]?.picture
+                : user.users[0]?.picture
+              : user.avatar != null
+                ? user.avatar
+                : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`
+          }
+          alt='user avatar'
+          className='h-14 w-14 rounded-full object-cover'
+        />
+        {/* <TbPointFilled size={22} className='absolute bottom-0 right-0 text-green-500' /> */}
+        {!user.isGroupChat ? (
+          (
+            user.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
+              ? user.users[1]?.is_online
+              : user.users[0]?.is_online
+          ) ? (
+            <TbPointFilled size={22} className='absolute bottom-0 right-0 text-green-500' />
+          ) : (
+            <TbPointFilled size={22} className='absolute bottom-0 right-0 text-gray-500' />
+          )
+        ) : (
+          ''
+        )}
+      </div>
+     
       <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
         <h3 className='truncate text-sm font-semibold'>
           {!user.isGroupChat

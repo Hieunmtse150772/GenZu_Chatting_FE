@@ -87,6 +87,11 @@ function createSocketChannel(socket, idConversation) {
       socket.off('typing')
       socket.off('stop_typing')
       socket.off('message received')
+      socket.off('isRead')
+      socket.off('emoji received')
+      socket.off('received reply')
+      socket.off('received request')
+      socket.off('recall received')
     }
   })
 }
@@ -107,7 +112,7 @@ function* handleSocketConnect(action) {
   // Gửi sự kiện 'setup' và 'join chat' đến server.
   socket.emit('setup', user)
   socket.emit('join chat', action.payload.idConversation)
-
+  socket.emit('login', user._id)
   // Tạo event channel để lắng nghe các sự kiện socket.io.
   const socketChannel = yield call(createSocketChannel, socket, action.payload.idConversation)
 
@@ -293,6 +298,13 @@ function* recallMessageSaga(action) {
     console.log(error)
   }
 }
+function* LogoutSaga(action) {
+  try {
+    yield call([socket, 'emit'], 'logout', action.payload)
+  } catch (error) {
+    console.log(error)
+  }
+}
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
  */
@@ -310,4 +322,5 @@ export default function* chatSaga() {
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
+  yield takeLatest('user/logoutSlice', LogoutSaga)
 }

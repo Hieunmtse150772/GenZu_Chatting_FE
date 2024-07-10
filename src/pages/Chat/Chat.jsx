@@ -39,11 +39,11 @@ export default function Chat() {
   const conversation = useSelector((state) => state.user.conversation)
   const lsConversation = useSelector((state) => state.user.lsConversation)
   const toastRef = useRef(null)
+  const idConversationPreventive = useSelector((state) => state.user.idConversation)
   useLayoutEffect(() => {
     if (!checkCookie()) {
       dispatch(setIdConversation(null))
       window.location.href = '/'
-      console.log('hihihih')
     }
   })
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function Chat() {
     }
   }, [])
   useLayoutEffect(() => {
-    if (checkCookie()) {
+    if (checkCookie() && idConversation.idConversation !== 'undefined') {
       dispatch(getMessagesById(idConversation))
       dispatch(setIdConversation(idConversation.idConversation))
       dispatch(resetChat())
@@ -84,7 +84,7 @@ export default function Chat() {
 
   //**// */
   useEffect(() => {
-    if (checkCookie()) {
+    if (checkCookie() && idConversation.idConversation != 'undefined') {
       dispatch(connectSocket(idConversation))
       dispatch(loginSlice(JSON.parse(getCookie('userLogin'))?.user._id))
     }
@@ -106,7 +106,14 @@ export default function Chat() {
       return () => clearTimeout(timer) // Cleanup the timer on unmount
     }
   }, [dispatch, toastMessage])
-
+  useEffect(() => {
+    if (lsConversation && idConversation.idConversation == 'undefined') {
+      if (idConversationPreventive != null) {
+        navigate(`/chat/${idConversationPreventive}`)
+        console.log(idConversationPreventive)
+      }
+    }
+  }, [idConversationPreventive, idConversation, lsConversation, navigate])
   return (
     <>
       {!checkCookie() ? (
