@@ -146,6 +146,7 @@ const DetailMessage = memo(function DetailMessage(props) {
                 message={item.message}
                 id={item._id}
                 callBackOptionClick={handleOptionClick}
+                owner={true}
               />
             </div>
 
@@ -255,6 +256,7 @@ const DetailMessage = memo(function DetailMessage(props) {
                 message={item.message}
                 id={item._id}
                 callBackOptionClick={handleOptionClick}
+                owner={false}
               />
             </div>
           </div>

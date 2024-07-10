@@ -24,6 +24,7 @@ import {
   updateEmoji,
   deleteEmoji,
   deleteConversation,
+  recallMessage,
 } from '@/services/messageService'
 
 // Import thư viện socket.io-client để tạo kết nối WebSocket.
@@ -74,6 +75,9 @@ function createSocketChannel(socket, idConversation) {
     // Lắng nghe sự kiện đã đọc thông báo.
     socket.on('isRead', (read) => {
       console.log(read)
+    })
+    socket.on('recall received', (message) => {
+      console.log(message)
     })
     // Trả về hàm unsubscribe để hủy đăng ký lắng nghe các sự kiện khi event channel bị đóng.
     return () => {
@@ -281,7 +285,16 @@ function* deleteHistoryMessage(action) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }
 }
-
+function* recallMessageSaga(action) {
+  console.log(action.payload)
+  try {
+    const response = yield call(recallMessage, action.payload)
+    console.log(response)
+    yield call([socket, 'emit'], 'recall', response)
+  } catch (error) {
+    console.log(error)
+  }
+}
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
  */
@@ -289,6 +302,7 @@ export default function* chatSaga() {
   // Sử dụng takeLatest để chỉ xử lý action cuối cùng được dispatch.
   yield takeLatest('user/setReadNotification', sendReadNotification)
   // yield takeLatest('user/setFriendRequestNotification', sendAddFriendRequest)
+  yield takeLatest('message/recallMessageSlice', recallMessageSaga)
   yield takeLatest('user/sendReplyFriendRequest', replyAddFriendRequest)
   yield takeLatest('user/alertFriendRequest', sendAddFriendRequest)
   yield takeLatest('message/translationMessage', translationTextSaga)

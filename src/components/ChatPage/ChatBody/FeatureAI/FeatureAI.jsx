@@ -91,6 +91,7 @@ const FeatureAI = memo(function FeatureAI(props) {
       <ul className='mr-4 hidden overflow-x-hidden font-semibold md:flex md:items-center'>
         {/* Nút "Dịch" */}
         <li className='mr-1 p-1'>
+          {console.log(props)}
           <button
             id='setting'
             className='rounded-md p-1 hover:bg-blue-400'
@@ -126,7 +127,7 @@ const FeatureAI = memo(function FeatureAI(props) {
       </ul>
       {/* Dropdown menu */}
       <div className='' ref={dropdownRef}>
-        {isOptionBtnClick && <DropdownOption />}
+        {isOptionBtnClick && <DropdownOption idMessage={props.id} owner={props.owner} />}
       </div>
     </div>
   )

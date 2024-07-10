@@ -46,6 +46,19 @@ const messageSlice = createSlice({
         })),
       }
     },
+    updateMessage: (state, action) => {
+      const index = state.message.findIndex((item) => item._id == action.payload._id)
+      if (index != -1) {
+        state.message[index] = { ...state.message[index], message: 'Tin nhắn đã bị thu hồi' }
+      }
+    },
+    setDeleteMessageOneSite: (state, action) => {
+      const index = state.message.findIndex((item) => item._id == action.payload)
+      if (index != -1) {
+        state.message.splice(index, 1)
+      }
+    },
+    recallMessageSlice: (state, action) => {},
     setMessageSpoiled: (state, action) => {
       const { id_message } = action.payload
       const message = state.message.find((msg) => msg.id_message === id_message)
@@ -198,7 +211,10 @@ export const {
   setNewMessage,
   translationMessage,
   setTranslationMessage,
+  recallMessageSlice,
   deleteConversation,
   setDeleteHistoryMessage,
+  setDeleteMessageOneSite,
+  updateMessage,
 } = messageSlice.actions
 export default messageSlice.reducer

@@ -58,3 +58,12 @@ export const deleteConversation = (idConversation) => {
   console.log(idConversation)
   return axiosClient.delete(`/conversations?id=${idConversation}`)
 }
+
+export const deleteMessageOnesite = (idMessage) => {
+  console.log(idMessage)
+  return axiosClient.patch(`/messages/deleteMessageByOneSide?id=${idMessage.idMessage}`)
+}
+export const recallMessage = (idMessage) => {
+  console.log(idMessage)
+  return axiosClient.delete(`messages/recall?id=${idMessage}`)
+}
