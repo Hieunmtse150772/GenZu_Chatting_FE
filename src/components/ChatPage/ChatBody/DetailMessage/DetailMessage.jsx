@@ -135,9 +135,9 @@ const DetailMessage = memo(function DetailMessage(props) {
             <div
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
-                  ? 'opacity-100'
+                  ? 'opacity-100 dark:text-white'
                   : hoveredMessage == item._id
-                    ? 'opacity-100'
+                    ? 'opacity-100 dark:text-white'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
               ref={optionRef}
@@ -180,7 +180,7 @@ const DetailMessage = memo(function DetailMessage(props) {
 
               {/* Nút emoji */}
               <div
-                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 rounded-md${
+                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
                   hoveredMessage == item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                 }`}
                 ref={buttonRef}
@@ -213,7 +213,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               </div>
               {/* Nút emoji */}
               <div
-                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 rounded-md${
+                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
                   hoveredMessage == item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                 }`}
                 ref={buttonRef}
@@ -245,9 +245,9 @@ const DetailMessage = memo(function DetailMessage(props) {
             <div
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
-                  ? 'opacity-100'
+                  ? 'opacity-100 dark:text-white'
                   : hoveredMessage == item._id
-                    ? 'opacity-100'
+                    ? 'opacity-100 dark:text-white'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
               ref={optionRef}

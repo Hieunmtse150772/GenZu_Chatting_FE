@@ -10,7 +10,7 @@ function ChatHeader({ toggleInfo }) {
   return (
     <>
       {personalChat ? (
-        <header className='mb-2 flex items-center justify-between rounded-lg bg-mainBlue px-8 py-4 shadow-xl dark:bg-[#6c8ea3]'>
+        <header className='mb-2 flex items-center justify-between rounded-lg bg-mainBlue px-8 py-4 shadow-xl dark:bg-darkTheme'>
           <div className='flex cursor-pointer items-center space-x-4'>
             {console.log(toggleInfo)}
             <img
@@ -37,7 +37,7 @@ function ChatHeader({ toggleInfo }) {
               <span className='font-semibold text-gray-500 dark:text-slate-500'>Active 2h ago</span>
             </div>
           </div>
-          <div className='flex space-x-2 md:space-x-6'>
+          <div className='flex space-x-2 md:space-x-6 dark:text-white'>
             <button className='rounded-md p-2 hover:bg-blue-400 dark:hover:bg-[#357ABD]'>
               <MdPhone size={22} />
             </button>

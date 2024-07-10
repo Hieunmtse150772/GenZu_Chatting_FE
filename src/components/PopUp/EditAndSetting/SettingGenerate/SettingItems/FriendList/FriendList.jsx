@@ -44,7 +44,6 @@ const FriendList = ({ onBack }) => {
 
   return (
     <div className='z-10 flex w-full translate-x-0 transform flex-col transition-transform'>
-      {console.log(friendLists)}
       <div className='flex w-auto cursor-pointer items-center justify-start border-b-2 border-gray-200 bg-white p-2'>
         <button onClick={onBack} className='mr-4'>
           <IoMdArrowBack size={22} />

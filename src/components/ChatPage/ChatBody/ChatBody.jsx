@@ -71,7 +71,7 @@ function ChatBody({ toggleInfo }) {
     }
   }, [loadMore])
   return (
-    <div className='mx-0 flex h-screen w-full flex-col shadow-2xl dark:bg-[#587e91] md:mx-2'>
+    <div className='mx-0 flex h-screen w-full flex-col shadow-2xl dark:bg-darkBlack md:mx-2'>
       <ChatHeader toggleInfo={toggleInfo} />
       {/* Hiển thị component ChatHeader với props toggleInfo được truyền vào */}
       <div

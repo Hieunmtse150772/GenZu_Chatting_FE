@@ -514,7 +514,7 @@ const ChatFooter = () => {
         )}
 
         {/* Input nhập liệu và các nút chức năng */}
-        <div className='relative flex items-center rounded-lg bg-white px-4 pb-4 pt-1 dark:bg-[#6c8ea3]'>
+        <div className='relative flex items-center rounded-lg bg-mainBlue px-4 pb-4 pt-1 dark:bg-darkBlack'>
           {/* Hiển thị input field hoặc trạng thái đang tải */}
           {!isAiSuggestionClick ? (
             <div className='loader-dots relative mt-2 h-5 w-10/12'>

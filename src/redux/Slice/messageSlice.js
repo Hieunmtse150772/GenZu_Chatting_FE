@@ -118,19 +118,20 @@ const messageSlice = createSlice({
       let message = state.message.find((msg) => msg._id === action.payload._id)
       // hanh dong update/delete emoji tren tin nhan
       // lay emoji
-      let emojiBy = message.emojiBy.find((emoji) => emoji._id === action.payload.data._id)
+      let indexEmoji
+      if(action.payload.type === 'UPDATE' || action.payload.type === 'DELETE'){
+        indexEmoji = message.emojiBy.findIndex((emoji) => emoji._id === action.payload.data._id)
+      }
 
       switch (action.payload.type) {
         case 'ADD':
           message.emojiBy = action.payload.emojiBy
           break
         case 'UPDATE':
-          emojiBy = [action.payload.data]
-          message.emojiBy = emojiBy
+          message.emojiBy[indexEmoji] = action.payload.data
           break
-        case 'DELETE':
-          emojiBy = []
-          message.emojiBy = emojiBy
+        default:
+          message.emojiBy.splice(indexEmoji, 1)
           break
       }
     },
