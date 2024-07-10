@@ -246,7 +246,7 @@ function* setEmoji(action) {
         apiCall.data.type = type
         apiCall.data.conversation = action.payload.idConversation
         apiCall.data._id = action.payload.id_message
-        apiCall.data.data.sender = apiCall.data.data.sender
+        apiCall.data.data.sender = { _id : apiCall.data.data.sender}
         yield call([socket, 'emit'], 'edit emoji', apiCall.data)
         break
       default: // Default là "DELETE"
@@ -255,7 +255,7 @@ function* setEmoji(action) {
         apiCall.data.type = type
         apiCall.data.conversation = action.payload.idConversation
         apiCall.data._id = action.payload.id_message
-        apiCall.data.data.sender = apiCall.data.data.sender
+        apiCall.data.data.sender = { _id : apiCall.data.data.sender}
         yield call([socket, 'emit'], 'delete emoji', apiCall.data)
     }
 
