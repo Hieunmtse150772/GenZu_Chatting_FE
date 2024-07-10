@@ -6,8 +6,7 @@ const DropdownInfoItem = ({ icon: Icon, label }) => {
       <li>
         <button
           id='setting'
-          className='relative flex cursor-pointer items-center dark:text-white'
-          style={{ width: '100%' }}
+          className='relative flex w-full cursor-pointer items-center dark:text-white'
         >
           <Icon size={24} />
           <span className='ml-3 text-sm font-medium text-gray-900 dark:text-white'>{label}</span>
