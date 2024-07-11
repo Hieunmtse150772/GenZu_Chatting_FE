@@ -3,15 +3,18 @@ import userService from '@/services/userService'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getIdConversation } from '@/redux/Slice/userSlice'
+import axios from 'axios'
 
 const LoginForm = (props) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [notification, setNotification] = useState('')
   const [loading, setLoading] = useState(false)
   const [rememberme, SetRememberme] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [showButton, setShowButton] = useState(false)
   const idConversation = useSelector((state) => state.user.idConversation)
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -26,9 +29,33 @@ const LoginForm = (props) => {
       // Handle successful login here (e.g., save token, redirect)
     } catch (err) {
       console.error('Login failed:', err)
-      setError('Login failed. Please check your email and password.')
+      // console.log(err.message == 'Please verify account')
+      if (err.message == 'Please verify account') {
+        setError('Login failed. Please verify your account.')
+        setShowButton(true)
+      } else {
+        setError('Login failed. Please check your email and password.')
+      }
     } finally {
       setLoading(false)
+    }
+  }
+  const resendVerifyEmail = async (email) => {
+    try {
+      const response = await axios.post(
+        'https://genzu-chatting-be.onrender.com/auth/resend-verify-email',
+        { email },
+        {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+
+      return response.data
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to resend verify email')
     }
   }
   useEffect(() => {
@@ -59,7 +86,7 @@ const LoginForm = (props) => {
         </div>
         <form className='mt-8 space-y-6' onSubmit={handleLogin}>
           <div className='-space-y-px rounded-md shadow-sm'>
-            <div>
+            <div className='relative'>
               <label htmlFor='email-address' className='sr-only'>
                 Email address
               </label>
@@ -74,6 +101,48 @@ const LoginForm = (props) => {
                 className='relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
                 placeholder='Email address'
               />
+              {/* Nút resend verify email */}
+              {showButton && (
+                <button
+                  type='button'
+                  onClick={() => {
+                    resendVerifyEmail(email)
+                      .then((data) => {
+                        console.log(data.status)
+                        setError('')
+                        setNotification('Send message successfull. Please check your email')
+                      })
+                      .catch(
+                        (error) => setError(error.message + ' s'),
+                        setNotification(''),
+                        console.log(error.message),
+                      )
+                  }}
+                  className='absolute inset-y-0 right-0 flex items-center justify-center bg-gray-200 px-3 py-2 text-gray-600 hover:bg-gray-300 focus:outline-none'
+                >
+                  <span className='mr-1'>Resend email</span>
+                  {/* <svg
+                    className='h-5 w-5 animate-spin text-gray-600'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                  >
+                    <circle
+                      className='opacity-25'
+                      cx='12'
+                      cy='12'
+                      r='10'
+                      stroke='currentColor'
+                      strokeWidth='4'
+                    ></circle>
+                    <path
+                      className='opacity-75'
+                      fill='currentColor'
+                      d='M4 12a8 8 0 018-8V2.5a.5.5 0 011 0V4a8 8 0 01-8 8z'
+                    ></path>
+                  </svg> */}
+                </button>
+              )}
             </div>
             <div>
               <label htmlFor='password' className='sr-only'>
@@ -94,6 +163,7 @@ const LoginForm = (props) => {
           </div>
 
           {error && <div className='mt-2 text-sm text-red-500'>{error}</div>}
+          {notification && <div className='mt-2 text-sm text-blue-500'>{notification}</div>}
 
           <div className='flex items-center justify-between'>
             <div className='flex items-center'>

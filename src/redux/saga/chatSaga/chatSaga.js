@@ -105,7 +105,7 @@ function* handleSocketConnect(action) {
   socket = io(import.meta.env.VITE_ENDPOINT, {
     extraHeaders: { Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}` },
   })
-
+  console.log('checl check')
   // Lấy thông tin người dùng từ cookie.
   const user = JSON.parse(getCookie('userLogin')).user
 
@@ -123,8 +123,9 @@ function* handleSocketConnect(action) {
   }
 }
 function* leaveRoom(action) {
+  console.log('leave room')
   const userLeave = {
-    user: JSON.parse(getCookie('userLogin')).user._id,
+    user: JSON.parse(getCookie('userLogin'))?.user?._id,
     conversation: action.payload.idConversation,
   }
 

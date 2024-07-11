@@ -16,9 +16,10 @@ import {
   setIdConversation,
   setToastMessage,
 } from '@/redux/Slice/userSlice'
-import { connectSocket, leaveRoomSlice, resetChat } from '@/redux/Slice/chatSlice'
+import { connectSocket, resetChat } from '@/redux/Slice/chatSlice'
 import { checkCookie, getCookie } from '@/services/Cookies'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
+import NoConversations from './NoConversation/NoConversation'
 
 export default function Chat() {
   const [showInfo, setShowInfo] = useState(false)
@@ -29,11 +30,6 @@ export default function Chat() {
   const getStatusFriendRequest = friendRequestNotification.length
     ? friendRequestNotification.at(-1)
     : null
-  // const session = Object.values(JSON.parse(getCookie('userLogin')))
-  // // Lấy id của session user
-  // const sessionId = Object.keys(session).map((key) => {
-  //   return session[key]._id
-  // })[2]
   const navigate = useNavigate()
   const idConversation = useParams()
   const conversation = useSelector((state) => state.user.conversation)
@@ -75,17 +71,20 @@ export default function Chat() {
     }
   }, [])
   useLayoutEffect(() => {
-    if (checkCookie() && idConversation.idConversation !== 'undefined') {
+    console.log(lsConversation)
+    if (checkCookie() && lsConversation && idConversation.idConversation !== 'undefined') {
       dispatch(getMessagesById(idConversation))
       dispatch(setIdConversation(idConversation.idConversation))
       dispatch(resetChat())
     }
-  }, [idConversation])
+  }, [idConversation, lsConversation])
 
   //**// */
   useEffect(() => {
-    if (checkCookie() && idConversation.idConversation != 'undefined') {
+    if (checkCookie()) {
       dispatch(connectSocket(idConversation))
+    }
+    if (checkCookie() && idConversation.idConversation != 'undefined') {
       dispatch(loginSlice(JSON.parse(getCookie('userLogin'))?.user._id))
     }
   }, [dispatch, idConversation])
@@ -110,22 +109,27 @@ export default function Chat() {
     if (lsConversation && idConversation.idConversation == 'undefined') {
       if (idConversationPreventive != null) {
         navigate(`/chat/${idConversationPreventive}`)
-        console.log(idConversationPreventive)
       }
     }
   }, [idConversationPreventive, idConversation, lsConversation, navigate])
-  // Rời phòng chat khi component bị huỷ bỏ
 
   return (
     <>
       {!checkCookie() ? (
-        ''
+        <LoadingSpinner />
       ) : (
         <div className='fixed w-full'>
           <div className='Login relative'>
             <main className='flex'>
               <Sidebar />
-              {conversation ? <ChatBody toggleInfo={toggleInfo} /> : <LoadingSpinner />}
+              {/* {!conversation ? <LoadingSpinner /> : <ChatBody toggleInfo={toggleInfo} />} */}
+              {conversation ? (
+                <ChatBody toggleInfo={toggleInfo} />
+              ) : lsConversation == null ? (
+                <LoadingSpinner />
+              ) : (
+                <NoConversations />
+              )}
               {showInfo && conversation ? (
                 <div className='w-1/3'>
                   <InformationConversation />

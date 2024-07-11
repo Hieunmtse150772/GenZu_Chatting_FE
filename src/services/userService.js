@@ -20,7 +20,7 @@ const signIn = async (email, password, rememberMe) => {
     setCookie('accessToken', accessToken, 7)
     return userData
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to sign in')
+    throw new Error(error.response?.data?.message || 'Please verify account')
   }
 }
 

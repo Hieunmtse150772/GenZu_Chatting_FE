@@ -6,6 +6,7 @@ import UserCardSkeleton from '../UserCard/UserCardSkeleton/UserCardSkeleton'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { setConversation } from '@/redux/Slice/userSlice'
+import SearchFriends from '../SearchFriends/SearchFriends'
 
 const UserList = () => {
   const [activeTab, setActiveTab] = useState('personal')
@@ -14,6 +15,8 @@ const UserList = () => {
   const navigate = useNavigate()
   const groupChats = useSelector((state) => state.user.lsGroupChats)
   const lsChats = useSelector((state) => state.user.lsPersonalChats)
+  const lsConversation = useSelector((state) => state.user.lsConversation)
+  const lsFriends = useSelector((state) => state.user.lsFriends)
   const dispatch = useDispatch()
   const handleUserClick = (id) => {
     navigate(`/chat/${id}`)
@@ -47,7 +50,17 @@ const UserList = () => {
       </div>
       <div className='mt-4 h-full overflow-y-auto'>
         {lsChats.length == 0 && groupChats.length == 0 ? (
-          <UserCardSkeleton />
+          lsConversation != null ? (
+            lsFriends.length > 0 ? (
+              lsFriends?.map((item, index) => {
+                return <SearchFriends key={index} user={item} />
+              })
+            ) : (
+              <h1>Khong co ban be</h1>
+            )
+          ) : (
+            <UserCardSkeleton />
+          )
         ) : (
           <>
             {activeTab === 'personal' &&

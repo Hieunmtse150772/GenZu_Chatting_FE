@@ -1,10 +1,12 @@
+import { setCookie } from '@/services/Cookies'
 import axios from 'axios'
 import React, { useLayoutEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export default function Verify() {
   const token = useParams()
   const [contentLoading, setContentLoading] = useState('Processing Verify your account')
+  const navigate = useNavigate()
   const verifyEmail = async (token) => {
     try {
       const response = await axios.post(
@@ -29,8 +31,33 @@ export default function Verify() {
   }
   useLayoutEffect(() => {
     verifyEmail(token.id)
-      .then((data) => {
-        console.log(data)
+      .then(async (data) => {
+        try {
+          // Create an instance of Axios
+          const api = axios.create({
+            baseURL: 'https://genzu-chatting-be.onrender.com',
+            headers: {
+              Accept: 'application/json',
+              Authorization: `Bearer ${data.data.accessToken}`,
+            },
+          })
+
+          // Make a GET request to the /auth/profile endpoint
+          const response = await api.get('/auth/profile')
+          console.log(response.status)
+
+          setCookie('userLogin', {
+            accessToken: data.data.accessToken,
+            refreshToken: data.data.refreshToken,
+            user: response.data,
+          })
+          if (response.status == 200) {
+            navigate('/')
+          }
+        } catch (error) {
+          // Handle error
+          console.error('Error fetching profile:', error)
+        }
       })
       .catch((error) => {
         console.log(error)

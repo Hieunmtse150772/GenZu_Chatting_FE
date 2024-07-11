@@ -6,7 +6,7 @@ const initialState = {
   lsSearchFriends: [],
   lsPersonalChats: [],
   lsGroupChats: [],
-  lsConversation: [],
+  lsConversation: null,
   editUser: false,
   idConversation: null,
   conversation: null,

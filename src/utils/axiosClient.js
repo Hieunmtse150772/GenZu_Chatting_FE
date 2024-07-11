@@ -27,7 +27,12 @@ axiosClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config
-
+    if (error.response?.status === 403) {
+      // Optionally handle the 403 error here
+      // console.error('403 Forbidden error occurred')
+      // You can throw an error or handle it as needed
+      throw new Error(error.response?.status)
+    }
     // If the error is 401 Unauthorized and it's not a retry request
     if (
       error.response?.status === 401 ||

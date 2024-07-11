@@ -73,8 +73,10 @@ function ChatBody({ toggleInfo }) {
     }
   }, [loadMore])
   useEffect(() => {
-    return () => {
-      dispatch(leaveRoomSlice(idConversation))
+    if (idConversation.idConversation != 'undefined') {
+      return () => {
+        dispatch(leaveRoomSlice(idConversation))
+      }
     }
   }, [])
   return (

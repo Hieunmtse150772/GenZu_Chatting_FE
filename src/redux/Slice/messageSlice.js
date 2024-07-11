@@ -3,21 +3,7 @@ import { translateText } from '@/services/TranslationService'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  message: [
-    {
-      id_user: 1,
-      id_message: 1,
-      message: "Hey, how's your day going?",
-      time: '',
-      styles: {},
-      emojiBy: [
-        {
-          id_user: 1,
-          url_emoji: '😡',
-        },
-      ],
-    },
-  ],
+  message: [],
   selectedEmojis: [],
   answerAI: [],
   testMessage: '',
