@@ -16,6 +16,7 @@ function ChatBody({ toggleInfo }) {
   const loadMore = useSelector((state) => state.chat.loadMore)
   const totalPage = useSelector((state) => state.message.totalPage)
   const isSearchMessage = useSelector((state) => state.message.isSearchMessage)
+  const resultMessage = useSelector((state) =>  state.message.resultMessage)
   const idConversation = useParams()
   const dispatch = useDispatch()
   const messagesListRef = useRef(null)
@@ -81,18 +82,18 @@ function ChatBody({ toggleInfo }) {
   }, [loadMore])
 
   useEffect(() => {
-    if (idConversation.idConversation != 'undefined') {
-      return () => {
-        dispatch(leaveRoomSlice(idConversation))
-      }
+if (idConversation.idConversation != 'undefined') {
+    return () => {
+      dispatch(leaveRoomSlice(idConversation))
+}
     }
   }, [])
   
   useEffect(() => {
-    if (!isSearchMessage) {
+    if (!isSearchMessage || resultMessage) {
       setIndexMessage(0)
     }
-  }, [isSearchMessage])
+  }, [isSearchMessage, resultMessage])
 
   return (
     <div className='relative mx-0 flex h-screen w-full flex-col shadow-2xl dark:bg-darkBlack md:mx-2'>

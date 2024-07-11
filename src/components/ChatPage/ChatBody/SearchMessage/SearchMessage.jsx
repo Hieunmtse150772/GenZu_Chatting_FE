@@ -14,6 +14,9 @@ export default function SearchMessage(props){
     const handleCloseBtn = (e) =>{
         dispatch(updateStateSearch(false))
     }
+    const handleDeleteStr = (e) =>{
+        setInputStr('')
+    }
     // Hàm xử lý khi nội dung input field thay đổi
     const handleChangeInput = (e) => {
         setInputStr(e.target.value)
@@ -38,7 +41,6 @@ export default function SearchMessage(props){
     useEffect(() => {
         setIndex(props.indexMgs)
     }, [props.indexMgs])
-    console.log('props.indexMgs', index)
     return (
             <div className='relative space-x-2 flex items-center rounded-lg bg-mainBlue px-4 pb-4 pt-1 dark:bg-darkBlack'>
                 <button className='items-center rounded-full  hover:bg-blue-400 dark:hover:bg-[#357ABD]'>
@@ -52,7 +54,8 @@ export default function SearchMessage(props){
                     className='flex-1 rounded-full border px-4 py-2 focus:outline outline-cyan-600 mr-2'
                 />
                 { inputStr && <button title='Xóa'
-                        className='items-center rounded-md  hover:bg-blue-400 dark:hover:bg-[#357ABD]'>
+                        className='items-center rounded-md  hover:bg-blue-400 dark:hover:bg-[#357ABD]'
+                        onClick={handleDeleteStr}>
                     <IoIosClose size={24}/>
                 </button>}
                 {(resultMessage != undefined) && (index > 0 && index < resultMessage.length) 

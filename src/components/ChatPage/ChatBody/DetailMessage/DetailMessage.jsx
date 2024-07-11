@@ -120,8 +120,15 @@ const DetailMessage = memo(function DetailMessage(props) {
   }, [messages])
   // xử lý scroll vào phần tử message khi user nhấn enter
   useEffect(() =>{
+    var index = props.indexMsg
     if(resultMessage == undefined || resultMessage == null || resultMessage.length == 0) return ;
-    const myElement = document.getElementById(`${resultMessage[props.indexMsg]._id}`);
+    // điều kiện ngăn lỗi khi state index lớn hơn length  
+    if(props.indexMsg > resultMessage.length - 1){
+      index = 0
+    }
+    const myElement = document.getElementById(`${resultMessage[index]._id}`);
+    // myElement.select()
+    myElement.classList.add('selection:bg-purple-600')
     // const topPos = myElement.offsetTop;
     myElement.scrollIntoView()
 
