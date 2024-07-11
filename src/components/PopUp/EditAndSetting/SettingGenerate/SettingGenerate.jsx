@@ -13,8 +13,9 @@ import SettingItems from './SettingItems/SettingItems'
 import ChooseLanguage from './SettingItems/ChooseLanguage/ChooseLanguage'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
+import UserQrCode from './SettingItems/UserQrCode/UserQrCode'
 
-export default function SettingGenerate() {
+export default function SettingGenerate({ user }) {
   const { t } = useTranslation()
   const [view, setView] = useState('list')
 
@@ -22,6 +23,7 @@ export default function SettingGenerate() {
     general: t('general_settings'),
     friends: t('friend_lists'),
     language: t('language'),
+    profile: t('your_profile'),
   }
 
   const handleItemClick = (label) => {
@@ -31,6 +33,8 @@ export default function SettingGenerate() {
       setView('friends')
     } else if (label === labels.language) {
       setView('language')
+    } else if (label === labels.profile) {
+      setView('profile')
     }
   }
 
@@ -60,7 +64,12 @@ export default function SettingGenerate() {
               onSettingItemClick={handleItemClick}
             />
             <SettingItems icon={PiStickerLight} size={24} label={t('stickers_emoji')} />
-            <SettingItems icon={LuFileQuestion} size={24} label={t('ask_question')} />
+            <SettingItems
+              icon={LuFileQuestion}
+              size={24}
+              label={t('your_profile')}
+              onSettingItemClick={handleItemClick}
+            />
             <SettingItems icon={MdOutlineWorkspacePremium} size={24} label={t('get_premium')} />
             <SettingItems
               icon={RiUser5Line}
@@ -87,6 +96,12 @@ export default function SettingGenerate() {
         <div className='mb-4 w-full rounded-lg bg-white p-4 shadow-lg'>
           <h3 className='mb-4 text-lg font-semibold'>{t('language')}</h3>
           <ChooseLanguage onBack={handleBack} />
+        </div>
+      )}
+      {view === 'profile' && (
+        <div className='mb-4 w-full rounded-lg bg-white p-4 shadow-lg'>
+          <h3 className='mb-4 text-lg font-semibold'>{t('your_profile')}</h3>
+          <UserQrCode onBack={handleBack} user={user} />
         </div>
       )}
     </div>

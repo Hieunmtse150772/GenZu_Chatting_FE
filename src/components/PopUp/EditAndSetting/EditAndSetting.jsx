@@ -79,7 +79,7 @@ export default function EditAndSetting({ isVisible, onClose }) {
             &times;
           </button>
           <EditProfile user={user} token={token} />
-          <SettingGenerate />
+          <SettingGenerate user={user} />
         </div>
       </div>
     </>
