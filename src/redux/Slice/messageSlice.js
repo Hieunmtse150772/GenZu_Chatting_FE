@@ -1,6 +1,7 @@
 import { getCookie } from '@/services/Cookies'
 import { translateText } from '@/services/TranslationService'
 import { createSlice } from '@reduxjs/toolkit'
+import Fuse from 'fuse.js'
 
 const initialState = {
   message: [
@@ -59,7 +60,7 @@ const messageSlice = createSlice({
           status: action.payload.status,
         }
       }
-      console.log(action.payload.status)
+console.log(action.payload.status)
     },
     setDeleteMessageOneSite: (state, action) => {
       const index = state.message.findIndex((item) => item._id == action.payload)
@@ -172,7 +173,7 @@ const messageSlice = createSlice({
             messageType: newMs.messageType,
             readBy: newMs.readBy,
             emojiBy: newMs.emojiBy,
-            status: newMs.status,
+status: newMs.status,
           },
           ...state.message,
         ],
@@ -203,6 +204,32 @@ const messageSlice = createSlice({
         message: [],
       }
     },
+    updateStateSearch:(state, action) =>{
+      return {
+        ...state,
+        isSearchMessage: action.payload,
+      }
+    },
+    searchMessage: (state, action) =>{
+      const lstMessage = JSON.parse(JSON.stringify(state.message))
+      const fuse =  new Fuse(lstMessage, {
+        keys: ['message'],
+        threshold: 0.5
+      })
+
+      const result = fuse.search(action.payload)
+      // const indexMsg = 0
+      // const temp ={
+      //   lstMessage:  result.map((res) => res.item),
+      //   indexMsg : 0
+      // }
+
+      console.log('result search:', result)
+      return {
+        ...state,
+        resultMessage: result.map((res) => res.item)
+      }
+    }
   },
 })
 
@@ -227,5 +254,7 @@ export const {
   setDeleteHistoryMessage,
   setDeleteMessageOneSite,
   updateMessage,
+  searchMessage,
+  updateStateSearch,
 } = messageSlice.actions
 export default messageSlice.reducer

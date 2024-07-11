@@ -2,25 +2,20 @@ import { IoIosSearch } from 'react-icons/io'
 import { FaRegImage } from 'react-icons/fa'
 import { SlOptions } from 'react-icons/sl'
 import { MdOutlineGTranslate } from 'react-icons/md'
-import DropdownInfoItem from './DropdownInfoItem'
+// import DropdownInfoItem from './DropdownInfoItem'
+import DropdownItem from '@/components/Sidebar/DropdownItem/DropdownItem'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 import { useState } from 'react'
 import { getCookie } from '@/services/Cookies'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import InfomationGroup from './InfomationGroup/InfomationGroup'
+import { updateStateSearch } from '@/redux/Slice/messageSlice'
 
 function InformationConversation() {
   const [isViewProfileClick, setIsViewProfileClick] = useState(false)
 
-  // const [user, setUser] = useState({
-  //   name: { value: 'Hoang Ba Thien', isDisable: true },
-  //   email: { value: 'thienhoang241299@gmail.com', isDisable: true },
-  //   password: { value: '********', isDisable: true },
-  //   phoneNumber: { value: '0345678912', isDisable: true },
-  //   dob: { value: '24/12/1999', isDisable: true },
-  // })
-  const { t } = useTranslation()
+  const dispatch = useDispatch()
   const cookie = getCookie('userLogin')
   const [token, SetToken] = useState('')
 
@@ -39,6 +34,9 @@ function InformationConversation() {
         : '',
   )
 
+  const handleSearchBtn = (e) => {
+    dispatch(updateStateSearch(true))
+  }
   return (
     <>
       <div className='dark:bg mx-auto h-screen max-w-2xl bg-mainBlue dark:bg-[#333333] dark:opacity-95'>
@@ -60,14 +58,29 @@ function InformationConversation() {
               className='my-4 inline-flex cursor-pointer items-center rounded-lg bg-black px-8 py-4 text-center text-sm font-medium text-white hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800'
               onClick={togglePopupViewProfile}
             >
-              {t('view_profile')}
+              {('view_profile')}
             </a>
             <div>
               <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
-                <DropdownInfoItem icon={IoIosSearch} label={t('search_chat')} />
-                <DropdownInfoItem icon={FaRegImage} label={t('list_images')} />
-                <DropdownInfoItem icon={MdOutlineGTranslate} label={t('auto_translate')} />
-                <DropdownInfoItem icon={SlOptions} label={t('more_options')} />
+                <DropdownItem icon={IoIosSearch} label={'Search chat'}
+                              dropdownStyle={'p-2'}
+                              iconStyle={'h-9 w-9 p-2'} 
+                              onClick={handleSearchBtn}/>
+                <hr />
+                <DropdownItem icon={FaRegImage} label={'List of images'}
+                              dropdownStyle={'p-2'}
+                              iconStyle={'h-9 w-9 p-2'} 
+                              onClick={() =>{}} />
+                <hr />
+                <DropdownItem icon={MdOutlineGTranslate} label={'Auto translate'}
+                              dropdownStyle={'p-2'}
+                              iconStyle={'h-9 w-9 p-2'} 
+                              onClick={() =>{}} />
+                <hr />
+                <DropdownItem icon={SlOptions} label={'More Option'}
+                              dropdownStyle={'p-2'}
+                              iconStyle={'h-9 w-9 p-2'} 
+                              onClick={() =>{}} />
               </ul>
             </div>
           </div>
