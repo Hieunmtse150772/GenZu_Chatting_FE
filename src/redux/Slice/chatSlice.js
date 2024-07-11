@@ -26,6 +26,7 @@ const chatSlice = createSlice({
       state.isTyping = action.payload
     },
     connectSocket: (state, action) => {},
+    leaveRoomSlice: (state, action) => {},
     setLoadMore: (state, action) => {
       return {
         ...state,
@@ -52,6 +53,7 @@ export const {
   setIsTyping,
   connectSocket,
   plusPage,
+  leaveRoomSlice,
   resetChat,
 } = chatSlice.actions
 

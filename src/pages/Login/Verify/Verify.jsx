@@ -28,7 +28,7 @@ export default function Verify() {
     }
   }
   useLayoutEffect(() => {
-    verifyEmail(token)
+    verifyEmail(token.id)
       .then((data) => {
         console.log(data)
       })
@@ -39,6 +39,7 @@ export default function Verify() {
 
   return (
     <div>
+      {console.log(token)}
       <div className='flex h-screen w-full flex-col items-center justify-center bg-lightTheme dark:bg-darkTheme'>
         <div className='h-32 w-32 animate-spin rounded-full border-b-4 border-t-4 border-blue-500'></div>
         <h2>{contentLoading}</h2>

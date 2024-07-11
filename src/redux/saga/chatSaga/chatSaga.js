@@ -122,7 +122,14 @@ function* handleSocketConnect(action) {
     yield put(action)
   }
 }
+function* leaveRoom(action) {
+  const userLeave = {
+    user: JSON.parse(getCookie('userLogin')).user._id,
+    conversation: action.payload.idConversation,
+  }
 
+  yield call([socket, 'emit'], 'leave chat', userLeave)
+}
 /**
  * Saga để lấy danh sách tin nhắn từ API.
  * @param {object} action - Redux action.
@@ -323,4 +330,5 @@ export default function* chatSaga() {
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
   yield takeLatest('user/logoutSlice', LogoutSaga)
+  yield takeLatest('chat/leaveRoomSlice', leaveRoom)
 }

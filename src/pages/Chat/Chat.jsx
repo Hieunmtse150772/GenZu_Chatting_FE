@@ -16,7 +16,7 @@ import {
   setIdConversation,
   setToastMessage,
 } from '@/redux/Slice/userSlice'
-import { connectSocket, resetChat } from '@/redux/Slice/chatSlice'
+import { connectSocket, leaveRoomSlice, resetChat } from '@/redux/Slice/chatSlice'
 import { checkCookie, getCookie } from '@/services/Cookies'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 
@@ -114,6 +114,8 @@ export default function Chat() {
       }
     }
   }, [idConversationPreventive, idConversation, lsConversation, navigate])
+  // Rời phòng chat khi component bị huỷ bỏ
+
   return (
     <>
       {!checkCookie() ? (

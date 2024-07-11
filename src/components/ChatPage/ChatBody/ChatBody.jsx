@@ -6,7 +6,7 @@ import { IoMdArrowRoundDown } from 'react-icons/io' // Import icon IoMdArrowRoun
 import { useEffect, useRef, useState } from 'react' // Import hook useEffect, useState từ thư viện react
 import { useParams } from 'react-router-dom'
 import { getMessagesMore } from '@/redux/Slice/messageSlice'
-import { setLoadMore } from '@/redux/Slice/chatSlice'
+import { leaveRoomSlice, setLoadMore } from '@/redux/Slice/chatSlice'
 import LoadMore from './LoadMore/LoadMore'
 
 function ChatBody({ toggleInfo }) {
@@ -72,8 +72,13 @@ function ChatBody({ toggleInfo }) {
       element.scrollTop = element.scrollTop - scrollHeight + 904
     }
   }, [loadMore])
+  useEffect(() => {
+    return () => {
+      dispatch(leaveRoomSlice(idConversation))
+    }
+  }, [])
   return (
-    <div className='dark:bg-darkBlack relative mx-0 flex h-screen w-full flex-col shadow-2xl md:mx-2'>
+    <div className='relative mx-0 flex h-screen w-full flex-col shadow-2xl dark:bg-darkBlack md:mx-2'>
       <ChatHeader toggleInfo={toggleInfo} />
       {loadMore ? <LoadMore /> : ''}
       {/* Hiển thị component ChatHeader với props toggleInfo được truyền vào */}
