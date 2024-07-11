@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, memo, useCallback } from 'react'
+import { useRef, useState, useEffect, memo, useCallback, useLayoutEffect } from 'react'
 import FeatureAI from '../FeatureAI/FeatureAI'
 import { useSelector } from 'react-redux'
 import { MdOutlineEmojiEmotions } from 'react-icons/md'
@@ -21,7 +21,7 @@ const DetailMessage = memo(function DetailMessage(props) {
   // State để lưu trữ id của emoji đang được active
   const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
   const [hoveredMessage, setHoveredMessage] = useState(null)
-
+  const resultMessage = useSelector((state) => state.message.resultMessage)
   // Sử dụng useDispatch để dispatch action
   const dispatch = useDispatch()
   // Lấy danh sách messages từ store redux
@@ -118,6 +118,15 @@ const DetailMessage = memo(function DetailMessage(props) {
   useEffect(() => {
     props.handleToBottom()
   }, [messages])
+  // xử lý scroll vào phần tử message khi user nhấn enter
+  useEffect(() =>{
+    if(resultMessage == undefined || resultMessage == null || resultMessage.length == 0) return ;
+    const myElement = document.getElementById(`${resultMessage[props.indexMsg]._id}`);
+    // const topPos = myElement.offsetTop;
+    myElement.scrollIntoView()
+
+    // props.handleSearchMessage(topPos)
+  },[resultMessage, props.indexMsg])
 
   // Render component
   return (
@@ -153,6 +162,7 @@ const DetailMessage = memo(function DetailMessage(props) {
             {/* Tin nhắn */}
             <div className='relative'>
               <div
+                id={item._id}
                 className={`my-4 max-w-xs break-words rounded-lg bg-blue-200 p-2 ${item.isSpoiled || item.isSpoiled === undefined ? 'show' : 'hide'}`}
                 style={{
                   fontWeight: item.styles.bold ? 'bold' : 'normal',
@@ -207,7 +217,7 @@ const DetailMessage = memo(function DetailMessage(props) {
           >
             {/* Tin nhắn */}
             <div className='relative'>
-              <div className='my-4 max-w-xs break-words rounded-lg bg-gray-300 p-2 text-black'>
+              <div id={item._id} className='my-4 max-w-xs break-words rounded-lg bg-gray-300 p-2 text-black'>
                 {/* Hiển thị nội dung tin nhắn dựa vào messageType */}
                 <RenderMessage item={item} />
               </div>

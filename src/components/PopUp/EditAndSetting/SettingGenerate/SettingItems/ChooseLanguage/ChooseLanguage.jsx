@@ -9,12 +9,17 @@ import { useTranslation } from 'react-i18next'
 const ChooseLanguage = ({ onBack }) => {
   const defaultLanguage = JSON.parse(getCookie('userLogin'))?.user?.language
   const [selectedLanguage, setSelectedLanguage] = useState(defaultLanguage)
+  const [isProcessing, setIsProcessing] = useState(false) // Thêm state để xử lý khi đang xử lý API
 
   const { t } = useTranslation()
 
   const handleLanguageChange = async (language) => {
+    if (isProcessing) return // Nếu đang xử lý API thì không cho phép nhấn nút nữa
+    setIsProcessing(true) // Đánh dấu đang xử lý API
+
     if (!['vn', 'en', 'jp'].includes(language)) {
       console.error('Invalid language:', language)
+      setIsProcessing(false) // Đánh dấu kết thúc xử lý API
       return // Thực hiện xử lý lỗi tùy theo yêu cầu
     }
 
@@ -37,6 +42,8 @@ const ChooseLanguage = ({ onBack }) => {
     } catch (error) {
       console.error('Failed to update language', error)
       setSelectedLanguage(defaultLanguage) // Đặt lại ngôn ngữ được chọn trở lại ngôn ngữ mặc định từ cookie
+    } finally {
+      setIsProcessing(false) // Kết thúc xử lý API sau khi hoàn thành
     }
   }
 

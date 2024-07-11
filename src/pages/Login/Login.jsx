@@ -29,7 +29,7 @@ export default function Login() {
           })
   }, [navigate])
   return (
-    <div className='LoginPage mx-auto my-auto flex h-screen w-screen items-center justify-center'>
+    <div className='LoginPage mx-auto my-auto flex min-h-screen w-screen items-center justify-center'>
       <div>
         <Routes>
           <Route path='/' element={<SignInPage linkGoogle={linkLoginGoogle} />} />

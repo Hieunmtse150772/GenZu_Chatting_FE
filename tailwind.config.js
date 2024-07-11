@@ -11,8 +11,8 @@ export default {
         mainBlue: '#E1F1FF',
         lightTheme: '#DEE4E7',
         darkTheme: '#333333',
-        darkBlack: '#262626',
-
+        darkBlack: '#212b36',
+        darkHeader: '#1b232b',
       },
       margin: {
         '7px': '7px',

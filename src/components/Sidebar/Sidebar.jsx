@@ -96,7 +96,7 @@ const Sidebar = () => {
     <>
       {/* Hamburger menu */}
       {!isOpen && (
-        <div className='fixed top-6 z-50 md:hidden'>
+        <div className='fixed top-6 z-50 h-screen md:hidden'>
           <button
             onClick={toggleSidebar}
             className='-left-2 rounded-full bg-gray-800 p-1 text-white transition-all hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500'

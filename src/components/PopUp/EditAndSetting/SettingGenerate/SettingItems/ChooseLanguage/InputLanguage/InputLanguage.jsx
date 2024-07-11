@@ -2,7 +2,7 @@ import React from 'react'
 
 const InputLanguage = ({ languageValue, labelName, onChange, checked }) => {
   return (
-    <div className='flex-start my-2 flex cursor-pointer items-center'>
+    <div className='flex cursor-pointer items-center py-2'>
       <input
         type='radio'
         id={languageValue}
@@ -12,7 +12,7 @@ const InputLanguage = ({ languageValue, labelName, onChange, checked }) => {
         onChange={onChange}
         checked={checked}
       />
-      <label htmlFor={languageValue} className='ml-8'>
+      <label htmlFor={languageValue} className='ml-2 text-sm'>
         {labelName}
       </label>
     </div>

@@ -23,5 +23,5 @@ export default function Home() {
       navigate(`/chat/${idConversation}`)
     }
   }, [idConversation])
-  return <div>{!isLoading ? <Login /> : <LoadingSpinner />}</div>
+  return <>{!isLoading ? <Login /> : <LoadingSpinner />}</>
 }

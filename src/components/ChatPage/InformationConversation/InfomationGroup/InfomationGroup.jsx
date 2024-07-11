@@ -7,7 +7,7 @@ import { MdDeleteOutline } from 'react-icons/md'
 import { IoLogInOutline } from 'react-icons/io5'
 import { MdOutlineAddLink } from 'react-icons/md'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
-import DropdownInfoItem from '../DropdownInfoItem'
+import DropdownItem from '@/components/Sidebar/DropdownItem/DropdownItem'
 
 const InfomationGroup = ({ conversation }) => {
   return (
@@ -30,16 +30,34 @@ const InfomationGroup = ({ conversation }) => {
 
       <div>
         <ul className='mb-2 cursor-pointer flex-col gap-2 overflow-x-hidden rounded-lg bg-white px-4 py-2 shadow-lg dark:bg-[#1E1E1E]'>
-          <DropdownInfoItem icon={LiaUserFriendsSolid} label={'5 thành viên'} />
-          <DropdownInfoItem icon={MdOutlineAddLink} label={'Link tham gia nhóm'} />
+          <DropdownItem icon={LiaUserFriendsSolid} label={'5 thành viên'}
+                        dropdownStyle={'p-2'}
+                        iconStyle={'h-9 w-9 p-2'} 
+                        onClick={() =>{}} />
+          <DropdownItem icon={MdOutlineAddLink} label={'Link tham gia nhóm'}
+                        dropdownStyle={'p-2'}
+                        iconStyle={'h-9 w-9 p-2'} 
+                        onClick={() =>{}} />
         </ul>
       </div>
       <div>
         <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold shadow-lg dark:bg-[#1E1E1E] md:flex'>
-          <DropdownInfoItem icon={IoIosSearch} label={'Search chat'} />
-          <DropdownInfoItem icon={IoImageOutline} label={'List of images'} />
-          <DropdownInfoItem icon={MdDeleteOutline} label={"Delete chat's history"} />
-          <DropdownInfoItem icon={IoLogInOutline} label={'Leave group'} />
+          <DropdownItem icon={IoIosSearch} label={'Search chat'}
+                        dropdownStyle={'p-2'}
+                        iconStyle={'h-9 w-9 p-2'} 
+                        onClick={() =>{}} />
+          <DropdownItem icon={IoImageOutline} label={'List of images'}
+                        dropdownStyle={'p-2'}
+                        iconStyle={'h-9 w-9 p-2'} 
+                        onClick={() =>{}} />
+          <DropdownItem icon={MdDeleteOutline} label={"Delete chat's history"}
+                        dropdownStyle={'p-2'}
+                        iconStyle={'h-9 w-9 p-2'} 
+                        onClick={() =>{}} />
+          <DropdownItem icon={IoLogInOutline} label={'Leave group'}
+                        dropdownStyle={'p-2'}
+                        iconStyle={'h-9 w-9 p-2'} 
+                        onClick={() =>{}} />
         </ul>
       </div>
     </div>
