@@ -51,7 +51,7 @@ const EditProfile = ({ user, token }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className='w-6/12 rounded-lg bg-white p-4 shadow-md dark:bg-[#1E1E1E]'
+      className='mr-2 w-full rounded-lg bg-white p-4 shadow-md dark:bg-[#1E1E1E] md:w-6/12'
     >
       <h2 className='mb-4 text-2xl font-semibold dark:text-white'>{t('edit_profile')}</h2>
       {Object.keys(profile).map((key) => (
@@ -83,7 +83,7 @@ const EditProfile = ({ user, token }) => {
       ))}
       <button
         type='submit'
-        className='focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none'
+        className='focus:shadow-outline w-full rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none md:w-auto'
       >
         {t('update_profile')}
       </button>

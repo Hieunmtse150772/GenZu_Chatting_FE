@@ -39,13 +39,11 @@ export default function SettingGenerate() {
   }
 
   return (
-    <div
-      className={`${view === 'list' ? 'flex' : ''} w-full flex-col items-center justify-around space-x-2 rounded-lg bg-white p-2 dark:bg-[#1E1E1E]`}
-    >
-      <div className={`w-full rounded-lg ${view === 'list' ? '' : 'relative'}`}>
-        {view === 'list' && (
-          <>
-            <h3 className='mb-2 ml-2 text-2xl font-semibold dark:text-white'>{t('setting')}</h3>
+    <div className='flex h-screen w-full flex-col items-center space-x-2 overflow-y-auto rounded-lg bg-white p-2 dark:bg-[#1E1E1E]'>
+      {view === 'list' && (
+        <>
+          <h3 className='mb-2 ml-2 text-2xl font-semibold dark:text-white'>{t('setting')}</h3>
+          <div className='w-full rounded-lg'>
             <SettingItems
               icon={CiSettings}
               size={24}
@@ -70,24 +68,27 @@ export default function SettingGenerate() {
               label={t('friend_lists')}
               onSettingItemClick={handleItemClick}
             />
-          </>
-        )}
-        {view === 'general' && (
-          <div className='translate-x-01 absolute inset-0 left-0 top-0 z-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out'>
-            <GeneralSettings onBack={handleBack} />
           </div>
-        )}
-        {view === 'friends' && (
-          <div className='translate-x-01 absolute inset-0 left-0 top-0 z-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out'>
-            <FriendList onBack={handleBack} />
-          </div>
-        )}
-        {view === 'language' && (
-          <div className='translate-x-01 absolute inset-0 left-0 top-0 z-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out'>
-            <ChooseLanguage onBack={handleBack} />
-          </div>
-        )}
-      </div>
+        </>
+      )}
+      {view === 'general' && (
+        <div className='mb-4 w-full rounded-lg bg-white p-4 shadow-lg'>
+          <h3 className='mb-4 text-lg font-semibold'>{t('general_settings')}</h3>
+          <GeneralSettings onBack={handleBack} />
+        </div>
+      )}
+      {view === 'friends' && (
+        <div className='mb-4 w-full rounded-lg bg-white p-4 shadow-lg'>
+          <h3 className='mb-4 text-lg font-semibold'>{t('friend_lists')}</h3>
+          <FriendList onBack={handleBack} />
+        </div>
+      )}
+      {view === 'language' && (
+        <div className='mb-4 w-full rounded-lg bg-white p-4 shadow-lg'>
+          <h3 className='mb-4 text-lg font-semibold'>{t('language')}</h3>
+          <ChooseLanguage onBack={handleBack} />
+        </div>
+      )}
     </div>
   )
 }
