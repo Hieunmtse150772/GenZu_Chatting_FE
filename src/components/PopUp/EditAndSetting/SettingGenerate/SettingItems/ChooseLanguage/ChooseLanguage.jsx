@@ -31,12 +31,14 @@ const ChooseLanguage = ({ onBack }) => {
 
       i18n.changeLanguage(language)
       // Cập nhật cookie với ngôn ngữ mới
+      const newDb = {
+        ...JSON.parse(getCookie('userLogin')),
+        user: { ...JSON.parse(getCookie('userLogin')).user, language: language },
+      }
+      console.log(newDb)
       setCookie(
         'userLogin',
-        JSON.stringify({
-          ...JSON.parse(getCookie('userLogin')),
-          user: { ...JSON.parse(getCookie('userLogin')).user, language: language },
-        }),
+        JSON.stringify(newDb),
       )
     } catch (error) {
       console.error('Failed to update language', error)

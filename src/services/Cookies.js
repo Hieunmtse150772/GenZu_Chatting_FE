@@ -4,7 +4,7 @@ function setCookie(name, value, days = 7) {
   if (name == 'userLogin') {
     if (sessionStorage.getItem('userLogin')) {
       console.log(value)
-      sessionStorage.setItem(name, JSON.stringify(value))
+      sessionStorage.setItem(name, value)
     } else {
       Cookies.set(name, value, { expires: days, secure: true, sameSite: 'None', path: '/' })
     }

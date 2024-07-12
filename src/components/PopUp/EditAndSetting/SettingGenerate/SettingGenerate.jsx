@@ -3,7 +3,7 @@ import { IoIosNotificationsOutline } from 'react-icons/io'
 import { GrSecure } from 'react-icons/gr'
 import { GoDatabase } from 'react-icons/go'
 import { IoLanguageOutline } from 'react-icons/io5'
-import { PiStickerLight } from 'react-icons/pi'
+import { PiPasswordFill, PiStickerLight } from 'react-icons/pi'
 import { LuFileQuestion } from 'react-icons/lu'
 import { MdOutlineWorkspacePremium } from 'react-icons/md'
 import { CgProfile } from 'react-icons/cg'
@@ -83,7 +83,7 @@ export default function SettingGenerate({ user }) {
               onSettingItemClick={handleItemClick}
             />
             <SettingItems
-              icon={RiUser5Line}
+              icon={PiPasswordFill}
               size={24}
               label={t('change_password')}
               onSettingItemClick={handleItemClick}
