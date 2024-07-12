@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 export default function DetailProfile({ user }){
+    console.log('user', user)
     const [profile, setProfile] = useState({
         fullName: user.fullName ,
         address: user.address ,

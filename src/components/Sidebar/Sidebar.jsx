@@ -20,7 +20,7 @@ import { clearUserSlice, logoutSlice } from '@/redux/Slice/userSlice'
 import { useTranslation } from 'react-i18next'
 import SearchFriends from './SearchFriends/SearchFriends'
 
-const Sidebar = () => {
+const Sidebar = ({togglePopupViewProfile}) => {
   const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation()
   const sidebarRef = useRef(null)
@@ -166,13 +166,13 @@ const Sidebar = () => {
               />
             </div>
           </div>
-          <div className='h-3/6 flex-grow'>
+          <div className='h-3/4 flex-grow'>
             {searchResults.length > 0 ? (
               searchResults.map((item, index) => {
                 return <SearchFriends key={index} user={item} />
               })
             ) : (
-              <UserList />
+              <UserList togglePopupViewProfile={togglePopupViewProfile}/>
             )}
           </div>
           <div className='absolute bottom-4 left-4 flex w-full items-center justify-between pr-8'>

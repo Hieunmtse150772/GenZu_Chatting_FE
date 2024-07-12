@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { setConversation } from '@/redux/Slice/userSlice'
 import SearchFriends from '../SearchFriends/SearchFriends'
 
-const UserList = () => {
+const UserList = ({togglePopupViewProfile}) => {
   const [activeTab, setActiveTab] = useState('personal')
   const { t } = useTranslation()
   const [activeUserID, setActiveUserID] = useState(null)
@@ -16,12 +16,15 @@ const UserList = () => {
   const groupChats = useSelector((state) => state.user.lsGroupChats)
   const lsChats = useSelector((state) => state.user.lsPersonalChats)
   const lsConversation = useSelector((state) => state.user.lsConversation)
+  const conversation = useSelector((state) => state.user.conversation)
   const lsFriends = useSelector((state) => state.user.lsFriends)
   const dispatch = useDispatch()
   const handleUserClick = (id) => {
     navigate(`/chat/${id}`)
     setActiveUserID(id)
-    dispatch(setConversation(id))
+    if(!conversation){
+      dispatch(setConversation(id))
+    }
   }
 
   return (
@@ -70,6 +73,7 @@ const UserList = () => {
                   key={item._id}
                   isActive={activeUserID === item._id}
                   onUserCardClick={() => handleUserClick(item._id)}
+                  togglePopupViewProfile={togglePopupViewProfile}
                 />
               ))}
             {activeTab === 'group' &&

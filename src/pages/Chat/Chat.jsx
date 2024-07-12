@@ -20,8 +20,10 @@ import { connectSocket, resetChat } from '@/redux/Slice/chatSlice'
 import { checkCookie, getCookie } from '@/services/Cookies'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 import NoConversations from './NoConversation/NoConversation'
+import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 
 export default function Chat() {
+  const [isViewProfileClick, setIsViewProfileClick] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
   const dispatch = useDispatch()
   const toastMessage = useSelector((state) => state?.user?.toastMessage)
@@ -34,8 +36,28 @@ export default function Chat() {
   const idConversation = useParams()
   const conversation = useSelector((state) => state.user.conversation)
   const lsConversation = useSelector((state) => state.user.lsConversation)
+  const [user, setUser] = useState()
+  // const [user, setUser] = useState(
+  //   lsConversation && !lsConversation[0]?.isGroupChat
+  //                             ? lsConversation[0].users[0]?._id === JSON.parse(getCookie('userLogin'))?.user?._id
+  //                               ? lsConversation[0]?.users[1]
+  //                               : lsConversation[0]?.users[0]
+  //                             : '',)
   const toastRef = useRef(null)
   const idConversationPreventive = useSelector((state) => state.user.idConversation)
+
+  const togglePopupViewProfile = () => {
+    setIsViewProfileClick(!isViewProfileClick)
+    if(!isViewProfileClick && conversation){
+      setUser(!conversation?.isGroupChat
+        ? conversation.users[0]?._id === JSON.parse(getCookie('userLogin'))?.user?._id
+          ? conversation?.users[1]
+          : conversation?.users[0]
+        : conversation?.avatar != null
+          ? conversation?.avatar
+          : '',)
+    }
+  }
   useLayoutEffect(() => {
     if (!checkCookie()) {
       dispatch(setIdConversation(null))
@@ -121,7 +143,7 @@ export default function Chat() {
         <div className='fixed w-full'>
           <div className='Login relative'>
             <main className='flex'>
-              <Sidebar />
+              <Sidebar togglePopupViewProfile={togglePopupViewProfile}/>
               {/* {!conversation ? <LoadingSpinner /> : <ChatBody toggleInfo={toggleInfo} />} */}
               {conversation ? (
                 <ChatBody toggleInfo={toggleInfo} />
@@ -132,7 +154,7 @@ export default function Chat() {
               )}
               {showInfo && conversation ? (
                 <div className='w-1/3'>
-                  <InformationConversation />
+                  <InformationConversation togglePopupViewProfile={togglePopupViewProfile}/>
                 </div>
               ) : (
                 <></>
@@ -140,6 +162,7 @@ export default function Chat() {
             </main>
             {toastMessage && <ToastMessage message={toastMessage} />}
           </div>
+          {isViewProfileClick && <ViewProfile user={user} onClose={togglePopupViewProfile} />}
         </div>
       )}
     </>
