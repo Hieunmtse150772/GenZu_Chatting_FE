@@ -5,6 +5,7 @@ import generalService from '@/services/generalService'
 import { getCookie, setCookie } from '@/services/Cookies'
 import i18n from 'i18next'
 import { useTranslation } from 'react-i18next'
+import InputLanguageTranslation from './InputLanguageTranslation/InputLanguageTranslation'
 
 const ChooseLanguage = ({ onBack }) => {
   const defaultLanguage = JSON.parse(getCookie('userLogin'))?.user?.language
@@ -36,10 +37,7 @@ const ChooseLanguage = ({ onBack }) => {
         user: { ...JSON.parse(getCookie('userLogin')).user, language: language },
       }
       console.log(newDb)
-      setCookie(
-        'userLogin',
-        JSON.stringify(newDb),
-      )
+      setCookie('userLogin', JSON.stringify(newDb))
     } catch (error) {
       console.error('Failed to update language', error)
       setSelectedLanguage(defaultLanguage) // Đặt lại ngôn ngữ được chọn trở lại ngôn ngữ mặc định từ cookie
@@ -60,6 +58,7 @@ const ChooseLanguage = ({ onBack }) => {
       </div>
 
       <div className='flex w-full flex-col rounded-lg p-4'>
+        <h2 className='pb-4 text-xl font-semibold'>{t('language_system')}</h2>
         <div className='flex-start flex flex-col'>
           <InputLanguage
             languageValue={'en'}
@@ -80,7 +79,12 @@ const ChooseLanguage = ({ onBack }) => {
             checked={selectedLanguage === 'ja'}
           />
         </div>
-        {console.log('after set cookie', JSON.parse(getCookie('userLogin')))}
+      </div>
+      <div className='flex w-full flex-col rounded-lg p-4'>
+        <h2 className='pb-4 text-xl font-semibold'>{t('language_translation')}</h2>
+        <div className='flex-start flex flex-col'>
+          <InputLanguageTranslation />
+        </div>
       </div>
     </div>
   )

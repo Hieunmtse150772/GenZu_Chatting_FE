@@ -1,4 +1,3 @@
-import { getIdConversation } from '@/redux/Slice/userSlice'
 import axiosClient from '@/utils/axiosClient'
 
 export const getConversations = () => {
@@ -66,4 +65,15 @@ export const deleteMessageOnesite = (idMessage) => {
 export const recallMessage = (idMessage) => {
   console.log(idMessage)
   return axiosClient.delete(`messages/recall?id=${idMessage}`)
+}
+export const createNewConversationService = async (idUser) => {
+  console.log(idUser)
+  try {
+    const response = await axiosClient.post(`/conversations`, { userId: idUser })
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error('Lỗi khi gửi tin nhắn qua API:', error)
+    throw error // Ném lỗi để saga có thể bắt
+  }
 }

@@ -31,5 +31,7 @@
   "loading": "Loading...",
   "accept": "Accept",
   "cancel": "Cancel",
-  "change_password": "Change Your Password"
+  "change_password": "Change Your Password",
+  "language_system": "Language System",
+  "language_translation":"Language Translation"
 }

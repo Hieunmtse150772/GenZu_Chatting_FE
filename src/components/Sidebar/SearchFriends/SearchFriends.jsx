@@ -7,6 +7,7 @@ import { MdBlock, MdOutlineDelete, MdPhone, MdVideocam } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setConversation } from '@/redux/Slice/userSlice'
+import { createNewConversation } from '@/redux/Slice/chatSlice'
 export default function SearchFriends({ user }) {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const buttonRef = useRef(null)
@@ -33,6 +34,9 @@ export default function SearchFriends({ user }) {
     navigate(`/chat/${id}`)
 
     dispatch(setConversation(id))
+  }
+  const handleUserNoConversationClcik = (id) => {
+    dispatch(createNewConversation(id))
   }
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -141,7 +145,7 @@ export default function SearchFriends({ user }) {
       ) : (
         <div
           onClick={() => {
-            handleUserClick(user.conversation[0]._id)
+            handleUserNoConversationClcik(user.info._id)
           }}
           className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
             isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
@@ -155,7 +159,6 @@ export default function SearchFriends({ user }) {
 
           <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
             <h3 className='truncate text-sm font-semibold'>{user.info.fullName}</h3>
-        
           </div>
           <div
             className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${

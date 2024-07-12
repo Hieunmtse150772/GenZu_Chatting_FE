@@ -31,5 +31,7 @@
   "loading": "読み込み中...",
   "accept": "承認",
   "cancel": "キャンセル",
-  "change_password": "パスワードを変更してください"
+  "change_password": "パスワードを変更してください",
+  "language_system": "言語システム",
+  "language_translation": "言語翻訳"
 }

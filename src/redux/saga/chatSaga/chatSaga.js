@@ -26,6 +26,7 @@ import {
   deleteEmoji,
   deleteConversation,
   recallMessage,
+  createNewConversationService,
 } from '@/services/messageService'
 
 // Import thư viện socket.io-client để tạo kết nối WebSocket.
@@ -233,7 +234,10 @@ function* translationTextSaga(action) {
     // Gọi service để dịch văn bản.
 
     const message = yield call(() => {
-      return translateText(action.payload.message, JSON.parse(getCookie('userLogin')).user.language)
+      return translateText(
+        action.payload.message,
+        JSON.parse(getCookie('userLogin'))?.user?.languageTranslate,
+      )
     })
 
     // Dispatch action để cập nhật state với văn bản đã dịch.
@@ -314,6 +318,11 @@ function* LogoutSaga(action) {
     console.log(error)
   }
 }
+function* createNewConversationSaga(action) {
+  console.log(action.payload)
+  const data = yield call(createNewConversationService, action.payload)
+  
+}
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
  */
@@ -333,4 +342,5 @@ export default function* chatSaga() {
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
   yield takeLatest('user/logoutSlice', LogoutSaga)
   yield takeLatest('chat/leaveRoomSlice', leaveRoom)
+  yield takeLatest('chat/createNewConversation', createNewConversationSaga)
 }

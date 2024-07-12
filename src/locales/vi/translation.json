@@ -31,5 +31,7 @@
   "loading": "Đang tải...",
   "accept": "Chấp nhận",
   "cancel": "Hủy",
-  "change_password": "Thay đổi mật khẩu"
+  "change_password": "Thay đổi mật khẩu",
+  "language_system": "Ngôn ngữ hệ thống",
+  "language_translation": "Ngôn ngữ dịch"
 }

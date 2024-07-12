@@ -42,6 +42,7 @@ const chatSlice = createSlice({
     resetChat: () => {
       return initialState
     },
+    createNewConversation: (state, action) => {},
   },
 })
 
@@ -55,6 +56,7 @@ export const {
   plusPage,
   leaveRoomSlice,
   resetChat,
+  createNewConversation,
 } = chatSlice.actions
 
 export default chatSlice.reducer
