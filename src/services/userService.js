@@ -12,6 +12,7 @@ const signIn = async (email, password, rememberMe) => {
       refreshToken,
       user,
     }
+    console.log(userData)
     if (!rememberMe) {
       sessionStorage.setItem('userLogin', JSON.stringify(userData))
     } else {
