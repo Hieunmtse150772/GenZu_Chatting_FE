@@ -53,7 +53,7 @@ axiosClient.interceptors.response.use(
         // Call your refresh token endpoint to get new tokens
         const { data } = await axios.post(
           `${baseURL}/auth/refresh-token`,
-          {},
+          { refreshToken: refreshToken },
           {
             headers: {
               'Content-Type': 'application/json',
@@ -67,14 +67,14 @@ axiosClient.interceptors.response.use(
           'userLogin',
           JSON.stringify({
             ...userLogin,
-            accessToken: data.accessToken,
-            refreshToken: data.refreshToken,
+            accessToken: data?.data?.accessToken,
+            refreshToken: data?.data?.refreshToken,
           }),
         )
 
         // Update the Authorization header with the new accessToken
-        axiosClient.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`
-        originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`
+        axiosClient.defaults.headers.common['Authorization'] = `Bearer ${data?.data?.accessToken}`
+        originalRequest.headers['Authorization'] = `Bearer ${data?.data?.accessToken}`
         // Retry the original request with the new accessToken
         return axiosClient(originalRequest)
       } catch (refreshError) {
