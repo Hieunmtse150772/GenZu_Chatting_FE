@@ -71,7 +71,7 @@ export default function EditAndSetting({ isVisible, onClose }) {
     <>
       {isUpdate && <ToastSuccesful message={'Thay đổi thông tin user thành công'} />}
       <div className='EditAndSetting fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-        <div className='relative flex justify-around rounded-lg bg-white p-6 shadow-lg'>
+        <div className='relative flex h-screen justify-around rounded-lg bg-white p-6 shadow-lg'>
           <button
             className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
             onClick={onClose}

@@ -98,7 +98,7 @@ export default function SettingGenerate({ user }) {
         </div>
       )}
       {view === 'friends' && (
-        <div className='mb-4 w-full rounded-lg bg-white p-4 shadow-lg'>
+        <div className='mb-4 w-full flex-1 overflow-y-auto rounded-lg bg-white p-4 shadow-lg'>
           <h3 className='mb-4 text-lg font-semibold'>{t('friend_lists')}</h3>
           <FriendList onBack={handleBack} />
         </div>
