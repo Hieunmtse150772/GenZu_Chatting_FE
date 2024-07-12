@@ -3,18 +3,18 @@ import { initReactI18next } from 'react-i18next'
 
 import { getCookie } from './services/Cookies'
 import translationEN from '@/locales/en/translation.json'
-import translationVN from '@/locales/vn/translation.json'
-import translationJP from '@/locales/jp/translation.json'
+import translationVI from '@/locales/vi/translation.json'
+import translationJA from '@/locales/ja/translation.json'
 
 const resources = {
   en: {
     translation: translationEN,
   },
-  vn: {
-    translation: translationVN,
+  vi: {
+    translation: translationVI,
   },
-  jp: {
-    translation: translationJP,
+  ja: {
+    translation: translationJA,
   },
 }
 
