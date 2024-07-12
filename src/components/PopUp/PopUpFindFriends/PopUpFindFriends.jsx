@@ -6,6 +6,7 @@ import { MdPersonSearch } from 'react-icons/md'
 import { IoPersonAdd } from 'react-icons/io5'
 import { RiUserSharedFill } from 'react-icons/ri'
 import { useDispatch, useSelector } from 'react-redux'
+import { RiUserSearchLine } from 'react-icons/ri'
 import { alertFriendRequest } from '../../../redux/Slice/userSlice'
 import userService from '@/services/userService'
 
@@ -169,7 +170,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
               placeholder='Enter search term'
             />
             <button onClick={handleSearch} className='ml-2'>
-              <MdPersonSearch size={34} />
+              <RiUserSearchLine size={24} />
             </button>
           </div>
 

@@ -17,7 +17,7 @@ const ChooseLanguage = ({ onBack }) => {
     if (isProcessing) return // Nếu đang xử lý API thì không cho phép nhấn nút nữa
     setIsProcessing(true) // Đánh dấu đang xử lý API
 
-    if (!['vn', 'en', 'jp'].includes(language)) {
+    if (!['vi', 'en', 'ja', 'ko'].includes(language)) {
       console.error('Invalid language:', language)
       setIsProcessing(false) // Đánh dấu kết thúc xử lý API
       return // Thực hiện xử lý lỗi tùy theo yêu cầu
@@ -29,16 +29,15 @@ const ChooseLanguage = ({ onBack }) => {
       const response = await generalService.changeLanguage(language)
       console.log('Language updated successfully', response)
 
+      i18n.changeLanguage(language)
       // Cập nhật cookie với ngôn ngữ mới
       setCookie(
         'userLogin',
         JSON.stringify({
           ...JSON.parse(getCookie('userLogin')),
-          user: { ...JSON.parse(getCookie('userLogin')).user, language },
+          user: { ...JSON.parse(getCookie('userLogin')).user, language: language },
         }),
       )
-      i18n.changeLanguage(language)
-      console.log(JSON.parse(getCookie('userLogin'))?.user?.language)
     } catch (error) {
       console.error('Failed to update language', error)
       setSelectedLanguage(defaultLanguage) // Đặt lại ngôn ngữ được chọn trở lại ngôn ngữ mặc định từ cookie
@@ -49,6 +48,8 @@ const ChooseLanguage = ({ onBack }) => {
 
   return (
     <div className='z-10 flex w-full translate-x-0 transform flex-col transition-transform'>
+      {console.log('userLogin', JSON.parse(getCookie('userLogin')))}
+      {console.log('lang in cookie', JSON.parse(getCookie('userLogin'))?.user?.language)}
       <div className='flex w-auto cursor-pointer items-center justify-start border-b-2 border-gray-200 bg-white p-2'>
         <button onClick={onBack} className='mr-4'>
           <IoMdArrowBack size={22} />
@@ -65,18 +66,19 @@ const ChooseLanguage = ({ onBack }) => {
             checked={selectedLanguage === 'en'}
           />
           <InputLanguage
-            languageValue={'vn'}
+            languageValue={'vi'}
             labelName={'Vietnamese'}
-            onChange={() => handleLanguageChange('vn')}
-            checked={selectedLanguage === 'vn'}
+            onChange={() => handleLanguageChange('vi')}
+            checked={selectedLanguage === 'vi'}
           />
           <InputLanguage
-            languageValue={'jp'}
+            languageValue={'ja'}
             labelName={'Japanese'}
-            onChange={() => handleLanguageChange('jp')}
-            checked={selectedLanguage === 'jp'}
+            onChange={() => handleLanguageChange('ja')}
+            checked={selectedLanguage === 'ja'}
           />
         </div>
+        {console.log('after set cookie', JSON.parse(getCookie('userLogin')))}
       </div>
     </div>
   )

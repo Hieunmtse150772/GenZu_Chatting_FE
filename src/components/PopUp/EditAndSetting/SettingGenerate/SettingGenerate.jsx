@@ -6,6 +6,7 @@ import { IoLanguageOutline } from 'react-icons/io5'
 import { PiStickerLight } from 'react-icons/pi'
 import { LuFileQuestion } from 'react-icons/lu'
 import { MdOutlineWorkspacePremium } from 'react-icons/md'
+import { CgProfile } from 'react-icons/cg'
 import GeneralSettings from './SettingItems/GeneralSettings/GeneralSettings'
 import FriendList from './SettingItems/FriendList/FriendList'
 import { RiUser5Line } from 'react-icons/ri'
@@ -47,7 +48,7 @@ export default function SettingGenerate({ user }) {
   }
 
   return (
-    <div className='flex h-screen w-full flex-col items-center space-x-2 overflow-y-auto rounded-lg bg-white p-2 dark:bg-[#1E1E1E]'>
+    <div className='flex h-screen w-full flex-col items-center space-x-2 overflow-y-auto rounded-lg bg-white p-2 dark:bg-[#1E1E1E] md:h-full md:overflow-hidden'>
       {view === 'list' && (
         <>
           <h3 className='mb-2 ml-2 text-2xl font-semibold dark:text-white'>{t('setting')}</h3>
@@ -69,7 +70,7 @@ export default function SettingGenerate({ user }) {
             />
             <SettingItems icon={PiStickerLight} size={24} label={t('stickers_emoji')} />
             <SettingItems
-              icon={LuFileQuestion}
+              icon={CgProfile}
               size={24}
               label={t('your_profile')}
               onSettingItemClick={handleItemClick}
