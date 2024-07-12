@@ -79,7 +79,7 @@ export default function SearchMessage(props){
                 <button title='Đóng tìm kiếm'
                         className='items-center rounded-ms  hover:bg-blue-400 dark:hover:bg-[#357ABD]'
                         onClick={handleCloseBtn}>
-                    <span> Dóng</span>
+                    <span> Đóng</span>
                 </button>
             </div>
     )

@@ -126,18 +126,32 @@ const DetailMessage = memo(function DetailMessage(props) {
     if(props.indexMsg > resultMessage.length - 1){
       index = 0
     }
-    const myElement = document.getElementById(`${resultMessage[index]._id}`);
-    // myElement.select()
-    myElement.classList.add('selection:bg-purple-600')
-    // const topPos = myElement.offsetTop;
-    myElement.scrollIntoView()
+    // thực thi hàm xử lý hiện kết quả tìm kiếm
+    handleSearchMessage(index, props.isSearchMessage)
+  },[props.isSearchMessage, resultMessage, props.indexMsg])
 
-    // props.handleSearchMessage(topPos)
-  },[resultMessage, props.indexMsg])
-
+  // hàm xử lý hiện kết quả tìm kiếm
+  const handleSearchMessage = (indexMsg, isSearch) =>{
+    const idCurrentMsg = resultMessage[indexMsg]._id
+    const myElement = document.getElementById(`${idCurrentMsg}`);
+    console.log('idCurrentMsg', idCurrentMsg)
+    if(!isSearch){
+      myElement.classList.remove('text-purple-700', 'font-bold')
+    }else{
+      resultMessage.map((msg, index) => {
+        const idPreviousMsg = msg._id
+        const previousElement = document.getElementById(`${idPreviousMsg}`);
+        if(previousElement.classList.contains('text-purple-700') && idCurrentMsg != idPreviousMsg){
+          previousElement.classList.remove('text-purple-700', 'font-bold')
+        }
+      })
+      myElement.classList.add('text-purple-700', 'font-bold')
+      myElement.scrollIntoView()
+    }
+  }
   // Render component
   return (
-    <div id='messages' className='mx-2 flex flex-col-reverse'>
+    <div id='messages' className='mx-2 flex flex-col-reverse bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 '>
       {messages.map((item, index) =>
         // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
         item.sender != null && sessionId == item.sender._id ? (
