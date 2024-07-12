@@ -46,11 +46,15 @@ export default function Verify() {
           const response = await api.get('/auth/profile')
           console.log(response.status)
 
-          setCookie('userLogin', {
-            accessToken: data.data.accessToken,
-            refreshToken: data.data.refreshToken,
-            user: response.data,
-          })
+          setCookie(
+            'userLogin',
+            JSON.stringify({
+              accessToken: data.data.accessToken,
+              refreshToken: data.data.refreshToken,
+              user: response.data,
+            }),
+            7,
+          )
           if (response.status == 200) {
             navigate('/')
           }

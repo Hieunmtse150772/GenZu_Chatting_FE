@@ -231,8 +231,9 @@ function* sendMessageSaga(action) {
 function* translationTextSaga(action) {
   try {
     // Gọi service để dịch văn bản.
+
     const message = yield call(() => {
-      return translateText(action.payload.message, 'en')
+      return translateText(action.payload.message, JSON.parse(getCookie('userLogin')).user.language)
     })
 
     // Dispatch action để cập nhật state với văn bản đã dịch.

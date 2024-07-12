@@ -30,5 +30,6 @@
   "decline_friend_req": "Friend request has declined!",
   "loading": "Loading...",
   "accept": "Accept",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "change_password": "Change Your Password"
 }

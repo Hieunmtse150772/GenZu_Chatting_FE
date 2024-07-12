@@ -14,6 +14,7 @@ import ChooseLanguage from './SettingItems/ChooseLanguage/ChooseLanguage'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import UserQrCode from './SettingItems/UserQrCode/UserQrCode'
+import ChangePassword from './SettingItems/ChangePassword/ChangePassword'
 
 export default function SettingGenerate({ user }) {
   const { t } = useTranslation()
@@ -24,6 +25,7 @@ export default function SettingGenerate({ user }) {
     friends: t('friend_lists'),
     language: t('language'),
     profile: t('your_profile'),
+    changePassword: t('change_password'),
   }
 
   const handleItemClick = (label) => {
@@ -35,6 +37,8 @@ export default function SettingGenerate({ user }) {
       setView('language')
     } else if (label === labels.profile) {
       setView('profile')
+    } else if (label === labels.changePassword) {
+      setView('changePassword')
     }
   }
 
@@ -77,6 +81,12 @@ export default function SettingGenerate({ user }) {
               label={t('friend_lists')}
               onSettingItemClick={handleItemClick}
             />
+            <SettingItems
+              icon={RiUser5Line}
+              size={24}
+              label={t('change_password')}
+              onSettingItemClick={handleItemClick}
+            />
           </div>
         </>
       )}
@@ -102,6 +112,12 @@ export default function SettingGenerate({ user }) {
         <div className='mb-4 w-full rounded-lg bg-white p-4 shadow-lg'>
           <h3 className='mb-4 text-lg font-semibold'>{t('your_profile')}</h3>
           <UserQrCode onBack={handleBack} user={user} />
+        </div>
+      )}
+      {view === 'changePassword' && (
+        <div className='mb-4 w-full rounded-lg bg-white p-4 shadow-lg'>
+          <h3 className='mb-4 text-lg font-semibold'>{t('change_password')}</h3>
+          <ChangePassword onBack={handleBack} />
         </div>
       )}
     </div>

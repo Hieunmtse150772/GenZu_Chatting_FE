@@ -23,7 +23,18 @@ const signIn = async (email, password, rememberMe) => {
     throw new Error(error.response?.data?.message || 'Please verify account')
   }
 }
-
+const ChangePassword = async (oldPassword, newPassword) => {
+  console.log(oldPassword, newPassword)
+  try {
+    const response = await axiosClient.post('auth/change-password', {
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    })
+    console.log(response)
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Change password not successfull')
+  }
+}
 const updateUser = async (id_user, formData) => {
   try {
     const response = await axiosClient.patch(`/users/update/${id_user}`, formData)
@@ -155,4 +166,5 @@ export default {
   getUserById,
   getAllFriends,
   deleteFriend,
+  ChangePassword,
 }

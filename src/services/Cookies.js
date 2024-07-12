@@ -1,7 +1,11 @@
 import Cookies from 'js-cookie'
 
-function setCookie(name, value, days) {
-  Cookies.set(name, value, { expires: days, secure: true, sameSite: 'None', path: '/' })
+function setCookie(name, value, days = 7) {
+  if (sessionStorage.getItem('userLogin')) {
+    sessionStorage.setItem('userLogin', JSON.stringify(value))
+  } else {
+    Cookies.set(name, value, { expires: days, secure: true, sameSite: 'None', path: '/' })
+  }
 }
 
 function getCookie(name) {
