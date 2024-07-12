@@ -114,8 +114,8 @@ const ChatFooter = () => {
         console.log(JSON.parse(answer.answerSuggestion))
         // parse chuỗi json sang array
         let checkMutiAnswer = JSON.parse(answer.answerSuggestion)
-        // tách giá trị từ key general về list 
-        let answerText = checkMutiAnswer.map((item)=>{
+        // tách giá trị từ key general về list
+        let answerText = checkMutiAnswer.map((item) => {
           return item.general
         })
         console.log(answerText)
@@ -465,7 +465,9 @@ const ChatFooter = () => {
               ),
           )}
         </div>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
 
       {/* Hiển thị xem trước file được chọn */}
       <div>
@@ -531,7 +533,7 @@ const ChatFooter = () => {
               onFocus={handleFocus}
               ref={inputRef}
               value={inputStr}
-              className={`flex-1 rounded-full border px-4 py-2 focus:outline outline-cyan-600 mr-2 ${
+              className={`mr-2 flex-1 rounded-full border px-4 py-2 outline-cyan-600 focus:outline ${
                 isSpoiled ? 'show' : 'hide'
               }`}
               style={{
@@ -631,7 +633,7 @@ const ChatFooter = () => {
 
           {/* Menu đính kèm */}
           <div
-            className={`absolute bottom-20 right-20 flex flex-col space-y-2 transition-transform duration-300 ease-in-out ${
+            className={`absolute bottom-20 right-[6rem] flex flex-col space-y-2 transition-transform duration-300 ease-in-out md:right-[6rem] ${
               showAttachments
                 ? 'translate-y-0 opacity-100'
                 : 'pointer-events-none translate-y-4 opacity-0'
