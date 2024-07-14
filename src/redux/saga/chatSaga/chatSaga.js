@@ -13,6 +13,7 @@ import {
   setFriendRequestNotification,
   setFriendRequestReply,
   setNewFriendRequestNotification,
+  setNewLsConversation,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -81,6 +82,13 @@ function createSocketChannel(socket, idConversation) {
     socket.on('recall received', (message) => {
       console.log(message)
       emit(updateMessage(message.data.data))
+    })
+    socket.on('accessed chat', (conversation) => {
+      emit(setNewLsConversation(conversation))
+      console.log(conversation)
+    })
+    socket.on('new message received', (message) => {
+      console.log(message)
     })
     // Trả về hàm unsubscribe để hủy đăng ký lắng nghe các sự kiện khi event channel bị đóng.
     return () => {
@@ -320,8 +328,9 @@ function* LogoutSaga(action) {
 }
 function* createNewConversationSaga(action) {
   console.log(action.payload)
-  const data = yield call(createNewConversationService, action.payload)
-  
+  const response = yield call(createNewConversationService, action.payload)
+  yield put(setNewLsConversation(response.data))
+  yield call([socket, 'emit'], 'access chat', response.data)
 }
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.

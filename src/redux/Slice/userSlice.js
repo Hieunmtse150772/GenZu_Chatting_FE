@@ -67,6 +67,21 @@ const userSlice = createSlice({
         lsConversation: action.payload,
       }
     },
+    setNewLsConversation: (state, action) => {
+      if (action.payload.isGroupChat) {
+        return {
+          ...state,
+          lsConversation: [action.payload, ...state.lsConversation],
+          lsGroupChats: [action.payload, ...state.lsGroupChats],
+        }
+      } else {
+        return {
+          ...state,
+          lsConversation: [action.payload, ...state.lsConversation],
+          lsPersonalChats: [action.payload, ...state.lsPersonalChats],
+        }
+      }
+    },
     setLsGroupChat: (state, action) => {
       return {
         ...state,
@@ -145,5 +160,6 @@ export const {
   clearUserSlice,
   loginSlice,
   logoutSlice,
+  setNewLsConversation,
 } = userSlice.actions
 export default userSlice.reducer
