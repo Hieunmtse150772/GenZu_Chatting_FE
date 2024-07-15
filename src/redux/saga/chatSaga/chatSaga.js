@@ -55,6 +55,7 @@ function createSocketChannel(socket, idConversation) {
     socket.on('stop_typing', () => emit(setIsTyping(false)))
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
+      console.log('co messsage moi ')
       if (message.conversation._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message))
@@ -101,6 +102,7 @@ function createSocketChannel(socket, idConversation) {
       socket.off('received reply')
       socket.off('received request')
       socket.off('recall received')
+      socket.off('new message received')
     }
   })
 }
@@ -226,6 +228,7 @@ function* sendMessageSaga(action) {
 
     // Gửi sự kiện 'new message' đến server.
     yield call([socket, 'emit'], 'new message', data.data)
+    console.log('send message success')
 
     // Dispatch action để cập nhật state với tin nhắn mới.
     yield put(setNewMessage(data.data))
@@ -333,8 +336,8 @@ function* createNewConversationSaga(action) {
   yield put(setNewLsConversation(response.data))
   console.log(response.data)
   yield call([socket, 'emit'], 'access chat', {
-    users: response.data.users,
-    userId: JSON.parse('userLogin').user._is,
+    users: response.data,
+    userId: JSON.parse('userLogin').user._id,
   })
 }
 /**
