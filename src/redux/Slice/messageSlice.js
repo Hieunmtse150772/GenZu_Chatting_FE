@@ -31,6 +31,7 @@ const messageSlice = createSlice({
           readBy: value.readBy,
           emojiBy: value.emojiBy,
           status: value.status,
+          replyMessage: value.replyMessage || '',
         })),
       }
     },
@@ -45,6 +46,12 @@ const messageSlice = createSlice({
         }
       }
       console.log(action.payload.status)
+    },
+    setReplyTo: (state, action) => {
+      state.replyMessage = action.payload
+    },
+    clearReplyTo: (state) => {
+      state.replyMessage = ''
     },
     setDeleteMessageOneSite: (state, action) => {
       const index = state.message.findIndex((item) => item._id == action.payload)
@@ -220,6 +227,8 @@ const messageSlice = createSlice({
 export const {
   sendMessage,
   setMessage,
+  setReplyTo,
+  clearReplyTo,
   getMessagesMore,
   setMessagesMore,
   selectEmoji,

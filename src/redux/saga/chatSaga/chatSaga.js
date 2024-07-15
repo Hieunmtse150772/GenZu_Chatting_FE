@@ -55,7 +55,6 @@ function createSocketChannel(socket, idConversation) {
     socket.on('stop_typing', () => emit(setIsTyping(false)))
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
-      console.log('co messsage moi ')
       if (message.conversation._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message))
@@ -85,8 +84,8 @@ function createSocketChannel(socket, idConversation) {
       emit(updateMessage(message.data.data))
     })
     socket.on('accessed chat', (conversation) => {
-      console.log(conversation)
       emit(setNewLsConversation(conversation))
+      console.log(conversation)
     })
     socket.on('new message received', (message) => {
       console.log(message)
@@ -102,7 +101,6 @@ function createSocketChannel(socket, idConversation) {
       socket.off('received reply')
       socket.off('received request')
       socket.off('recall received')
-      socket.off('new message received')
     }
   })
 }
@@ -216,6 +214,7 @@ function* sendMessageSaga(action) {
     messageType: action.payload.messageType ? action.payload.messageType : 'text',
     styles: action.payload.styles,
     emojiBy: action.payload.emojiBy,
+    replyMessage: action.payload.replyMessage || '',
   }
 
   try {
@@ -227,7 +226,7 @@ function* sendMessageSaga(action) {
 
     // Gửi sự kiện 'new message' đến server.
     yield call([socket, 'emit'], 'new message', data.data)
-    console.log('send message success')
+
     // Dispatch action để cập nhật state với tin nhắn mới.
     yield put(setNewMessage(data.data))
   } catch (error) {
@@ -334,8 +333,8 @@ function* createNewConversationSaga(action) {
   yield put(setNewLsConversation(response.data))
   console.log(response.data)
   yield call([socket, 'emit'], 'access chat', {
-    conversation: response.data,
-    userId: JSON.parse(getCookie('userLogin')).user._id,
+    users: response.data.users,
+    userId: JSON.parse('userLogin').user._is,
   })
 }
 /**

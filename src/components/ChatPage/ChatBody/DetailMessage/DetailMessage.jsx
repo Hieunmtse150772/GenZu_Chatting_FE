@@ -8,6 +8,7 @@ import { setMessageSpoiled } from '../../../../redux/Slice/messageSlice'
 import './DetailMessage.css'
 import { getCookie } from '@/services/Cookies'
 import RenderMessage from './RenderFIle/RenderFIle'
+import RenderReplyMessage from './RenderFIle/RenderReplyMessage'
 
 /* eslint-disable react/prop-types */
 const DetailMessage = memo(function DetailMessage(props) {
@@ -94,7 +95,7 @@ const DetailMessage = memo(function DetailMessage(props) {
   }
 
   // Hàm xử lý khi click vào nút spoiled
-  const handleSpoiledClick = (id_message) => {
+  const handleSpoiledClick = useCallback((id_message) => {
     // Tìm kiếm tin nhắn theo id
     const message = messages.find((msg) => msg.id_message === id_message)
 
@@ -102,7 +103,7 @@ const DetailMessage = memo(function DetailMessage(props) {
     if (message && !message.isSpoiled) {
       dispatch(setMessageSpoiled({ id_message }))
     }
-  }
+  }, [])
 
   // Sử dụng useEffect để thêm và xóa event listener
   useEffect(() => {
@@ -119,29 +120,32 @@ const DetailMessage = memo(function DetailMessage(props) {
     props.handleToBottom()
   }, [messages])
   // xử lý scroll vào phần tử message khi user nhấn enter
-  useEffect(() =>{
+  useEffect(() => {
     var index = props.indexMsg
-    if(resultMessage == undefined || resultMessage == null || resultMessage.length == 0) return ;
-    // điều kiện ngăn lỗi khi state index lớn hơn length  
-    if(props.indexMsg > resultMessage.length - 1){
+    if (resultMessage == undefined || resultMessage == null || resultMessage.length == 0) return
+    // điều kiện ngăn lỗi khi state index lớn hơn length
+    if (props.indexMsg > resultMessage.length - 1) {
       index = 0
     }
     // thực thi hàm xử lý hiện kết quả tìm kiếm
     handleSearchMessage(index, props.isSearchMessage)
-  },[props.isSearchMessage, resultMessage, props.indexMsg])
+  }, [props.isSearchMessage, resultMessage, props.indexMsg])
 
   // hàm xử lý hiện kết quả tìm kiếm
-  const handleSearchMessage = (indexMsg, isSearch) =>{
+  const handleSearchMessage = (indexMsg, isSearch) => {
     const idCurrentMsg = resultMessage[indexMsg]._id
-    const myElement = document.getElementById(`${idCurrentMsg}`);
+    const myElement = document.getElementById(`${idCurrentMsg}`)
     console.log('idCurrentMsg', idCurrentMsg)
-    if(!isSearch){
+    if (!isSearch) {
       myElement.classList.remove('text-purple-700', 'font-bold')
-    }else{
+    } else {
       resultMessage.map((msg, index) => {
         const idPreviousMsg = msg._id
-        const previousElement = document.getElementById(`${idPreviousMsg}`);
-        if(previousElement.classList.contains('text-purple-700') && idCurrentMsg != idPreviousMsg){
+        const previousElement = document.getElementById(`${idPreviousMsg}`)
+        if (
+          previousElement.classList.contains('text-purple-700') &&
+          idCurrentMsg != idPreviousMsg
+        ) {
           previousElement.classList.remove('text-purple-700', 'font-bold')
         }
       })
@@ -151,7 +155,10 @@ const DetailMessage = memo(function DetailMessage(props) {
   }
   // Render component
   return (
-    <div id='messages' className='mx-2 flex flex-col-reverse bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 '>
+    <div
+      id='messages'
+      className='mx-2 flex flex-col-reverse bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500'
+    >
       {messages.map((item, index) =>
         // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
         item.sender != null && sessionId == item.sender._id ? (
@@ -193,7 +200,11 @@ const DetailMessage = memo(function DetailMessage(props) {
                 onClick={() => handleSpoiledClick(item._id)}
               >
                 {/* Hiển thị nội dung tin nhắn dựa vào messageType */}
-                <RenderMessage item={item} />
+                {item.replyMessage !== undefined ? (
+                  <RenderReplyMessage item={item} />
+                ) : (
+                  <RenderMessage item={item} />
+                )}
               </div>
               {/* Component FeatureEmoji */}
               {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
@@ -238,9 +249,16 @@ const DetailMessage = memo(function DetailMessage(props) {
           >
             {/* Tin nhắn */}
             <div className='relative'>
-              <div id={item._id} className='my-4 max-w-xs break-words rounded-lg bg-gray-300 p-2 text-black'>
+              <div
+                id={item._id}
+                className='my-4 max-w-xs break-words rounded-lg bg-gray-300 p-2 text-black'
+              >
                 {/* Hiển thị nội dung tin nhắn dựa vào messageType */}
-                <RenderMessage item={item} />
+                {item.replyMessage ? (
+                  <RenderReplyMessage item={item} />
+                ) : (
+                  <RenderMessage item={item} />
+                )}
               </div>
               {/* Nút emoji */}
               <div
@@ -284,6 +302,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               ref={optionRef}
             >
               <FeatureAI
+                sender={item.sender}
                 message={item.message}
                 id={item._id}
                 callBackOptionClick={handleOptionClick}

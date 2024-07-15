@@ -4,7 +4,7 @@ import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-ic
 import { LuSend } from 'react-icons/lu'
 import { FaFile, FaImage, FaVideo } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { sendMessage, deleteEmoji } from '../../../redux/Slice/messageSlice'
+import { sendMessage, deleteEmoji, clearReplyTo } from '../../../redux/Slice/messageSlice'
 import AttachmentButton from '../../Button/AttachmentButton'
 import { VscBold } from 'react-icons/vsc'
 import { GoItalic } from 'react-icons/go'
@@ -22,23 +22,39 @@ import { TiDeleteOutline } from 'react-icons/ti'
 import Preview from './Preview/Preview'
 
 const ChatFooter = () => {
-  const dispatch = useDispatch()
-  const param = useParams()
+  // Trạng thái hiển thị menu đính kèm
   const [showAttachments, setShowAttachments] = useState(false)
+  // Trạng thái hiển thị bảng chọn emoji
   const [isEmojiMsgClick, setIsEmojiMsgClick] = useState(false)
+  // Trạng thái đang ghi âm
   const [isRecording, setIsRecording] = useState(false)
+  // Blob dữ liệu âm thanh đã ghi
   const [audioBlob, setAudioBlob] = useState(null)
+  // Trạng thái văn bản được chọn trong input
   const [isTextSelected, setIsTextSelected] = useState(false)
+  // Nội dung văn bản được chọn
+  const [selectedText, setSelectedInput] = useState('')
+  // Nội dung văn bản trong input
   const [inputStr, setInputStr] = useState('')
+  // Trạng thái tin nhắn "spoiled" (ẩn nội dung)
   const [isSpoiled, setIsSpoiled] = useState(true)
+  // Trạng thái định dạng văn bản in đậm
   const [boldActive, setBoldActive] = useState(false)
+  // Trạng thái định dạng văn bản in nghiêng
   const [italicActive, setItalicActive] = useState(false)
+  // Trạng thái định dạng văn bản gạch chân
   const [underlineActive, setUnderlineActive] = useState(false)
+  // Trạng thái gợi ý AI đang được kích hoạt
   const [isAiSuggestionClick, setIsAiSuggestionClick] = useState(true)
+  // Trạng thái hiển thị gợi ý trả lời từ AI
   const [showAnswerSuggestion, setShowAnswerSuggestion] = useState(false)
+  // Chỉ số của câu trả lời được chọn từ gợi ý AI
   const [indexAnswerText, setIndexAnswerText] = useState()
+  // Mảng chứa các câu trả lời được gợi ý từ AI
   const [answerArray, setAnswerArray] = useState([])
+  // Đối tượng chứa file được chọn và loại file (hình ảnh, video, file)
   const [selectedFile, setSelectedFile] = useState(null)
+  // URL xem trước của file được chọn
   const [previewUrl, setPreviewUrl] = useState('')
   const [isUploading, setIsUploading] = useState(false)
   // Tham chiếu đến các thành phần DOM
@@ -61,8 +77,16 @@ const ChatFooter = () => {
   }
   // Tham chiếu đến container chứa các bản ghi âm
   const audioContainerRef = useRef(null)
+
+  // Lấy useDispatch từ react-redux để dispatch actions
+  const dispatch = useDispatch()
+  const replyMessage = useSelector((state) => state?.message?.replyMessage)
+  // Lấy danh sách emoji đã chọn từ store Redux
   const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
+  // Lấy gợi ý trả lời từ AI từ store Redux
   const answerSuggestionAI = useSelector((state) => state.message.answerAI)
+  // Lấy tham số từ URL
+  const param = useParams()
 
   // Sử dụng useSpeechRecognition hook để chuyển đổi giọng nói thành văn bản
   const {
@@ -88,6 +112,7 @@ const ChatFooter = () => {
     answerSuggestionAI.map((answer, index) => {
       // Kiểm tra nếu có gợi ý trả lời
       if (answer.answerSuggestion) {
+        console.log(JSON.parse(answer.answerSuggestion))
         // parse chuỗi json sang array
         let checkMutiAnswer = JSON.parse(answer.answerSuggestion)
         // tách giá trị từ key general về list
@@ -184,15 +209,22 @@ const ChatFooter = () => {
         emojiBy: [],
         isSpoiled: isSpoiled,
         idConversation: param,
+        replyMessage: replyMessage ? replyMessage._id : null,
       }
-
+      // Dispatch action gửi tin nhắn
       dispatch(sendMessage(messageData))
+      // Xóa emoji đã chọn
       dispatch(deleteEmoji())
+      // Xóa nội dung input field sau khi gửi
       setInputStr('')
+      // Reset định dạng văn bản
       setBoldActive(false)
       setItalicActive(false)
       setUnderlineActive(false)
+      // Reset trạng thái tin nhắn "spoiled"
       setIsSpoiled(true)
+      dispatch(clearReplyTo())
+      // Ẩn gợi ý trả lời từ AI
       setShowAnswerSuggestion(!showAnswerSuggestion)
     }
   }
@@ -257,7 +289,6 @@ const ChatFooter = () => {
   // Hàm xử lý gửi file đính kèm
   const handleSendFile = async () => {
     // Tạo đường dẫn lưu trữ trên Firebase Storage
-
     const storageRef = ref(storage, `${selectedFile.type}/${selectedFile.file.name}`)
     // Tải file lên Firebase Storage
     uploadBytes(storageRef, selectedFile.file)
@@ -266,6 +297,8 @@ const ChatFooter = () => {
         return getDownloadURL(snapshot.ref)
       })
       .then((downloadURL) => {
+        // Cập nhật state downloadURL
+        SetDownloadURL(downloadURL)
         // Tạo object messageData chứa thông tin tin nhắn
         const messageData = {
           message: downloadURL, // URL tải xuống của file
@@ -372,9 +405,13 @@ const ChatFooter = () => {
     if (selection && selection.toString()) {
       // Cập nhật trạng thái văn bản được chọn
       setIsTextSelected(true)
+      // Cập nhật nội dung văn bản được chọn
+      setSelectedInput(selection.toString())
     } else {
       // Cập nhật trạng thái văn bản được chọn
       setIsTextSelected(false)
+      // Reset nội dung văn bản được chọn
+      setSelectedInput('')
     }
   }
 
@@ -452,6 +489,17 @@ const ChatFooter = () => {
 
         {/* Input nhập liệu và các nút chức năng */}
         <div className='relative flex items-center rounded-lg bg-mainBlue px-4 pb-4 pt-1 dark:bg-darkBlack'>
+          {replyMessage && (
+            <div className='reply-preview mb-2 rounded-md bg-gray-100 p-2'>
+              <p className='text-sm text-gray-500'>Replying to: {replyMessage.message}</p>
+              <button
+                onClick={() => dispatch(clearReplyTo())}
+                className='text-xs text-red-500 underline'
+              >
+                Cancel
+              </button>
+            </div>
+          )}
           {/* Hiển thị input field hoặc trạng thái đang tải */}
           {!isAiSuggestionClick ? (
             <div className='loader-dots relative mt-2 h-5 w-10/12'>
