@@ -13,7 +13,7 @@ const EmojiMessage = () => {
 
   return (
     <div className='emoji-picker-wrapper'>
-      <EmojiPicker onEmojiClick={handleEmojiClick} />
+      <EmojiPicker onEmojiClick={handleEmojiClick} lazyLoadEmojis={true} />
     </div>
   )
 }

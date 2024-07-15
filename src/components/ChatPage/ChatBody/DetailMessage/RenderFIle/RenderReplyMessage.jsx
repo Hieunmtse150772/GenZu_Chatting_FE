@@ -5,7 +5,7 @@ const RenderReplyMessage = ({ item }) => {
     if (!replyMessage) return null
 
     return (
-      <div className='reply-message mb-2 border-l-4 border-gray-400 pl-2'>
+      <div className='reply-message mb-2 border-l-4 border-gray-400 pl-2 text-gray-500'>
         {/* <p className='text-sm text-gray-600'>Đang trả lời: {replyMessage.sender}</p> */}
         {renderMessageContent(replyMessage)}
       </div>
