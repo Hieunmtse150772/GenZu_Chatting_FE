@@ -333,7 +333,10 @@ function* createNewConversationSaga(action) {
   const response = yield call(createNewConversationService, action.payload)
   yield put(setNewLsConversation(response.data))
   console.log(response.data)
-  yield call([socket, 'emit'], 'access chat', {users:response.data.users,userId:JSON.parse('userLogin').user._is})
+  yield call([socket, 'emit'], 'access chat', {
+    conversation: response.data,
+    userId: JSON.parse(getCookie('userLogin')).user._id,
+  })
 }
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
