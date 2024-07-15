@@ -85,8 +85,8 @@ function createSocketChannel(socket, idConversation) {
       emit(updateMessage(message.data.data))
     })
     socket.on('accessed chat', (conversation) => {
-      emit(setNewLsConversation(conversation))
       console.log(conversation)
+      emit(setNewLsConversation(conversation))
     })
     socket.on('new message received', (message) => {
       console.log(message)
@@ -332,7 +332,8 @@ function* createNewConversationSaga(action) {
   console.log(action.payload)
   const response = yield call(createNewConversationService, action.payload)
   yield put(setNewLsConversation(response.data))
-  yield call([socket, 'emit'], 'access chat', response.data)
+  console.log(response.data)
+  yield call([socket, 'emit'], 'access chat', {users:response.data.users,userId:JSON.parse('userLogin').user._is})
 }
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.

@@ -1,6 +1,6 @@
 import { CgMoreO } from 'react-icons/cg'
 import userIcon from '../../../assets/user_icon.jpg'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import { MdPhone, MdVideocam, MdBlock, MdOutlineDelete } from 'react-icons/md'
 import { CgProfile } from 'react-icons/cg'
 import DropdownItem from '../DropdownItem/DropdownItem'
@@ -12,7 +12,7 @@ import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) => {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const [isViewProfileClick, setIsViewProfileClick] = useState(false)
-
+  const [infoConversation, SetInfoConversation] = useState('')
   const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
 
@@ -43,10 +43,41 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
-  useEffect
-
+  useLayoutEffect(() => {
+    if (user?.isGroupChat) {
+      SetInfoConversation({
+        name: user?.chatName,
+        picture:
+          user.avatar != null
+            ? user.avatar
+            : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`,
+        isGroupChat: true,
+        latestMessage: user?.latestMessage?.message,
+        is_online: null,
+      })
+    } else {
+      if (user.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id) {
+        SetInfoConversation({
+          name: user.users[1]?.fullName,
+          picture: user.users[1]?.picture,
+          is_online: user.users[1]?.is_online,
+          latestMessage: user?.latestMessage?.message,
+          isGroupChat: false,
+        })
+      } else {
+        SetInfoConversation({
+          name: user.users[0]?.fullName,
+          picture: user.users[0]?.picture,
+          is_online: user.users[0]?.is_online,
+          latestMessage: user?.latestMessage?.message,
+          isGroupChat: false,
+        })
+      }
+    }
+  }, [])
   return (
     <>
+      {console.log(infoConversation)}
       <div
         onClick={onUserCardClick}
         className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
@@ -55,44 +86,19 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
       >
         <div className='relative h-14 w-20'>
           <img
-            src={
-              !user.isGroupChat
-                ? user.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
-                  ? user.users[1]?.picture
-                  : user.users[0]?.picture
-                : user.avatar != null
-                  ? user.avatar
-                  : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`
-            }
+            src={infoConversation.picture}
             alt='user avatar'
             className='h-14 w-14 rounded-full object-cover'
           />
-          {/* <TbPointFilled size={22} className='absolute bottom-0 right-0 text-green-500' /> */}
-          {!user.isGroupChat ? (
-            (
-              user.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id
-                ? user.users[1]?.is_online
-                : user.users[0]?.is_online
-            ) ? (
-              <TbPointFilled size={22} className='absolute bottom-0 right-0 text-green-500' />
-            ) : (
-              <TbPointFilled size={22} className='absolute bottom-0 right-0 text-gray-500' />
-            )
-          ) : (
-            ''
-          )}
+          <TbPointFilled
+            size={22}
+            className={`absolute bottom-0 right-0 ${infoConversation.is_online == null ? 'hidden' : infoConversation.is_online ? 'text-green-500' : 'text-gray-500'}`}
+          />
         </div>
-      
         <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
-          <h3 className='truncate text-sm font-semibold'>
-            {!user.isGroupChat
-              ? user.users[0]._id == JSON.parse(getCookie('userLogin')).user._id
-                ? user.users[1]?.fullName
-                : user.users[0]?.fullName
-              : user.chatName}
-          </h3>
+          <h3 className='truncate text-sm font-semibold'>{infoConversation.name}</h3>
           <p className='truncate text-sm text-gray-500 dark:text-slate-500'>
-            {user?.latestMessage?.message}
+            {infoConversation.latestMessage}
           </p>
         </div>
         <div
@@ -109,7 +115,6 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
             className='absolute right-0 top-0 z-10 mt-12 w-52 rounded-lg border bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
             ref={dropdownRef}
           >
-            {/* <div className="absolute left-48 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-white" /> */}
             <ul>
               <DropdownItem
                 icon={CgProfile}
@@ -152,8 +157,7 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
           </div>
         )}
       </div>
-      {console.log('user', user)}
-      
+
       {/* {isViewProfileClick && <ViewProfile user={user} onClose={togglePopupViewProfile} />} */}
     </>
   )

@@ -37,12 +37,6 @@ export default function Chat() {
   const conversation = useSelector((state) => state.user.conversation)
   const lsConversation = useSelector((state) => state.user.lsConversation)
   const [user, setUser] = useState()
-  // const [user, setUser] = useState(
-  //   lsConversation && !lsConversation[0]?.isGroupChat
-  //                             ? lsConversation[0].users[0]?._id === JSON.parse(getCookie('userLogin'))?.user?._id
-  //                               ? lsConversation[0]?.users[1]
-  //                               : lsConversation[0]?.users[0]
-  //                             : '',)
   const toastRef = useRef(null)
   const idConversationPreventive = useSelector((state) => state.user.idConversation)
 

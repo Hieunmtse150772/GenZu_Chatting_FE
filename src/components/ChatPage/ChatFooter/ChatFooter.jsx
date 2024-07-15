@@ -19,45 +19,28 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { storage } from '@/utils/firebaseConfig'
 import { useParams } from 'react-router-dom'
 import { TiDeleteOutline } from 'react-icons/ti'
+import Preview from './Preview/Preview'
 
 const ChatFooter = () => {
-  // Trạng thái hiển thị menu đính kèm
+  const dispatch = useDispatch()
+  const param = useParams()
   const [showAttachments, setShowAttachments] = useState(false)
-  // Trạng thái hiển thị bảng chọn emoji
   const [isEmojiMsgClick, setIsEmojiMsgClick] = useState(false)
-  // Trạng thái đang ghi âm
   const [isRecording, setIsRecording] = useState(false)
-  // Blob dữ liệu âm thanh đã ghi
   const [audioBlob, setAudioBlob] = useState(null)
-  // Trạng thái văn bản được chọn trong input
   const [isTextSelected, setIsTextSelected] = useState(false)
-  // Nội dung văn bản được chọn
-  const [selectedText, setSelectedInput] = useState('')
-  // Nội dung văn bản trong input
   const [inputStr, setInputStr] = useState('')
-  // Trạng thái tin nhắn "spoiled" (ẩn nội dung)
   const [isSpoiled, setIsSpoiled] = useState(true)
-  // Trạng thái định dạng văn bản in đậm
   const [boldActive, setBoldActive] = useState(false)
-  // Trạng thái định dạng văn bản in nghiêng
   const [italicActive, setItalicActive] = useState(false)
-  // Trạng thái định dạng văn bản gạch chân
   const [underlineActive, setUnderlineActive] = useState(false)
-  // Trạng thái gợi ý AI đang được kích hoạt
   const [isAiSuggestionClick, setIsAiSuggestionClick] = useState(true)
-  // Trạng thái hiển thị gợi ý trả lời từ AI
   const [showAnswerSuggestion, setShowAnswerSuggestion] = useState(false)
-  // Chỉ số của câu trả lời được chọn từ gợi ý AI
   const [indexAnswerText, setIndexAnswerText] = useState()
-  // Mảng chứa các câu trả lời được gợi ý từ AI
   const [answerArray, setAnswerArray] = useState([])
-  // Đối tượng chứa file được chọn và loại file (hình ảnh, video, file)
   const [selectedFile, setSelectedFile] = useState(null)
-  // URL xem trước của file được chọn
   const [previewUrl, setPreviewUrl] = useState('')
-  // URL tải xuống của file đã tải lên Firebase Storage
-  const [downloadURL, SetDownloadURL] = useState('')
-
+  const [isUploading, setIsUploading] = useState(false)
   // Tham chiếu đến các thành phần DOM
   const buttonRef = useRef(null) // Nút emoji
   const emoteRef = useRef(null) // Bảng chọn emoji
@@ -78,15 +61,8 @@ const ChatFooter = () => {
   }
   // Tham chiếu đến container chứa các bản ghi âm
   const audioContainerRef = useRef(null)
-
-  // Lấy useDispatch từ react-redux để dispatch actions
-  const dispatch = useDispatch()
-  // Lấy danh sách emoji đã chọn từ store Redux
   const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
-  // Lấy gợi ý trả lời từ AI từ store Redux
   const answerSuggestionAI = useSelector((state) => state.message.answerAI)
-  // Lấy tham số từ URL
-  const param = useParams()
 
   // Sử dụng useSpeechRecognition hook để chuyển đổi giọng nói thành văn bản
   const {
@@ -112,7 +88,6 @@ const ChatFooter = () => {
     answerSuggestionAI.map((answer, index) => {
       // Kiểm tra nếu có gợi ý trả lời
       if (answer.answerSuggestion) {
-        console.log(JSON.parse(answer.answerSuggestion))
         // parse chuỗi json sang array
         let checkMutiAnswer = JSON.parse(answer.answerSuggestion)
         // tách giá trị từ key general về list
@@ -183,11 +158,15 @@ const ChatFooter = () => {
       handleSendMsg()
     }
   }
-
+  const handleDeletePreview = () => {
+    setPreviewUrl(null)
+    setSelectedFile(null)
+  }
   // Hàm xử lý gửi tin nhắn
   const handleSendMsg = () => {
     // Nếu có file được chọn, tiến hành gửi file
     if (selectedFile?.file) {
+      setIsUploading(true)
       handleSendFile()
     }
     // Kiểm tra inputStr khác null, undefined và rỗng
@@ -206,19 +185,14 @@ const ChatFooter = () => {
         isSpoiled: isSpoiled,
         idConversation: param,
       }
-      // Dispatch action gửi tin nhắn
+
       dispatch(sendMessage(messageData))
-      // Xóa emoji đã chọn
       dispatch(deleteEmoji())
-      // Xóa nội dung input field sau khi gửi
       setInputStr('')
-      // Reset định dạng văn bản
       setBoldActive(false)
       setItalicActive(false)
       setUnderlineActive(false)
-      // Reset trạng thái tin nhắn "spoiled"
       setIsSpoiled(true)
-      // Ẩn gợi ý trả lời từ AI
       setShowAnswerSuggestion(!showAnswerSuggestion)
     }
   }
@@ -283,6 +257,7 @@ const ChatFooter = () => {
   // Hàm xử lý gửi file đính kèm
   const handleSendFile = async () => {
     // Tạo đường dẫn lưu trữ trên Firebase Storage
+
     const storageRef = ref(storage, `${selectedFile.type}/${selectedFile.file.name}`)
     // Tải file lên Firebase Storage
     uploadBytes(storageRef, selectedFile.file)
@@ -291,8 +266,6 @@ const ChatFooter = () => {
         return getDownloadURL(snapshot.ref)
       })
       .then((downloadURL) => {
-        // Cập nhật state downloadURL
-        SetDownloadURL(downloadURL)
         // Tạo object messageData chứa thông tin tin nhắn
         const messageData = {
           message: downloadURL, // URL tải xuống của file
@@ -313,6 +286,7 @@ const ChatFooter = () => {
         // Reset state previewUrl và selectedFile sau khi gửi thành công
         setPreviewUrl(null)
         setSelectedFile(null)
+        setIsUploading(false)
       })
       .catch((error) => {
         // Xử lý lỗi khi tải file lên
@@ -398,13 +372,9 @@ const ChatFooter = () => {
     if (selection && selection.toString()) {
       // Cập nhật trạng thái văn bản được chọn
       setIsTextSelected(true)
-      // Cập nhật nội dung văn bản được chọn
-      setSelectedInput(selection.toString())
     } else {
       // Cập nhật trạng thái văn bản được chọn
       setIsTextSelected(false)
-      // Reset nội dung văn bản được chọn
-      setSelectedInput('')
     }
   }
 
@@ -473,47 +443,11 @@ const ChatFooter = () => {
       {/* Hiển thị xem trước file được chọn */}
       <div>
         {previewUrl && (
-          <div className='bg-white px-6 dark:bg-[#6c8ea3]'>
-            <div className='relative inline-block'>
-              {/* Hiển thị xem trước hình ảnh */}
-              {previewUrl.type == 'image' && (
-                <img
-                  src={previewUrl.url}
-                  alt='Preview'
-                  style={{ width: '100px', height: 'auto' }}
-                />
-              )}
-              {/* Hiển thị xem trước video */}
-              {previewUrl.type == 'video' && (
-                <video
-                  src={previewUrl.url}
-                  alt='Preview'
-                  style={{ width: '100px', height: 'auto' }}
-                />
-              )}
-              {/* Hiển thị icon cho file */}
-              {previewUrl.type == 'file' && (
-                <a href={previewUrl.url} download>
-                  <img
-                    src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAzHuAroNuDhtPXeGxXfL-Idoctgcv2wPggA&s'
-                    alt='image file'
-                    style={{ width: '100px', height: 'auto' }}
-                  />
-                </a>
-              )}
-
-              <button
-                className='absolute -right-3 -top-3'
-                onClick={() => {
-                  // Xóa xem trước và file đã chọn
-                  setPreviewUrl(null)
-                  setSelectedFile(null)
-                }}
-              >
-                <TiDeleteOutline />
-              </button>
-            </div>
-          </div>
+          <Preview
+            previewUrl={previewUrl}
+            onDelete={handleDeletePreview}
+            isUploading={isUploading}
+          />
         )}
 
         {/* Input nhập liệu và các nút chức năng */}
