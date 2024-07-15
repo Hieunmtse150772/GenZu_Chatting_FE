@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getCookie, setCookie } from '../../../../services/Cookies'
 import { useDispatch } from 'react-redux'
 import userService from '@/services/userService'
@@ -20,6 +20,16 @@ const EditProfile = ({ user, token }) => {
   })
   const [image, setImage] = useState(null)
   const [previewImage, setPreviewImage] = useState(profile.picture || '/default-avatar.png')
+
+  useEffect(() => {
+    return () => {
+      // Cleanup URL object to avoid memory leaks
+      if (previewImage && previewImage.startsWith('blob:')) {
+        console.log('trigger')
+        URL.revokeObjectURL(previewImage)
+      }
+    }
+  }, [previewImage])
 
   const handleChange = (e) => {
     const { name, value } = e.target

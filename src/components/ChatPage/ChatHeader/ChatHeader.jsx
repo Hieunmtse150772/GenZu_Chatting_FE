@@ -27,6 +27,8 @@ function ChatHeader({ toggleInfo }) {
 
   useEffect(() => {
     const calculateOfflineTime = () => {
+      if (!offlineTime) return
+
       const offlineDate = new Date(offlineTime)
       const now = new Date()
       const diffInMilliseconds = now - offlineDate
@@ -35,16 +37,12 @@ function ChatHeader({ toggleInfo }) {
       const hours = Math.floor(diffInMilliseconds / (1000 * 60 * 60))
       const days = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24))
 
-      if (minutes < 60) {
-        setTimeOffline(`${minutes} minutes`)
-      } else if (hours < 24) {
-        const remainingMinutes = minutes % 60
-        setTimeOffline(`${hours} hour ${remainingMinutes} minutes`)
+      if (days > 0) {
+        setTimeOffline(`${days} day${days > 1 ? 's' : ''}`)
+      } else if (hours > 0) {
+        setTimeOffline(`${hours} hour${hours > 1 ? 's' : ''}`)
       } else {
-        // const remainingHours = hours % 24
-        // const remainingMinutes = minutes % 60
-        setTimeOffline(`${days} days`)
-        // setTimeOffline(`${days} ngày ${remainingHours} giờ ${remainingMinutes} phút`)
+        setTimeOffline(`${minutes} minute${minutes > 1 ? 's' : ''}`)
       }
     }
 
@@ -59,7 +57,6 @@ function ChatHeader({ toggleInfo }) {
   }, [offlineTime])
   return (
     <>
-      {console.log(customer)}
       {personalChat ? (
         <header className='mb-2 flex items-center justify-between rounded-lg bg-mainBlue px-8 py-4 shadow-xl dark:bg-darkTheme'>
           <div className='flex cursor-pointer items-center space-x-4'>

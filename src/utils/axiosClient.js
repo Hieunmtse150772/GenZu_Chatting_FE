@@ -44,7 +44,6 @@ axiosClient.interceptors.response.use(
       try {
         const userLogin = JSON.parse(getCookie('userLogin'))
         const refreshToken = userLogin?.refreshToken
-        console.log(refreshToken)
 
         if (!refreshToken) {
           throw new Error('No refreshToken found')
@@ -61,7 +60,7 @@ axiosClient.interceptors.response.use(
             },
           },
         )
-        console.log('new response data', data)
+        console.log('new response data', data.data)
         // Update the accessToken and refreshToken in cookies or global state
         setCookie(
           'userLogin',
