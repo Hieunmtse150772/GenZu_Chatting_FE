@@ -14,6 +14,7 @@ import {
   setFriendRequestReply,
   setNewFriendRequestNotification,
   setNewLsConversation,
+  setNewLsFriends,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -70,6 +71,9 @@ function createSocketChannel(socket, idConversation) {
     socket.on('received reply', (newReply) => {
       console.log('new reply', newReply)
       emit(setNewFriendRequestNotification(newReply))
+      if (newReply.status == 'accepted') {
+        emit(setNewLsFriends(newReply.receiver))
+      }
     })
     // Lắng nghe các sự kiện liên quan tới emoji
     socket.on('emoji received', (emoji) => {
@@ -85,7 +89,7 @@ function createSocketChannel(socket, idConversation) {
       emit(updateMessage(message.data.data))
     })
     socket.on('accessed chat', (conversation) => {
-      emit(setNewLsConversation(conversation))
+      emit(setNewLsConversation(conversation.conversation))
       console.log(conversation)
     })
     socket.on('new message received', (message) => {
@@ -336,7 +340,7 @@ function* createNewConversationSaga(action) {
   yield put(setNewLsConversation(response.data))
   console.log(response.data)
   yield call([socket, 'emit'], 'access chat', {
-    users: response.data,
+    conversation: response.data,
     userId: JSON.parse(getCookie('userLogin')).user?._id,
   })
 }

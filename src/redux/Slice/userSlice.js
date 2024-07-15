@@ -46,6 +46,12 @@ const userSlice = createSlice({
         lsFriends: action.payload,
       }
     },
+    setNewLsFriends: (state, action) => {
+      return {
+        ...state,
+        lsFriends:[...state.lsFriends,action.payload]
+      }
+    },
     getFriends: (state, action) => {},
     updateUser: (state, action) => {
       return {
@@ -140,6 +146,7 @@ export const {
   setUserInfo,
   searchFriends,
   updateUser,
+  setNewLsFriends,
   setIdConversation,
   getIdConversation,
   setLsConversation,
