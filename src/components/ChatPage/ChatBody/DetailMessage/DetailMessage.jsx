@@ -200,7 +200,7 @@ const DetailMessage = memo(function DetailMessage(props) {
                 onClick={() => handleSpoiledClick(item._id)}
               >
                 {/* Hiển thị nội dung tin nhắn dựa vào messageType */}
-                {item.replyMessage !== undefined ? (
+                {item.replyMessage ? (
                   <RenderReplyMessage item={item} />
                 ) : (
                   <RenderMessage item={item} />

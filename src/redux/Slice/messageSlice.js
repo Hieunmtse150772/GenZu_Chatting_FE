@@ -31,7 +31,7 @@ const messageSlice = createSlice({
           readBy: value.readBy,
           emojiBy: value.emojiBy,
           status: value.status,
-          replyMessage: value.replyMessage || '',
+          replyMessage: value.replyMessage || null,
         })),
       }
     },
@@ -51,7 +51,7 @@ const messageSlice = createSlice({
       state.replyMessage = action.payload
     },
     clearReplyTo: (state) => {
-      state.replyMessage = ''
+      state.replyMessage = null
     },
     setDeleteMessageOneSite: (state, action) => {
       const index = state.message.findIndex((item) => item._id == action.payload)
@@ -147,7 +147,7 @@ const messageSlice = createSlice({
     },
     setNewMessage: (state, action) => {
       const newMs = action.payload
-      console.log(newMs)
+      console.log('new mesg', newMs)
       return {
         ...state,
         message: [
@@ -165,6 +165,7 @@ const messageSlice = createSlice({
             readBy: newMs.readBy,
             emojiBy: newMs.emojiBy,
             status: newMs.status,
+            replyMessage: newMs.replyMessage,
           },
           ...state.message,
         ],

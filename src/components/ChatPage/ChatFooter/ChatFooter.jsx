@@ -223,7 +223,7 @@ const ChatFooter = () => {
       setUnderlineActive(false)
       // Reset trạng thái tin nhắn "spoiled"
       setIsSpoiled(true)
-      dispatch(clearReplyTo())
+      // dispatch(clearReplyTo())
       // Ẩn gợi ý trả lời từ AI
       setShowAnswerSuggestion(!showAnswerSuggestion)
     }

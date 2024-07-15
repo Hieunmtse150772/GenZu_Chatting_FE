@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 const RenderReplyMessage = ({ item }) => {
   const renderReplyMessage = (replyMessage) => {

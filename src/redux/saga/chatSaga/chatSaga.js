@@ -220,7 +220,7 @@ function* sendMessageSaga(action) {
     messageType: action.payload.messageType ? action.payload.messageType : 'text',
     styles: action.payload.styles,
     emojiBy: action.payload.emojiBy,
-    replyMessage: action.payload.replyMessage || '',
+    replyMessage: action.payload.replyMessage || null,
   }
 
   try {
