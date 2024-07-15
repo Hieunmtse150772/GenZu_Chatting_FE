@@ -102,6 +102,7 @@ function createSocketChannel(socket, idConversation) {
       socket.off('received reply')
       socket.off('received request')
       socket.off('recall received')
+      socket.off('new message received')
     }
   })
 }
