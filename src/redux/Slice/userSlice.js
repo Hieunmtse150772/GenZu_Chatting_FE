@@ -49,7 +49,7 @@ const userSlice = createSlice({
     setNewLsFriends: (state, action) => {
       return {
         ...state,
-        lsFriends:[...state.lsFriends,action.payload]
+        lsFriends: [...state.lsFriends, action.payload],
       }
     },
     getFriends: (state, action) => {},
@@ -65,6 +65,7 @@ const userSlice = createSlice({
         idConversation: action.payload,
       }
     },
+    createGroupChat: (state, action) => {},
     getIdConversation: (state, action) => {},
     getLsConversation: (state, action) => {},
     setLsConversation: (state, action) => {
@@ -167,6 +168,7 @@ export const {
   clearUserSlice,
   loginSlice,
   logoutSlice,
+  createGroupChat,
   setNewLsConversation,
 } = userSlice.actions
 export default userSlice.reducer

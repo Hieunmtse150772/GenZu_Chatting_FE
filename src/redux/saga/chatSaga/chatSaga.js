@@ -54,6 +54,21 @@ function createSocketChannel(socket, idConversation) {
     socket.on('connected', () => emit(setSocketConnected(true)))
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
+    socket.on('validation', (data) => {
+      console.log('validation', data)
+    })
+    socket.on('notification', (data) => {
+      if (data.success && data.actionCode === 3006) {
+        emit(setNewLsConversation(data.data))
+      }
+      console.log('notification', data)
+    })
+    socket.on('response group', (res) => {
+      console.log('response group', res)
+      if (res.success && res.messageCode === 3001) {
+        emit(setNewLsConversation(res.data))
+      }
+    })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
       console.log('co messsage moi ')
@@ -327,6 +342,13 @@ function* recallMessageSaga(action) {
     console.log(error)
   }
 }
+function* createGroupChatSaga(action) {
+  try {
+    yield call([socket, 'emit'], 'create group', action.payload)
+  } catch (error) {
+    console.log(error)
+  }
+}
 function* LogoutSaga(action) {
   try {
     yield call([socket, 'emit'], 'logout', action.payload)
@@ -358,6 +380,7 @@ export default function* chatSaga() {
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/getMessagesMore', fetchMessagesMore)
+  yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
