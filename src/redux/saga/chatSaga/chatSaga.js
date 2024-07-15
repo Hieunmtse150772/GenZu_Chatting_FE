@@ -55,6 +55,7 @@ function createSocketChannel(socket, idConversation) {
     socket.on('stop_typing', () => emit(setIsTyping(false)))
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
+      console.log('co messsage moi ')
       if (message.conversation._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message))
@@ -120,7 +121,7 @@ function* handleSocketConnect(action) {
 
   // Gửi sự kiện 'setup' và 'join chat' đến server.
   socket.emit('setup', user)
-  socket.emit('join chat', action.payload.idConversation)
+  socket.emit('join chat', { conversation: action.payload.idConversation, user: user._id })
   socket.emit('login', user._id)
   // Tạo event channel để lắng nghe các sự kiện socket.io.
   const socketChannel = yield call(createSocketChannel, socket, action.payload.idConversation)
@@ -225,7 +226,7 @@ function* sendMessageSaga(action) {
 
     // Gửi sự kiện 'new message' đến server.
     yield call([socket, 'emit'], 'new message', data.data)
-
+    console.log('send message success')
     // Dispatch action để cập nhật state với tin nhắn mới.
     yield put(setNewMessage(data.data))
   } catch (error) {

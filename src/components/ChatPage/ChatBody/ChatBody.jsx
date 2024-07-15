@@ -45,13 +45,7 @@ function ChatBody({ toggleInfo }) {
       dispatch(getMessagesMore({ idConversation: idConversation.idConversation, page: page }))
       dispatch(setLoadMore(true))
       setScrollHeight(element.scrollHeight)
-      // setTimeout(() => {
-      //   const scrollHeightAfterUpdate = element.scrollHeight
 
-      //   console.log(scrollHeightAfterUpdate)
-      //   // Gán trực tiếp độ lệch cho scrollTop
-      //   element.scrollTop = scrollHeightAfterUpdate
-      // }, 0)
     }
   }
   // Hàm xử lý sự kiện click vào nút "Go To Bottom"

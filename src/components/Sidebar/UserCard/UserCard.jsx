@@ -16,19 +16,8 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
   const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
 
-  // const personalChat = useSelector((state) => state.user.conversation)
-  // const [user, setUser] = useState(
-  //   !personalChat?.isGroupChat
-  //     ? personalChat.users[0]?._id === JSON.parse(getCookie('userLogin'))?.user?._id
-  //       ? personalChat?.users[1]
-  //       : personalChat?.users[0]
-  //     : personalChat?.avatar != null
-  //       ? personalChat?.avatar
-  //       : '',
-  // )
-
   const dispatch = useDispatch()
-  const handleDeleteBtn = (e) => {
+  const handleDeleteBtn = () => {
     dispatch(deleteConversation(user))
   }
 
@@ -54,6 +43,7 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+  useEffect
 
   return (
     <>
