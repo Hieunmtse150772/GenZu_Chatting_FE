@@ -196,6 +196,9 @@ const ChatFooter = () => {
     }
     // Kiểm tra inputStr khác null, undefined và rỗng
     if (inputStr != null && inputStr != undefined && inputStr != '') {
+      if (replyMessage) {
+        console.log('1', replyMessage)
+      }
       // Tạo object messageData chứa thông tin tin nhắn
       const messageData = {
         message: inputStr, // Nội dung tin nhắn
@@ -223,7 +226,7 @@ const ChatFooter = () => {
       setUnderlineActive(false)
       // Reset trạng thái tin nhắn "spoiled"
       setIsSpoiled(true)
-      // dispatch(clearReplyTo())
+      dispatch(clearReplyTo())
       // Ẩn gợi ý trả lời từ AI
       setShowAnswerSuggestion(!showAnswerSuggestion)
     }
@@ -298,7 +301,6 @@ const ChatFooter = () => {
       })
       .then((downloadURL) => {
         // Cập nhật state downloadURL
-        SetDownloadURL(downloadURL)
         // Tạo object messageData chứa thông tin tin nhắn
         const messageData = {
           message: downloadURL, // URL tải xuống của file
