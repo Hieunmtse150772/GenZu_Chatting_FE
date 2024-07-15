@@ -126,7 +126,14 @@ const FeatureAI = memo(function FeatureAI(props) {
       </ul>
       {/* Dropdown menu */}
       <div className='' ref={dropdownRef}>
-        {isOptionBtnClick && <DropdownOption idMessage={props.id} owner={props.owner} />}
+        {isOptionBtnClick && (
+          <DropdownOption
+            idMessage={props.id}
+            owner={props.owner}
+            message={props.message}
+            sender={props.sender}
+          />
+        )}
       </div>
     </div>
   )

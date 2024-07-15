@@ -1,9 +1,10 @@
 import DropdownItem from '../../../../Sidebar/DropdownItem/DropdownItem'
 import { MdOutlineEdit, MdOutlineRedo } from 'react-icons/md'
+import { LiaReplySolid } from 'react-icons/lia'
 import { useRef } from 'react'
 import { deleteMessageOnesite } from '@/services/messageService'
 import { useDispatch } from 'react-redux'
-import { recallMessageSlice, setDeleteMessageOneSite } from '@/redux/Slice/messageSlice'
+import { recallMessageSlice, setDeleteMessageOneSite, setReplyTo } from '@/redux/Slice/messageSlice'
 export default function DropdownOption(props) {
   const dropdownRef = useRef(null)
   const dispatch = useDispatch()
@@ -19,6 +20,17 @@ export default function DropdownOption(props) {
     console.log(props.idMessage)
     dispatch(recallMessageSlice(props.idMessage))
   }
+
+  const replyMessage = () => {
+    dispatch(
+      setReplyTo({
+        _id: props.idMessage,
+        message: props.message,
+        sender: props.sender,
+      }),
+    )
+  }
+
   return (
     <div
       className='absolute right-0 top-0 z-10 mt-12 w-40 rounded-lg border bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
@@ -35,6 +47,13 @@ export default function DropdownOption(props) {
           onClick={deleteOnesite}
         />
         <hr />
+        <DropdownItem
+          icon={LiaReplySolid}
+          label={'Reply'}
+          iconStyle={''}
+          dropdownStyle={'p-2'}
+          onClick={replyMessage}
+        />
         {props.owner ? (
           <DropdownItem
             icon={MdOutlineRedo}
