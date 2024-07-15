@@ -337,7 +337,7 @@ function* createNewConversationSaga(action) {
   console.log(response.data)
   yield call([socket, 'emit'], 'access chat', {
     users: response.data,
-    userId: JSON.parse('userLogin').user._id,
+    userId: JSON.parse(getCookie('userLogin')).user?._id,
   })
 }
 /**
