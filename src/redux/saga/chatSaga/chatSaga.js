@@ -31,6 +31,7 @@ import {
   recallMessage,
   createNewConversationService,
   changeBackground,
+  getMessagesSearch,
 } from '@/services/messageService'
 
 // Import thư viện socket.io-client để tạo kết nối WebSocket.
@@ -56,7 +57,7 @@ function createSocketChannel(socket, idConversation) {
     socket.on('connected', () => emit(setSocketConnected(true)))
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
-socket.on('validation', (data) => {
+    socket.on('validation', (data) => {
       console.log('validation', data)
     })
     socket.on('notification', (data) => {
@@ -188,7 +189,7 @@ function* fetchMessagesMore(action) {
     const response = yield call(() => {
       return getMessages(action.payload.idConversation, action.payload.page)
     })
-        // Dispatch action để cập nhật state với danh sách tin nhắn.
+    // Dispatch action để cập nhật state với danh sách tin nhắn.
     yield put(setMessagesMore(response))
     yield put(plusPage())
     yield put(setLoadMore(false))
@@ -336,7 +337,11 @@ function* deleteHistoryMessage(action) {
 
 function* changeBgConversation(action) {
   try {
-    const {data} = yield call(changeBackground, action.payload.background, action.payload.idConversation)
+    const { data } = yield call(
+      changeBackground,
+      action.payload.background,
+      action.payload.idConversation,
+    )
     yield put(setChangeBackground(data.data))
   } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
@@ -378,6 +383,21 @@ function* createNewConversationSaga(action) {
     userId: JSON.parse(getCookie('userLogin')).user?._id,
   })
 }
+function* searchMessageByKeyword(action) {
+  console.log(action.payload)
+  const response = yield call(
+    getMessagesSearch(action.payload.idConversation, action.payload.keyword),
+  )
+  console.log(response)
+}
+
+function* searchMessageById(action) {
+  console.log(action.payload)
+  const response = yield call(
+    getMessagesSearch(action.payload.idConversation, action.payload.idMessage),
+    console.log(response),
+  )
+}
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
  */
@@ -385,6 +405,7 @@ export default function* chatSaga() {
   // Sử dụng takeLatest để chỉ xử lý action cuối cùng được dispatch.
   yield takeLatest('user/setReadNotification', sendReadNotification)
   // yield takeLatest('user/setFriendRequestNotification', sendAddFriendRequest)
+  yield takeLatest('chat/searchMessageById', searchMessageById)
   yield takeLatest('message/recallMessageSlice', recallMessageSaga)
   yield takeLatest('user/sendReplyFriendRequest', replyAddFriendRequest)
   yield takeLatest('user/alertFriendRequest', sendAddFriendRequest)
@@ -392,7 +413,7 @@ export default function* chatSaga() {
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/getMessagesMore', fetchMessagesMore)
-yield takeLatest('user/createGroupChat', createGroupChatSaga)
+  yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
@@ -400,4 +421,5 @@ yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('chat/leaveRoomSlice', leaveRoom)
   yield takeLatest('chat/createNewConversation', createNewConversationSaga)
   yield takeLatest('user/handleChangeBackground', changeBgConversation)
+  yield takeLatest('chat/searchMessageByKeyword', searchMessageByKeyword)
 }

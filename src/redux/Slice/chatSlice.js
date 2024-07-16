@@ -42,7 +42,9 @@ const chatSlice = createSlice({
     resetChat: () => {
       return initialState
     },
-    createNewConversation: (state, action) => {},
+    createNewConversation: (state, action) => { },
+    searchMessageByKeyword: (state, action) => { },
+    searchMessageById:(state,action)=>{}
   },
 })
 
@@ -50,7 +52,9 @@ export const {
   setLoadMore,
   setLoading,
   setSocketConnected,
+  searchMessageById,
   setTyping,
+  searchMessageByKeyword,
   setIsTyping,
   connectSocket,
   plusPage,

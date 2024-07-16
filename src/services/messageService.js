@@ -10,12 +10,39 @@ export const getMessages = async (messageId, page = 1) => {
     const response = await axiosClient.get(
       `/messages/getMessagePagination?id=${messageId}&limit=40&page=${page}`,
     )
-        return response.data.data
+    return response.data.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)
     throw error // Ném lỗi để saga có thể bắt
   }
 }
+// search list message theo keyword
+export const getMessagesSearch = async (conversationId, keyword) => {
+  console.log(conversationId, keyword)
+  try {
+    const response = await axiosClient.get(
+      `/messages/searchMessage?id=${conversationId}&search=${keyword}`,
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Lỗi khi search tin nhắn qua API:', error)
+    throw error // Ném lỗi để saga có thể bắt
+  }
+}
+// lay 40 tin nhan gan tin nhan dich
+export const getMessagesSearchDetails = async (conversationId, idMessage) => {
+  console.log(conversationId, idMessage)
+  try {
+    const response = await axiosClient.get(
+      `messages/getMessagePagination?id=${conversationId}&limit=40&messageId=${idMessage}`,
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Lỗi khi search tin nhắn qua API:', error)
+    throw error // Ném lỗi để saga có thể bắt
+  }
+}
+
 export const sendMessageApi = async (message, id) => {
   console.log(message)
   try {
@@ -78,10 +105,10 @@ export const createNewConversationService = async (idUser) => {
 }
 
 export const changeBackground = (background, idConversation) => {
-  try{
+  try {
     return axiosClient.patch(`/conversations/background?id=${idConversation}`, background)
-  } catch(error){
-      console.error('Lỗi khi thay đổi background cuộc hội thoại:', error)
-      throw error // Ném lỗi để saga có thể bắt
+  } catch (error) {
+    console.error('Lỗi khi thay đổi background cuộc hội thoại:', error)
+    throw error // Ném lỗi để saga có thể bắt
   }
 }
