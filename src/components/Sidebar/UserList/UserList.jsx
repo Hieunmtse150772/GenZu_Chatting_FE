@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import UserCard from '../UserCard/UserCard'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -7,8 +7,9 @@ import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { setConversation } from '@/redux/Slice/userSlice'
 import SearchFriends from '../SearchFriends/SearchFriends'
+import { getCookie } from '@/services/Cookies'
 
-const UserList = ({togglePopupViewProfile}) => {
+const UserList = ({ togglePopupViewProfile }) => {
   const [activeTab, setActiveTab] = useState('personal')
   const { t } = useTranslation()
   const [activeUserID, setActiveUserID] = useState(null)
@@ -22,7 +23,7 @@ const UserList = ({togglePopupViewProfile}) => {
   const handleUserClick = (id) => {
     navigate(`/chat/${id}`)
     setActiveUserID(id)
-    if(!conversation){
+    if (!conversation) {
       dispatch(setConversation(id))
     }
   }
@@ -67,24 +68,56 @@ const UserList = ({togglePopupViewProfile}) => {
         ) : (
           <>
             {activeTab === 'personal' &&
-              lsChats.map((item) => (
-                <UserCard
-                  user={item}
-                  key={item._id}
-                  isActive={activeUserID === item._id}
-                  onUserCardClick={() => handleUserClick(item._id)}
-                  togglePopupViewProfile={togglePopupViewProfile}
-                />
-              ))}
+              lsChats.map((item) => {
+                let userInfo
+                if (item.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id) {
+                  userInfo = {
+                    name: item.users[1]?.fullName,
+                    picture: item.users[1]?.picture,
+                    is_online: item.users[1]?.is_online,
+                    latestMessage: item?.latestMessage?.message,
+                    isGroupChat: false,
+                  }
+                } else {
+                  userInfo = {
+                    name: item.users[0]?.fullName,
+                    picture: item.users[0]?.picture,
+                    is_online: item.users[0]?.is_online,
+                    latestMessage: item?.latestMessage?.message,
+                    isGroupChat: false,
+                  }
+                }
+                return (
+                  <UserCard
+                    user={userInfo}
+                    key={item._id}
+                    isActive={activeUserID === item._id}
+                    onUserCardClick={() => handleUserClick(item._id)}
+                    togglePopupViewProfile={togglePopupViewProfile}
+                  />
+                )
+              })}
             {activeTab === 'group' &&
-              groupChats.map((item) => (
-                <UserCard
-                  user={item}
-                  key={item._id}
-                  isActive={activeUserID === item._id}
-                  onUserCardClick={() => handleUserClick(item._id)}
-                />
-              ))}
+              groupChats.map((item) => {
+                const userInfo = {
+                  name: item?.chatName,
+                  picture:
+                    item.avatar != null
+                      ? item.avatar
+                      : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`,
+                  isGroupChat: true,
+                  latestMessage: item?.latestMessage?.message,
+                  is_online: null,
+                }
+                return (
+                  <UserCard
+                    user={userInfo}
+                    key={item._id}
+                    isActive={activeUserID === item._id}
+                    onUserCardClick={() => handleUserClick(item._id)}
+                  />
+                )
+              })}
           </>
         )}
       </div>
@@ -92,4 +125,4 @@ const UserList = ({togglePopupViewProfile}) => {
   )
 }
 
-export default UserList
+export default memo(UserList)

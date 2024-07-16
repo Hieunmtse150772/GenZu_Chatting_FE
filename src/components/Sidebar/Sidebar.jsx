@@ -17,12 +17,10 @@ import PopUpAddMenber from '../PopUp/PopUpAddMember/PopUpAddMember'
 import userService from '../../services/userService'
 import UserInfoFriendRequest from './UserInfoFriendRequest/UserInfoFriendRequest'
 import { clearUserSlice, logoutSlice } from '@/redux/Slice/userSlice'
-import { useTranslation } from 'react-i18next'
 import SearchFriends from './SearchFriends/SearchFriends'
 
-const Sidebar = ({togglePopupViewProfile}) => {
+const Sidebar = ({ togglePopupViewProfile }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const { t } = useTranslation()
   const sidebarRef = useRef(null)
   const navigate = useNavigate()
   const [isPopupVisible, setIsPopupVisible] = useState(false)
@@ -95,6 +93,7 @@ const Sidebar = ({togglePopupViewProfile}) => {
   return (
     <>
       {/* Hamburger menu */}
+      {console.log('sidebar ')}
       {!isOpen && (
         <div className='fixed top-6 z-50 h-screen md:hidden'>
           <button
@@ -172,7 +171,7 @@ const Sidebar = ({togglePopupViewProfile}) => {
                 return <SearchFriends key={index} user={item} />
               })
             ) : (
-              <UserList togglePopupViewProfile={togglePopupViewProfile}/>
+              <UserList togglePopupViewProfile={togglePopupViewProfile} />
             )}
           </div>
           <div className='absolute bottom-4 left-4 flex w-full items-center justify-between pr-8'>

@@ -21,6 +21,7 @@ import { checkCookie, getCookie } from '@/services/Cookies'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 import NoConversations from './NoConversation/NoConversation'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
+import SearchBar from '@/components/ChatPage/InformationConversation/SearchBar/SearchBar'
 
 export default function Chat() {
   const [isViewProfileClick, setIsViewProfileClick] = useState(false)
@@ -42,14 +43,16 @@ export default function Chat() {
 
   const togglePopupViewProfile = () => {
     setIsViewProfileClick(!isViewProfileClick)
-    if(!isViewProfileClick && conversation){
-      setUser(!conversation?.isGroupChat
-        ? conversation.users[0]?._id === JSON.parse(getCookie('userLogin'))?.user?._id
-          ? conversation?.users[1]
-          : conversation?.users[0]
-        : conversation?.avatar != null
-          ? conversation?.avatar
-          : '',)
+    if (!isViewProfileClick && conversation) {
+      setUser(
+        !conversation?.isGroupChat
+          ? conversation.users[0]?._id === JSON.parse(getCookie('userLogin'))?.user?._id
+            ? conversation?.users[1]
+            : conversation?.users[0]
+          : conversation?.avatar != null
+            ? conversation?.avatar
+            : '',
+      )
     }
   }
   useLayoutEffect(() => {
@@ -82,6 +85,7 @@ export default function Chat() {
   //**// */
   useLayoutEffect(() => {
     if (checkCookie()) {
+      dispatch(connectSocket(idConversation))
       dispatch(getLsConversation())
       dispatch(getFriends())
     }
@@ -97,10 +101,7 @@ export default function Chat() {
 
   //**// */
   useEffect(() => {
-    if (checkCookie()) {
-      dispatch(connectSocket(idConversation))
-    }
-    if (checkCookie() && idConversation.idConversation != 'undefined') {
+    if (checkCookie() && idConversation.idConversation !== 'undefined') {
       dispatch(loginSlice(JSON.parse(getCookie('userLogin'))?.user._id))
     }
   }, [dispatch, idConversation])
@@ -137,7 +138,7 @@ export default function Chat() {
         <div className='fixed w-full'>
           <div className='Login relative'>
             <main className='flex'>
-              <Sidebar togglePopupViewProfile={togglePopupViewProfile}/>
+              <Sidebar togglePopupViewProfile={togglePopupViewProfile} />
               {/* {!conversation ? <LoadingSpinner /> : <ChatBody toggleInfo={toggleInfo} />} */}
               {conversation ? (
                 <ChatBody toggleInfo={toggleInfo} />
@@ -146,12 +147,12 @@ export default function Chat() {
               ) : (
                 <NoConversations />
               )}
-              {showInfo && conversation ? (
+              {!showInfo && !conversation ? (
                 <div className='w-1/3'>
-                  <InformationConversation togglePopupViewProfile={togglePopupViewProfile}/>
+                  <InformationConversation togglePopupViewProfile={togglePopupViewProfile} />
                 </div>
               ) : (
-                <></>
+                <SearchBar />
               )}
             </main>
             {toastMessage && <ToastMessage message={toastMessage} />}

@@ -10,8 +10,6 @@ import {
 import { getConversations } from '@/services/messageService'
 import userService from '@/services/userService'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { io } from 'socket.io-client'
-let socket
 // Export hàm `fetchIdConversation`
 function* fetchIdConversation() {
   console.log('firstConversationId')

@@ -11,6 +11,7 @@ const SignUpComponent = () => {
   const [password, setPassword] = useState('')
   const [picture, setPicture] = useState('')
   const [error, setError] = useState('')
+  const [isSuccess, setIsSuccess] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const handleSignUp = async (e) => {
@@ -36,13 +37,9 @@ const SignUpComponent = () => {
           },
         },
       )
-      const user = {
-        accessToken: response.data.accessToken,
-        refreshToken: response.data.refreshToken,
-        user: response.data.user,
-      }
-      setCookie('userLogin', JSON.stringify(user), 7)
-      navigate('/')
+      setIsSuccess('Sign Up successfull, please confirm in your email')
+
+      // navigate('/')
       // Handle successful sign up (e.g., redirect, show success message)
     } catch (err) {
       console.error('Sign up failed:', err)
@@ -162,6 +159,7 @@ const SignUpComponent = () => {
           </div>
 
           {error && <p className='text-sm text-red-500'>{error}</p>}
+          {isSuccess && <p className='text-sm text-green-500'>{isSuccess}</p>}
 
           <div>
             <button

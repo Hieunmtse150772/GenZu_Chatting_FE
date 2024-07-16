@@ -159,6 +159,7 @@ const DetailMessage = memo(function DetailMessage(props) {
       id='messages'
       className='mx-2 flex flex-col-reverse bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500'
     >
+      {console.log('DetailMessage')}
       {messages.map((item, index) =>
         // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
         item.sender != null && sessionId == item.sender._id ? (

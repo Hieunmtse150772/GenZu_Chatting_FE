@@ -9,7 +9,7 @@ import store from './redux/store.js'
 import './i18n.js'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
+  <BrowserRouter basename='/'>
     <Provider store={store}>
       <App />
     </Provider>
