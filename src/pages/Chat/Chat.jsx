@@ -147,7 +147,7 @@ export default function Chat() {
               ) : (
                 <NoConversations />
               )}
-              {!showInfo && !conversation ? (
+              {showInfo && conversation ? (
                 <div className='w-1/3'>
                   <InformationConversation togglePopupViewProfile={togglePopupViewProfile} />
                 </div>
