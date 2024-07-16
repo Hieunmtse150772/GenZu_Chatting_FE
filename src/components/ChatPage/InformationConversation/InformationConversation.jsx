@@ -12,12 +12,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import InfomationGroup from './InfomationGroup/InfomationGroup'
 import { updateStateSearch } from '@/redux/Slice/messageSlice'
+import ChangeBackground from '@/components/PopUp/ChangeBackground/ChangeBackground';
 
 function InformationConversation(props) {
   const personalChat = useSelector((state) => state.user.conversation)
   const [customer, setCustomer] = useState(null)
   const [timeOffline, setTimeOffline] = useState('')
   const [offlineTime, setOfflineTime] = useState(null)
+  const [isOpenChangeBackground, setIsOpenChangeBackground] = useState(false)
   
   const dispatch = useDispatch()
   const cookie = getCookie('userLogin')
@@ -25,6 +27,10 @@ function InformationConversation(props) {
 
   const togglePopupViewProfile = () => {
     props.togglePopupViewProfile()
+  }
+
+  const togglePopupChangeBackground = (e) =>{
+    setIsOpenChangeBackground(!isOpenChangeBackground)
   }
 
   const handleSearchBtn = (e) => {
@@ -123,13 +129,13 @@ function InformationConversation(props) {
                 <DropdownItem icon={PiSelectionBackground} label={'Change background'}
                               dropdownStyle={'p-2'}
                               iconStyle={'h-9 w-9 p-2'} 
-                              onClick={() =>{}} />
+                              onClick={togglePopupChangeBackground} />
               </ul>
             </div>
           </div>
         )}
       </div>
-      {/* {isViewProfileClick && <ViewProfile user={user} onClose={togglePopupViewProfile} />} */}
+      {isOpenChangeBackground && <ChangeBackground onClose={togglePopupChangeBackground} />}
     </>
   )
 }

@@ -98,7 +98,7 @@ if (idConversation.idConversation != 'undefined') {
       {/* Hiển thị component ChatHeader với props toggleInfo được truyền vào */}
       <div
         id='messages-list'
-        className='no-scrollbar flex flex-grow flex-col space-y-2 overflow-y-auto'
+        className='no-scrollbar h-screen flex flex-col space-y-2 overflow-y-auto'
         onScroll={(e) => {
           showGoToBottomBtn(e)
           page > totalPage ? '' : handleScrollToTop(e)

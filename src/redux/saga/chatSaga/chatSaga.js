@@ -10,6 +10,7 @@ import {
   updateMessage,
 } from '@/redux/Slice/messageSlice'
 import {
+  setChangeBackground,
   setFriendRequestNotification,
   setFriendRequestReply,
   setNewFriendRequestNotification,
@@ -29,6 +30,7 @@ import {
   deleteConversation,
   recallMessage,
   createNewConversationService,
+  changeBackground,
 } from '@/services/messageService'
 
 // Import thư viện socket.io-client để tạo kết nối WebSocket.
@@ -54,7 +56,7 @@ function createSocketChannel(socket, idConversation) {
     socket.on('connected', () => emit(setSocketConnected(true)))
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
-    socket.on('validation', (data) => {
+socket.on('validation', (data) => {
       console.log('validation', data)
     })
     socket.on('notification', (data) => {
@@ -186,7 +188,7 @@ function* fetchMessagesMore(action) {
     const response = yield call(() => {
       return getMessages(action.payload.idConversation, action.payload.page)
     })
-    // Dispatch action để cập nhật state với danh sách tin nhắn.
+        // Dispatch action để cập nhật state với danh sách tin nhắn.
     yield put(setMessagesMore(response))
     yield put(plusPage())
     yield put(setLoadMore(false))
@@ -331,6 +333,16 @@ function* deleteHistoryMessage(action) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }
 }
+
+function* changeBgConversation(action) {
+  try {
+    const {data} = yield call(changeBackground, action.payload.background, action.payload.idConversation)
+    yield put(setChangeBackground(data.data))
+  } catch (error) {
+    console.error('Lỗi khi xóa cuộc hội thoại:', error)
+  }
+}
+
 function* recallMessageSaga(action) {
   console.log(action.payload)
   try {
@@ -380,11 +392,12 @@ export default function* chatSaga() {
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/getMessagesMore', fetchMessagesMore)
-  yield takeLatest('user/createGroupChat', createGroupChatSaga)
+yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
   yield takeLatest('user/logoutSlice', LogoutSaga)
   yield takeLatest('chat/leaveRoomSlice', leaveRoom)
   yield takeLatest('chat/createNewConversation', createNewConversationSaga)
+  yield takeLatest('user/handleChangeBackground', changeBgConversation)
 }
