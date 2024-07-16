@@ -10,7 +10,6 @@ export const getMessages = async (messageId, page = 1) => {
     const response = await axiosClient.get(
       `/messages/getMessagePagination?id=${messageId}&limit=40&page=${page}`,
     )
-    console.log(response.data.data.Messages)
     return response.data.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)

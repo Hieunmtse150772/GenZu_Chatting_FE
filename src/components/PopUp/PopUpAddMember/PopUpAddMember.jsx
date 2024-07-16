@@ -6,10 +6,12 @@ import { MdOutlineSavedSearch, MdOutlinePhotoCamera } from 'react-icons/md'
 import axios from 'axios'
 import { getCookie } from '@/services/Cookies'
 import Fuse from 'fuse.js'
-import { searchFriends } from '@/redux/Slice/userSlice'
+import { createGroupChat, searchFriends } from '@/redux/Slice/userSlice'
 
 export default function PopUpAddMember({ isVisible, onClose }) {
   const [input, setInput] = useState('')
+  const [inputChatName, setInputChatName] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [friends, setFriends] = useState([
     {
       id: 1,
@@ -25,6 +27,11 @@ export default function PopUpAddMember({ isVisible, onClose }) {
     },
   ])
   const [filteredFriends, setFilteredFriends] = useState(friends)
+  const [group, setGroup] = useState({
+    chatName: '',
+    avatar: 'https://i.pinimg.com/564x/49/fb/92/49fb9228c75ed3066c3d859783c1708e.jpg',
+    users: [],
+  })
   const dispatch = useDispatch()
   const fuse = new Fuse(friends, {
     keys: ['name', 'email'],
@@ -34,6 +41,14 @@ export default function PopUpAddMember({ isVisible, onClose }) {
     setInput(e.target.value)
     const result = fuse.search(e.target.value)
     setFilteredFriends(result.map(({ item }) => item))
+  }
+
+  const handleChangeInputChatName = (e) => {
+    setInputChatName(e.target.value)
+    setGroup({
+      ...group,
+      chatName: e.target.value,
+    })
   }
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
@@ -61,9 +76,11 @@ export default function PopUpAddMember({ isVisible, onClose }) {
     }
   }, [isVisible, onClose])
 
-  const handleAddToGroup = (friendID) => {
-    console.log(friendID)
+  const handleAddToGroup = (friendId) => {
+    group.users.push(friendId)
+    setIsLoading(true)
   }
+
   useLayoutEffect(() => {
     const fetchFriends = async () => {
       try {
@@ -85,12 +102,16 @@ export default function PopUpAddMember({ isVisible, onClose }) {
     return null
   }
 
+  const handleCreateGroup = () => {
+    dispatch(createGroupChat(group))
+  }
+
   return (
     <>
       <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
         <div
           ref={popupRef}
-          className='relative w-full max-w-lg rounded-lg bg-white p-6 shadow-lg dark:bg-[#1E1E1E]'
+          className='relative h-screen w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-lg dark:bg-[#1E1E1E]'
         >
           <button
             className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
@@ -112,9 +133,9 @@ export default function PopUpAddMember({ isVisible, onClose }) {
                 </label>
                 <input
                   id='groupName'
-                  onChange={handleChangeInput}
+                  onChange={handleChangeInputChatName}
                   onKeyDown={handleKeyPress}
-                  value={input}
+                  value={inputChatName}
                   type='text'
                   placeholder='Nhập tên nhóm của bạn'
                   className='mt-2 w-64 rounded-lg border border-gray-400 px-4 py-2 focus:outline-none'
@@ -138,26 +159,31 @@ export default function PopUpAddMember({ isVisible, onClose }) {
               </button>
             </div>
           </div>
-          <ul className='space-y-4'>
-            {filteredFriends.map((friend) => (
+          <div className='flex items-center justify-center'>
+            <button className='mt-2 rounded-xl bg-blue-300 px-4 py-3' onClick={handleCreateGroup}>
+              Create group
+            </button>
+          </div>
+          <ul className='h-screen space-y-4 overflow-y-auto'>
+            {friends.map((friend, index) => (
               <li
-                key={friend.id}
+                key={index}
                 className='flex items-center rounded-lg bg-gray-100 p-4 shadow dark:bg-[#2A2A2A] dark:text-white'
               >
                 <img
-                  src={friend.avatar}
-                  alt={friend.name}
+                  src={friend?.info?.picture}
+                  alt={friend?.info?.fullName}
                   className='mr-4 h-12 w-12 rounded-full'
                 />
                 <div className='flex-1'>
-                  <p className='font-semibold'>{friend.name}</p>
-                  <p className='text-gray-500'>{friend.email}</p>
+                  <p className='font-semibold'>{friend?.info?.fullName}</p>
+                  <p className='text-gray-500'>{friend?.info?.email}</p>
                 </div>
                 <button
-                  onClick={() => handleAddToGroup(friend.id)}
+                  onClick={() => handleAddToGroup(friend?.info?._id)}
                   className='rounded-lg bg-blue-500 px-4 py-2 text-white dark:bg-blue-500'
                 >
-                  Add to Group
+                  {isLoading ? 'Loading' : 'Add to Group'}
                 </button>
               </li>
             ))}

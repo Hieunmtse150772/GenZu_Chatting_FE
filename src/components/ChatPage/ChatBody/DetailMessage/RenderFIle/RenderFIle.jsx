@@ -1,4 +1,29 @@
+import { getCookie } from '@/services/Cookies'
+import React from 'react'
+
 const RenderMessage = ({ item }) => {
+  const userId = JSON.parse(getCookie('userLogin')).user._id
+  if (item.sender._id === userId && item.conversation.isGroupChat) {
+    return (
+      <p>
+        {'Bạn vừa thêm ' +
+          item?.affected_user_id?.fullName +
+          ' vào nhóm ' +
+          item.conversation?.chatName}
+      </p>
+    )
+  } else if (item.affected_user_id?._id === userId && item.conversation?.isGroupChat) {
+    return <p>{item.sender?.fullName + ' thêm bạn vào nhóm ' + item.conversation?.chatName}</p>
+  } else if (item.conversation?.isGroupChat) {
+    return (
+      <p>
+        {item.sender?.fullName +
+          ` thêm ${item.affected_user_id?.fullName}  vào nhóm ` +
+          item.conversation?.chatName}
+      </p>
+    )
+  }
+
   switch (item.messageType) {
     case 'image':
       return (
