@@ -16,7 +16,7 @@ function ChatBody({ toggleInfo }) {
   const loadMore = useSelector((state) => state.chat.loadMore)
   const totalPage = useSelector((state) => state.message.totalPage)
   const isSearchMessage = useSelector((state) => state.message.isSearchMessage)
-  const resultMessage = useSelector((state) =>  state.message.resultMessage)
+  const resultMessage = useSelector((state) => state.message.resultMessage)
   const idConversation = useParams()
   const dispatch = useDispatch()
   const messagesListRef = useRef(null)
@@ -45,7 +45,6 @@ function ChatBody({ toggleInfo }) {
       dispatch(getMessagesMore({ idConversation: idConversation.idConversation, page: page }))
       dispatch(setLoadMore(true))
       setScrollHeight(element.scrollHeight)
-
     }
   }
   // Hàm xử lý sự kiện click vào nút "Go To Bottom"
@@ -59,30 +58,31 @@ function ChatBody({ toggleInfo }) {
     // element.scrollTo({ bottom: 0, behavior: 'smooth' });
   }
 
-  // các hàm xử lý tăng/ giảm index khi nhấn arrow search 
-  const handleArrowUpBtn = useCallback((e) =>{
+  // các hàm xử lý tăng/ giảm index khi nhấn arrow search
+  const handleArrowUpBtn = useCallback((e) => {
     setIndexMessage(--indexMessage)
   }, [])
-  
-  const handleArrowDownBtn = useCallback((e) =>{
+
+  const handleArrowDownBtn = useCallback((e) => {
     setIndexMessage(++indexMessage)
   }, [])
 
   useEffect(() => {
     if (!loadMore) {
+      console.log(scrollHeight)
       const element = document.getElementById('messages-list')
       element.scrollTop = element.scrollTop - scrollHeight + 904
     }
   }, [loadMore])
 
   useEffect(() => {
-if (idConversation.idConversation != 'undefined') {
-    return () => {
-      dispatch(leaveRoomSlice(idConversation))
-}
+    if (idConversation.idConversation != 'undefined') {
+      return () => {
+        dispatch(leaveRoomSlice(idConversation))
+      }
     }
   }, [])
-  
+
   useEffect(() => {
     if (!isSearchMessage || resultMessage) {
       setIndexMessage(0)
@@ -94,19 +94,28 @@ if (idConversation.idConversation != 'undefined') {
       <ChatHeader toggleInfo={toggleInfo} />
       {loadMore ? <LoadMore /> : ''}
       {/* Hiển thị thanh tìm kiếm tin nhắn khi được chọn */}
-      {isSearchMessage && <SearchMessage indexMgs={indexMessage} handleArrowUpBtn={handleArrowUpBtn} handleArrowDownBtn={handleArrowDownBtn}/>}
+      {isSearchMessage && (
+        <SearchMessage
+          indexMgs={indexMessage}
+          handleArrowUpBtn={handleArrowUpBtn}
+          handleArrowDownBtn={handleArrowDownBtn}
+        />
+      )}
       {/* Hiển thị component ChatHeader với props toggleInfo được truyền vào */}
       <div
         id='messages-list'
-        className='no-scrollbar h-screen flex flex-col space-y-2 overflow-y-auto'
+        className='no-scrollbar flex h-screen flex-col space-y-2 overflow-y-auto'
         onScroll={(e) => {
           showGoToBottomBtn(e)
           page > totalPage ? '' : handleScrollToTop(e)
         }}
         ref={messagesListRef} // Gắn ref cho danh sách tin nhắn
       >
-        
-        <DetailMessage handleToBottom={goToBottom} indexMsg={indexMessage} isSearchMessage={isSearchMessage}/>{' '}
+        <DetailMessage
+          handleToBottom={goToBottom}
+          indexMsg={indexMessage}
+          isSearchMessage={isSearchMessage}
+        />{' '}
         {/* Hiển thị component DetailMessage với props handleToBottom được truyền vào */}
         {/* Nút "Go To Bottom" */}
         <button
