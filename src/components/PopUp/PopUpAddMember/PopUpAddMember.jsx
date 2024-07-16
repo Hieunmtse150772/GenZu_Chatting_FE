@@ -27,6 +27,7 @@ export default function PopUpAddMember({ isVisible, onClose }) {
     },
   ])
   const [filteredFriends, setFilteredFriends] = useState(friends)
+  const [addedFriends, setAddedFriends] = useState([])
   const [group, setGroup] = useState({
     chatName: '',
     avatar: 'https://i.pinimg.com/564x/49/fb/92/49fb9228c75ed3066c3d859783c1708e.jpg',
@@ -77,7 +78,11 @@ export default function PopUpAddMember({ isVisible, onClose }) {
   }, [isVisible, onClose])
 
   const handleAddToGroup = (friendId) => {
-    group.users.push(friendId)
+    setGroup((prevGroup) => ({
+      ...prevGroup,
+      users: [...prevGroup.users, friendId],
+    }))
+    setAddedFriends([...addedFriends, friendId])
     setIsLoading(true)
   }
 
@@ -182,8 +187,9 @@ export default function PopUpAddMember({ isVisible, onClose }) {
                 <button
                   onClick={() => handleAddToGroup(friend?.info?._id)}
                   className='rounded-lg bg-blue-500 px-4 py-2 text-white dark:bg-blue-500'
+                  disabled={addedFriends.includes(friend?.info?._id)}
                 >
-                  {isLoading ? 'Loading' : 'Add to Group'}
+                  {addedFriends.includes(friend?.info?._id) ? 'Added' : 'Add to Group'}
                 </button>
               </li>
             ))}

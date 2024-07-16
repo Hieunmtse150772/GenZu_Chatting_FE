@@ -79,7 +79,6 @@ function createSocketChannel(socket, idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message))
       }
-      emit(setNewMessage(message))
     })
 
     // Lắng nghe các sự kiện liên quan đến lời mời kết bạn.
