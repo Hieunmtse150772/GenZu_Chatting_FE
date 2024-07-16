@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleChangeBackground } from "@/redux/Slice/userSlice";
 
 export default function ChangeBackground({ onClose}){
-    const isUpdate = false
     const [previewUrl, setPreviewUrl] = useState('')
     const [color, setColor] = useState('')
     const conversation = useSelector((state) => state.user.conversation)
@@ -32,10 +31,11 @@ export default function ChangeBackground({ onClose}){
             idConversation: conversation._id
         }
         dispatch(handleChangeBackground(itemBackground))
+        onClose()
     }
     return (
         <>
-            {isUpdate && <ToastSuccesful message={'Thay đổi background thành công'} />}
+            {/* {isUpdate && <ToastSuccesful message={'Thay đổi background thành công'} />} */}
             <div className='changeBackground fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
                 <div className='relative flex flex-col justify-around rounded-lg bg-mainBlue p-6 shadow-lg'>
                 
@@ -60,7 +60,8 @@ export default function ChangeBackground({ onClose}){
                         <div className="flex justify-end space-x-3">
                             <button className="inline-flex items-center rounded-md bg-transparent  text-sm font-semibold
                                             text-gray-400 shadow-sm hover:text-gray-600 focus-visible:outline 
-                                            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                                            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                                    onClick={onClose}>
                                     <p> Hủy </p>
                             </button>
                             <button className="inline-flex items-center gap-x-2 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold
