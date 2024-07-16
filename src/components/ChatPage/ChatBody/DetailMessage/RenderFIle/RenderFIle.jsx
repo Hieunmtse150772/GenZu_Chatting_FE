@@ -3,13 +3,9 @@ import { useParams } from 'react-router-dom'
 import React from 'react'
 
 const RenderMessage = ({ item }) => {
-  const messageGroup = useSelector((state) => state.message?.message)
-  if (item.messageType === 'text' && messageGroup) {
-    return messageGroup.map((user, index) => (
-      <div key={index} className='message-container'>
-        <p>{'Bạn vừa thêm ' + user?.affected_user_id?.fullName + ' vào nhóm'}</p>
-      </div>
-    ))
+  console.log('item', item)
+  if (item.messageType === 'text' && item.conversation.isGroupChat) {
+    return <p>{'Bạn vừa thêm ' + item?.affected_user_id?.fullName + ' vào nhóm'}</p>
   }
 
   switch (item.messageType) {
