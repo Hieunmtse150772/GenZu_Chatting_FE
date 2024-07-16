@@ -30,18 +30,7 @@ export const getMessagesSearch = async (conversationId, keyword) => {
   }
 }
 // lay 40 tin nhan gan tin nhan dich
-export const getMessagesSearchDetails = async (conversationId, idMessage) => {
-  console.log(conversationId, idMessage)
-  try {
-    const response = await axiosClient.get(
-      `messages/getMessagePagination?id=${conversationId}&limit=40&messageId=${idMessage}`,
-    )
-    return response.data.data
-  } catch (error) {
-    console.error('Lỗi khi search tin nhắn qua API:', error)
-    throw error // Ném lỗi để saga có thể bắt
-  }
-}
+
 
 export const sendMessageApi = async (message, id) => {
   console.log(message)

@@ -7,6 +7,7 @@ const initialState = {
   typing: false,
   isTyping: false,
   loadMore: false,
+  listSearch: '',
   page: 2,
 }
 const chatSlice = createSlice({
@@ -42,14 +43,21 @@ const chatSlice = createSlice({
     resetChat: () => {
       return initialState
     },
-    createNewConversation: (state, action) => { },
-    searchMessageByKeyword: (state, action) => { },
-    searchMessageById:(state,action)=>{}
+    createNewConversation: (state, action) => {},
+    searchMessageByKeyword: (state, action) => {},
+    searchMessageById: (state, action) => {},
+    setListSearch: (state, action) => {
+      return {
+        ...state,
+        listSearch: action.payload,
+      }
+    },
   },
 })
 
 export const {
   setLoadMore,
+  setListSearch,
   setLoading,
   setSocketConnected,
   searchMessageById,

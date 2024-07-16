@@ -1,5 +1,11 @@
 // Import các actions cần thiết để cập nhật state trong Redux store.
-import { plusPage, setIsTyping, setLoadMore, setSocketConnected } from '@/redux/Slice/chatSlice'
+import {
+  plusPage,
+  setIsTyping,
+  setListSearch,
+  setLoadMore,
+  setSocketConnected,
+} from '@/redux/Slice/chatSlice'
 import {
   setMessage,
   setNewMessage,
@@ -387,13 +393,14 @@ function* searchMessageByKeyword(action) {
   const response = yield call(
     getMessagesSearch(action.payload.idConversation, action.payload.keyword),
   )
+  yield put(setListSearch(response.data.data))
   console.log(response)
 }
 
 function* searchMessageById(action) {
   console.log(action.payload)
   const response = yield call(
-    getMessagesSearch(action.payload.idConversation, action.payload.idMessage),
+    getMessages(action.payload.idConversation, action.payload.page),
     console.log(response),
   )
 }
