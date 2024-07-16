@@ -3,7 +3,7 @@ import ChatFooter from '../ChatFooter/ChatFooter' // Import component ChatFooter
 import DetailMessage from './DetailMessage/DetailMessage' // Import component DetailMessage từ đường dẫn tương đối
 import { useDispatch, useSelector } from 'react-redux' // Import hook useSelector từ thư viện react-redux
 import { IoMdArrowRoundDown } from 'react-icons/io' // Import icon IoMdArrowRoundDown từ thư viện react-icons/io
-import { useCallback, useEffect, useRef, useState } from 'react' // Import hook useEffect, useState từ thư viện react
+import { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react' // Import hook useEffect, useState từ thư viện react
 import { useParams } from 'react-router-dom'
 import { getMessagesMore } from '@/redux/Slice/messageSlice'
 import { leaveRoomSlice, setLoadMore } from '@/redux/Slice/chatSlice'
@@ -11,12 +11,16 @@ import LoadMore from './LoadMore/LoadMore'
 import SearchMessage from './SearchMessage/SearchMessage'
 function ChatBody({ toggleInfo }) {
   // Component ChatBody nhận props toggleInfo
+  const [backgroundStyle, setBackgroundStyle] = useState({backgroundColor: '#6699FF'})
+
   let [indexMessage, setIndexMessage] = useState(0)
   const page = useSelector((state) => state.chat.page)
   const loadMore = useSelector((state) => state.chat.loadMore)
   const totalPage = useSelector((state) => state.message.totalPage)
   const isSearchMessage = useSelector((state) => state.message.isSearchMessage)
   const resultMessage = useSelector((state) =>  state.message.resultMessage)
+  const conversation = useSelector((state) => state.user.conversation)
+
   const idConversation = useParams()
   const dispatch = useDispatch()
   const messagesListRef = useRef(null)
@@ -89,6 +93,30 @@ if (idConversation.idConversation != 'undefined') {
     }
   }, [isSearchMessage, resultMessage])
 
+  // let backgroundStyle 
+  useLayoutEffect(() =>{
+    let style
+    if(conversation.background == null) return 
+    const backgroundType = conversation.background.backgroundType;
+    const url = conversation.background.url
+    switch(backgroundType){
+      case 'color':
+        style = {
+          backgroundColor: url
+        }
+        break
+      case 'image':
+        style = {
+          backgroundImage: `url(${url})`,
+          backgroundSize: 'cover'
+        }
+        break
+      default:
+        break
+    }
+    setBackgroundStyle(style)
+  }, [conversation.background])
+
   return (
     <div className='relative mx-0 flex h-screen w-full flex-col shadow-2xl dark:bg-darkBlack md:mx-2'>
       <ChatHeader toggleInfo={toggleInfo} />
@@ -99,6 +127,7 @@ if (idConversation.idConversation != 'undefined') {
       <div
         id='messages-list'
         className='no-scrollbar h-screen flex flex-col space-y-2 overflow-y-auto'
+        style={backgroundStyle}
         onScroll={(e) => {
           showGoToBottomBtn(e)
           page > totalPage ? '' : handleScrollToTop(e)

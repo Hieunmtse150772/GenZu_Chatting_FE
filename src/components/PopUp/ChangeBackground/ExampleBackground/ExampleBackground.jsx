@@ -1,6 +1,5 @@
 import { useLayoutEffect, useState } from "react"
 export default function ExampleBackground(props){
-    console.log('props:', props)
     const [backgroundStyle, setBackgroundStyle] = useState({})
     // let backgroundStyle 
     useLayoutEffect(() =>{
@@ -20,7 +19,6 @@ export default function ExampleBackground(props){
         }
         setBackgroundStyle(style)
     }, [props])
-    console.log('backgroundStyle:', backgroundStyle)
     return (
            <div className={`mx-2 flex flex-col h-full`}
                 style={backgroundStyle}> 

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, memo, useCallback, useLayoutEffect } from 'react'
+import React, { useRef, useState, useEffect, memo, useCallback,  } from 'react'
 import FeatureAI from '../FeatureAI/FeatureAI'
 import { useSelector, useDispatch } from 'react-redux'
 import { MdOutlineEmojiEmotions } from 'react-icons/md'
@@ -15,9 +15,7 @@ const DetailMessage = memo(function DetailMessage(props) {
     const [activeMessageOptionID, setActiveMessageOptionID] = useState(null)
     const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
   const [hoveredMessage, setHoveredMessage] = useState(null)
-  const [backgroundStyle, setBackgroundStyle] = useState({backgroundColor: '#6699FF'})
 
-  const conversation = useSelector((state) => state.user.conversation)
 
   const resultMessage = useSelector((state) => state.message.resultMessage)
     const messages = useSelector((state) => state.message.message)
@@ -123,34 +121,12 @@ const dispatch = useDispatch()
   },
     [resultMessage],
   )
-    // let backgroundStyle 
-    useLayoutEffect(() =>{
-      let style
-      if(conversation.background == null) return 
-      const backgroundType = conversation.background.backgroundType;
-      const url = conversation.background.url
-      switch(backgroundType){
-        case 'color':
-          style = {
-            backgroundColor: url
-          }
-          break
-        case 'image':
-          style = {
-            backgroundImage: `url(${url})`,
-            backgroundSize: 'cover'
-          }
-          break
-        default:
-          break
-      }
-      setBackgroundStyle(style)
-  }, [conversation.background])
+    
   return (
     <div
       id='messages'
       className={`mx-2 flex flex-col-reverse ${messages.length >= 10 ? 'h-fit': 'h-full'}`}
-      style={backgroundStyle}
+      
     >
       {messages.map((item, index) =>
         // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
