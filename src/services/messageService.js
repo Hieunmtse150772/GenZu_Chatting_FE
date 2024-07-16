@@ -10,7 +10,7 @@ export const getMessages = async (messageId, page = 1) => {
     const response = await axiosClient.get(
       `/messages/getMessagePagination?id=${messageId}&limit=40&page=${page}`,
     )
-    return response.data.data
+        return response.data.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)
     throw error // Ném lỗi để saga có thể bắt
@@ -74,5 +74,14 @@ export const createNewConversationService = async (idUser) => {
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)
     throw error // Ném lỗi để saga có thể bắt
+  }
+}
+
+export const changeBackground = (background, idConversation) => {
+  try{
+    return axiosClient.patch(`/conversations/background?id=${idConversation}`, background)
+  } catch(error){
+      console.error('Lỗi khi thay đổi background cuộc hội thoại:', error)
+      throw error // Ném lỗi để saga có thể bắt
   }
 }

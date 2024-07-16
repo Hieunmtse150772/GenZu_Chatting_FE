@@ -65,7 +65,7 @@ const userSlice = createSlice({
         idConversation: action.payload,
       }
     },
-    createGroupChat: (state, action) => {},
+createGroupChat: (state, action) => {},
     getIdConversation: (state, action) => {},
     getLsConversation: (state, action) => {},
     setLsConversation: (state, action) => {
@@ -138,6 +138,33 @@ const userSlice = createSlice({
     clearUserSlice: () => initialState,
     loginSlice: (state, action) => {},
     logoutSlice: (state, action) => {},
+    handleChangeBackground: (state, action) =>{},
+    setChangeBackground: (state, action) =>{
+      let conversation = JSON.parse(JSON.stringify(state.lsConversation)).find( (item) => item._id == action.payload._id,)
+
+      const conversItem = {
+        background: action.payload.background,
+        avatar : conversation.avatar,
+        deleteBy: conversation.deleteBy,
+        blockUsers: conversation.blockUsers,
+        _id: conversation._id,
+        chatName: conversation.chatName,
+        isGroupChat: conversation.isGroupChat,
+        users: conversation.users,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt,
+        __v: conversation.__v,
+        latestMessage: conversation.latestMessage
+      }
+
+      if(conversation){
+        conversation = conversItem
+      }
+      return {
+        ...state,
+        conversation: conversation
+      }
+    },
   },
 })
 
@@ -168,7 +195,9 @@ export const {
   clearUserSlice,
   loginSlice,
   logoutSlice,
-  createGroupChat,
+createGroupChat,
   setNewLsConversation,
+  handleChangeBackground,
+  setChangeBackground,
 } = userSlice.actions
 export default userSlice.reducer

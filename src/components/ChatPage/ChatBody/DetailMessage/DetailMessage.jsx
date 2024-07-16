@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, memo, useCallback } from 'react'
+import React, { useRef, useState, useEffect, memo, useCallback, useLayoutEffect } from 'react'
 import FeatureAI from '../FeatureAI/FeatureAI'
 import { useSelector, useDispatch } from 'react-redux'
 import { MdOutlineEmojiEmotions } from 'react-icons/md'
@@ -10,21 +10,25 @@ import RenderMessage from './RenderFIle/RenderFIle'
 import RenderReplyMessage from './RenderFIle/RenderReplyMessage'
 
 const DetailMessage = memo(function DetailMessage(props) {
-  const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
-  const [isOptionSelected, setIsOptionSelected] = useState(false)
-  const [activeMessageOptionID, setActiveMessageOptionID] = useState(null)
-  const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
+    const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
+    const [isOptionSelected, setIsOptionSelected] = useState(false)
+    const [activeMessageOptionID, setActiveMessageOptionID] = useState(null)
+    const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
   const [hoveredMessage, setHoveredMessage] = useState(null)
+  const [backgroundStyle, setBackgroundStyle] = useState({backgroundColor: '#6699FF'})
+
+  const conversation = useSelector((state) => state.user.conversation)
+
   const resultMessage = useSelector((state) => state.message.resultMessage)
-  const messages = useSelector((state) => state.message.message)
-  const dispatch = useDispatch()
+    const messages = useSelector((state) => state.message.message)
+const dispatch = useDispatch()
 
   const buttonRef = useRef(null)
   const emoteRef = useRef(null)
   const optionRef = useRef(null)
 
   const session = Object.values(JSON.parse(getCookie('userLogin')))
-  const sessionId = Object.keys(session)?.map((key) => {
+    const sessionId = Object.keys(session)?.map((key) => {
     return session[key]._id
   })[2]
 
@@ -37,8 +41,8 @@ const DetailMessage = memo(function DetailMessage(props) {
   }, [])
 
   const handleMessageHover = useCallback((id_message) => {
-    setHoveredMessage(id_message)
-  }, [])
+        setHoveredMessage(id_message)
+    }, [])
 
   const handleEmoteClick = useCallback(
     (id_message) => {
@@ -72,67 +76,111 @@ const DetailMessage = memo(function DetailMessage(props) {
 
   const handleSpoiledClick = useCallback(
     (id_message) => {
-      const message = messages.find((msg) => msg.id_message === id_message)
-      if (message && !message.isSpoiled) {
-        dispatch(setMessageSpoiled({ id_message }))
-      }
-    },
+        const message = messages.find((msg) => msg.id_message === id_message)
+    if (message && !message.isSpoiled) {
+      dispatch(setMessageSpoiled({ id_message }))
+    }
+  },
     [dispatch, messages],
   )
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [handleClickOutside])
 
-  useEffect(() => {
+    useEffect(() => {
     props.handleToBottom()
   }, [messages, props])
 
   useEffect(() => {
     var index = props.indexMsg
     if (!resultMessage || resultMessage.length === 0) return
-    if (props.indexMsg > resultMessage.length - 1) {
+        if (props.indexMsg > resultMessage.length - 1) {
       index = 0
     }
-    handleSearchMessage(index, props.isSearchMessage)
+        handleSearchMessage(index, props.isSearchMessage)
   }, [props.isSearchMessage, resultMessage, props.indexMsg])
 
   const handleSearchMessage = useCallback(
     (indexMsg, isSearch) => {
-      const idCurrentMsg = resultMessage[indexMsg]._id
-      const myElement = document.getElementById(`${idCurrentMsg}`)
-      if (!isSearch) {
-        myElement.classList.remove('text-purple-700', 'font-bold')
-      } else {
-        resultMessage.forEach((msg) => {
-          const previousElement = document.getElementById(`${msg._id}`)
-          if (previousElement.classList.contains('text-purple-700') && idCurrentMsg !== msg._id) {
-            previousElement.classList.remove('text-purple-700', 'font-bold')
-          }
-        })
-        myElement.classList.add('text-purple-700', 'font-bold')
-        myElement.scrollIntoView()
-      }
-    },
+    const idCurrentMsg = resultMessage[indexMsg]._id
+    const myElement = document.getElementById(`${idCurrentMsg}`)
+        if (!isSearch) {
+      myElement.classList.remove('text-purple-700', 'font-bold')
+    } else {
+      resultMessage.forEach((msg) => {
+        const previousElement = document.getElementById(`${msg._id}`)
+        if (previousElement.classList.contains('text-purple-700') && idCurrentMsg !== msg._id) {
+          previousElement.classList.remove('text-purple-700', 'font-bold')
+        }
+      })
+      myElement.classList.add('text-purple-700', 'font-bold')
+      myElement.scrollIntoView()
+    }
+  },
     [resultMessage],
   )
-
+    // let backgroundStyle 
+    useLayoutEffect(() =>{
+      let style
+      if(conversation.background == null) return 
+      const backgroundType = conversation.background.backgroundType;
+      const url = conversation.background.url
+      switch(backgroundType){
+        case 'color':
+          style = {
+            backgroundColor: url
+          }
+          break
+        case 'image':
+          style = {
+            backgroundImage: `url(${url})`,
+            backgroundSize: 'cover'
+          }
+          break
+        default:
+          break
+      }
+      setBackgroundStyle(style)
+  }, [conversation.background])
   return (
     <div
       id='messages'
-      className='mx-2 flex flex-col-reverse bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500'
+      className={`mx-2 flex flex-col-reverse ${messages.length >= 10 ? 'h-fit': 'h-full'}`}
+      style={backgroundStyle}
     >
-      {messages.map((item, index) => (
-        <div
-          key={index}
-          className={`flex ${item.sender && sessionId === item.sender._id ? 'justify-end' : ''} ${item.status === 'recalled' ? 'pointer-events-none opacity-50' : ''}`}
-          onMouseEnter={() => handleMessageHover(item._id)}
-          onMouseLeave={() => handleMessageHover(null)}
-        >
-          {item.sender && sessionId === item.sender._id ? (
+      {messages.map((item, index) =>
+        // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
+        item.sender && sessionId === item.sender._id ? (
+          <div
+            key={index}
+            className={`flex ${item.sender && sessionId === item.sender._id ? 'justify-end' : ''} ${item.status === 'recalled' ? 'pointer-events-none opacity-50' : ''}`}
+            onMouseEnter={() => handleMessageHover(item._id)}
+            onMouseLeave={() => handleMessageHover(null)}
+          >
+            {/* Component FeatureAI */}
+            <div
+              className={`${
+                isOptionSelected && activeMessageOptionID == item._id
+                  ? 'opacity-100 dark:text-white'
+                  : hoveredMessage == item._id
+                    ? 'opacity-100 dark:text-white'
+                    : 'opacity-0 group-hover:opacity-100'
+              }`}
+              ref={optionRef}
+            >
+              <FeatureAI
+                message={item.message}
+                id={item._id}
+                callBackOptionClick={handleOptionClick}
+                owner={true}
+              />
+            </div>
+
+            {/* Tin nhắn */}
             <div className='relative'>
               <div
                 id={item._id}
@@ -144,13 +192,14 @@ const DetailMessage = memo(function DetailMessage(props) {
                 }}
                 onClick={() => handleSpoiledClick(item._id)}
               >
-                {item.replyMessage ? (
+                                {item.replyMessage ? (
                   <RenderReplyMessage item={item} />
                 ) : (
                   <RenderMessage item={item} />
                 )}
               </div>
-              {isEmoteBtnClick && activeMessageEmoteID === item._id && (
+              {/* Component FeatureEmoji */}
+              {isEmoteBtnClick && activeMessageEmoteID === item._id ? (
                 <div className='absolute right-px z-10' ref={emoteRef}>
                   <FeatureEmoji
                     isActive={isEmoteBtnClick}
@@ -159,12 +208,19 @@ const DetailMessage = memo(function DetailMessage(props) {
                     handleCallBack={handleEmoteClick}
                   />
                 </div>
+              ) : (
+                <></>
               )}
+
+              {/* Nút emoji */}
               <div
-                className={`absolute bottom-px right-px rounded-md p-0.5 hover:bg-blue-400 dark:text-white ${hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
+                  hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                }`}
                 ref={buttonRef}
                 onClick={() => handleEmoteClick(item._id)}
               >
+                {/* Hiển thị danh sách emoji đã react */}
                 {item.emojiBy.length !== 0 ? (
                   item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
                 ) : (
@@ -172,30 +228,46 @@ const DetailMessage = memo(function DetailMessage(props) {
                 )}
               </div>
             </div>
-          ) : (
+          </div>
+        ) : (
+          // Nếu người gửi tin nhắn không phải là user hiện tại thì hiển thị tin nhắn ở bên trái
+          <div
+            key={index}
+            className={`flex ${item.status === 'recalled' ? 'pointer-events-none opacity-50' : ''}`}
+            onMouseEnter={() => {
+              handleMessageHover(item._id)
+            }}
+            onMouseLeave={() => handleMessageHover(null)}
+          >
+            {/* Tin nhắn */}
             <div className='relative'>
               <div
                 id={item._id}
                 className='my-4 max-w-xs break-words rounded-lg bg-gray-300 p-2 text-black'
               >
-                {item.replyMessage ? (
+                                {item.replyMessage ? (
                   <RenderReplyMessage item={item} />
                 ) : (
                   <RenderMessage item={item} />
                 )}
               </div>
+              {/* Nút emoji */}
               <div
-                className={`absolute bottom-px right-px rounded-md p-0.5 hover:bg-blue-400 dark:text-white ${hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
+                  hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                }`}
                 ref={buttonRef}
                 onClick={() => handleEmoteClick(item._id)}
               >
-                {item.emojiBy.length !== 0 ? (
+                {/* Hiển thị danh sách emoji đã react */}
+                {item.emojiBy.length != 0 ? (
                   item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
                 ) : (
                   <MdOutlineEmojiEmotions size={14} />
                 )}
               </div>
-              {isEmoteBtnClick && activeMessageEmoteID === item._id && (
+              {/* Component FeatureEmoji */}
+              {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
                 <div className='absolute z-10' ref={emoteRef}>
                   <FeatureEmoji
                     isActive={isEmoteBtnClick}
@@ -204,11 +276,33 @@ const DetailMessage = memo(function DetailMessage(props) {
                     handleCallBack={handleEmoteClick}
                   />
                 </div>
+              ) : (
+                <></>
               )}
             </div>
-          )}
-        </div>
-      ))}
+
+            {/* Component FeatureAI */}
+            <div
+              className={`${
+                isOptionSelected && activeMessageOptionID == item._id
+                  ? 'opacity-100 dark:text-white'
+                  : hoveredMessage == item._id
+                    ? 'opacity-100 dark:text-white'
+                    : 'opacity-0 group-hover:opacity-100'
+              }`}
+              ref={optionRef}
+            >
+              <FeatureAI
+                sender={item.sender}
+                message={item.message}
+                id={item._id}
+                callBackOptionClick={handleOptionClick}
+                owner={false}
+              />
+            </div>
+          </div>
+        ),
+      )}
     </div>
   )
 })
