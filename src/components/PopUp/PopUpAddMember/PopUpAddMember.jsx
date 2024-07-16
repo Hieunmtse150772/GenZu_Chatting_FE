@@ -7,10 +7,14 @@ import axios from 'axios'
 import { getCookie } from '@/services/Cookies'
 import Fuse from 'fuse.js'
 import { createGroupChat, searchFriends } from '@/redux/Slice/userSlice'
+import { storage } from '@/utils/firebaseConfig'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 export default function PopUpAddMember({ isVisible, onClose }) {
   const [input, setInput] = useState('')
   const [inputChatName, setInputChatName] = useState('')
+  const [avatar, setAvatar] = useState(null)
+  const [previewImage, setPreviewImage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [friends, setFriends] = useState([
     {
@@ -30,7 +34,7 @@ export default function PopUpAddMember({ isVisible, onClose }) {
   const [addedFriends, setAddedFriends] = useState([])
   const [group, setGroup] = useState({
     chatName: '',
-    avatar: 'https://i.pinimg.com/564x/49/fb/92/49fb9228c75ed3066c3d859783c1708e.jpg',
+    avatar: '',
     users: [],
   })
   const dispatch = useDispatch()
@@ -38,10 +42,38 @@ export default function PopUpAddMember({ isVisible, onClose }) {
     keys: ['name', 'email'],
     threshold: 0.3, // Adjust this value to change the sensitivity of the search
   })
+
+  useEffect(() => {
+    return () => {
+      // Cleanup URL object to avoid memory leaks
+      if (previewImage && previewImage.startsWith('blob:')) {
+        URL.revokeObjectURL(previewImage)
+      }
+    }
+  }, [previewImage])
+
   const handleChangeInput = (e) => {
     setInput(e.target.value)
     const result = fuse.search(e.target.value)
     setFilteredFriends(result.map(({ item }) => item))
+  }
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setAvatar(file)
+      setPreviewImage(URL.createObjectURL(file))
+    }
+    let avatarUrl = ''
+    if (file) {
+      const storageRef = ref(storage, `avatars/${avatar}`)
+      await uploadBytes(storageRef, avatar)
+      avatarUrl = await getDownloadURL(storageRef)
+      setGroup({
+        ...group,
+        avatar: avatarUrl,
+      })
+    }
   }
 
   const handleChangeInputChatName = (e) => {
@@ -54,7 +86,6 @@ export default function PopUpAddMember({ isVisible, onClose }) {
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
       dispatch(searchFriends(input))
-      console.log(input)
       setInput('') // Clear input field after dispatch
     }
   }
@@ -109,6 +140,8 @@ export default function PopUpAddMember({ isVisible, onClose }) {
 
   const handleCreateGroup = () => {
     dispatch(createGroupChat(group))
+    setInputChatName('')
+    setAvatar('')
   }
 
   return (
@@ -128,9 +161,23 @@ export default function PopUpAddMember({ isVisible, onClose }) {
             <div className='mb-4 flex flex-row items-center justify-center'>
               <div className='mr-4 h-12 w-12 rounded-full border border-indigo-500 bg-white p-3 shadow-md backdrop-blur-2xl'>
                 <label htmlFor='upload' className='flex cursor-pointer flex-col items-center gap-2'>
-                  <MdOutlinePhotoCamera size={24} />
+                  {previewImage ? (
+                    <img
+                      src={previewImage}
+                      alt='User avatar'
+                      className='h-full w-full rounded-full border-2 border-gray-200 object-cover hover:border-blue-500'
+                    />
+                  ) : (
+                    <MdOutlinePhotoCamera size={24} />
+                  )}
                 </label>
-                <input id='upload' type='file' className='hidden' />
+                <input
+                  id='upload'
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={handleImageChange}
+                />
               </div>
               <div className='mr-6 mt-4 flex flex-col items-center'>
                 <label htmlFor='groupName' className='text-lg font-bold dark:text-white'>
@@ -165,7 +212,10 @@ export default function PopUpAddMember({ isVisible, onClose }) {
             </div>
           </div>
           <div className='flex items-center justify-center'>
-            <button className='mt-2 rounded-xl bg-blue-300 px-4 py-3' onClick={handleCreateGroup}>
+            <button
+              className='text-dark my-2 rounded-xl bg-blue-300 px-4 py-3 hover:bg-blue-500 dark:text-white'
+              onClick={handleCreateGroup}
+            >
               Create group
             </button>
           </div>
@@ -182,7 +232,7 @@ export default function PopUpAddMember({ isVisible, onClose }) {
                 />
                 <div className='flex-1'>
                   <p className='font-semibold'>{friend?.info?.fullName}</p>
-                  <p className='text-gray-500'>{friend?.info?.email}</p>
+                  <p className='truncate text-gray-500'>{friend?.info?.email}</p>
                 </div>
                 <button
                   onClick={() => handleAddToGroup(friend?.info?._id)}
