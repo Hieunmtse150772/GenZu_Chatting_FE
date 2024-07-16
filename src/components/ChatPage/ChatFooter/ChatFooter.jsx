@@ -492,7 +492,7 @@ const ChatFooter = () => {
         {/* Input nhập liệu và các nút chức năng */}
         <div className='relative flex items-center rounded-lg bg-mainBlue px-4 pb-4 pt-1 dark:bg-darkBlack'>
           {replyMessage && (
-            <div className='reply-preview mb-2 rounded-md bg-gray-100 p-2'>
+            <div className='absolute left-0 top-[-50px] w-full rounded-md bg-gray-100 p-2 shadow-md'>
               <p className='text-sm text-gray-500'>Replying to: {replyMessage.message}</p>
               <button
                 onClick={() => dispatch(clearReplyTo())}

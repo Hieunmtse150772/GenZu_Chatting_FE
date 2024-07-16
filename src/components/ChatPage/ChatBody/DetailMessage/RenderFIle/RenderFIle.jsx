@@ -3,7 +3,7 @@ import React from 'react'
 
 const RenderMessage = ({ item }) => {
   const userId = JSON.parse(getCookie('userLogin')).user._id
-  if (item.sender._id === userId && item.conversation.isGroupChat) {
+  if (item.affected_user_id && item.sender._id === userId && item.conversation.isGroupChat) {
     return (
       <p>
         {'Bạn vừa thêm ' +
@@ -12,9 +12,13 @@ const RenderMessage = ({ item }) => {
           item.conversation?.chatName}
       </p>
     )
-  } else if (item.affected_user_id?._id === userId && item.conversation?.isGroupChat) {
+  } else if (
+    item.affected_user_id &&
+    item.affected_user_id?._id === userId &&
+    item.conversation?.isGroupChat
+  ) {
     return <p>{item.sender?.fullName + ' thêm bạn vào nhóm ' + item.conversation?.chatName}</p>
-  } else if (item.conversation?.isGroupChat) {
+  } else if (item.affected_user_id && item.conversation?.isGroupChat) {
     return (
       <p>
         {item.sender?.fullName +

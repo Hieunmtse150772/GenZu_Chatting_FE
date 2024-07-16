@@ -56,7 +56,7 @@ function createSocketChannel(socket, idConversation) {
     socket.on('connected', () => emit(setSocketConnected(true)))
     socket.on('typing', () => emit(setIsTyping(true)))
     socket.on('stop_typing', () => emit(setIsTyping(false)))
-socket.on('validation', (data) => {
+    socket.on('validation', (data) => {
       console.log('validation', data)
     })
     socket.on('notification', (data) => {
@@ -78,7 +78,6 @@ socket.on('validation', (data) => {
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message))
       }
-      emit(setNewMessage(message))
     })
 
     // Lắng nghe các sự kiện liên quan đến lời mời kết bạn.
@@ -188,7 +187,7 @@ function* fetchMessagesMore(action) {
     const response = yield call(() => {
       return getMessages(action.payload.idConversation, action.payload.page)
     })
-        // Dispatch action để cập nhật state với danh sách tin nhắn.
+    // Dispatch action để cập nhật state với danh sách tin nhắn.
     yield put(setMessagesMore(response))
     yield put(plusPage())
     yield put(setLoadMore(false))
@@ -336,7 +335,11 @@ function* deleteHistoryMessage(action) {
 
 function* changeBgConversation(action) {
   try {
-    const {data} = yield call(changeBackground, action.payload.background, action.payload.idConversation)
+    const { data } = yield call(
+      changeBackground,
+      action.payload.background,
+      action.payload.idConversation,
+    )
     yield put(setChangeBackground(data.data))
   } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
@@ -392,7 +395,7 @@ export default function* chatSaga() {
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/getMessagesMore', fetchMessagesMore)
-yield takeLatest('user/createGroupChat', createGroupChatSaga)
+  yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
