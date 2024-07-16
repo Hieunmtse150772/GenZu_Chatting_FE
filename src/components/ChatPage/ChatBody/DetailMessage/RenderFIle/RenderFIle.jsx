@@ -1,4 +1,17 @@
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import React from 'react'
+
 const RenderMessage = ({ item }) => {
+  const messageGroup = useSelector((state) => state.message?.message)
+  if (item.messageType === 'text' && messageGroup) {
+    return messageGroup.map((user, index) => (
+      <div key={index} className='message-container'>
+        <p>{'Bạn vừa thêm ' + user?.affected_user_id?.fullName + ' vào nhóm'}</p>
+      </div>
+    ))
+  }
+
   switch (item.messageType) {
     case 'image':
       return (

@@ -77,7 +77,6 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
   }, [])
   return (
     <>
-      {console.log(infoConversation)}
       <div
         onClick={onUserCardClick}
         className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${

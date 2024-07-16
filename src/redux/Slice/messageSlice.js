@@ -19,6 +19,7 @@ const messageSlice = createSlice({
         ...state,
         totalPage: action.payload.totalPages,
         message: action.payload.Messages.map((value) => ({
+          affected_user_id: value.affected_user_id,
           sender: value.sender,
           _id: value._id,
           conversation: value.conversation,

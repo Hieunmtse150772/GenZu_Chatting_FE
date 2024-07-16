@@ -76,6 +76,7 @@ function createSocketChannel(socket, idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message))
       }
+      emit(setNewMessage(message))
     })
 
     // Lắng nghe các sự kiện liên quan đến lời mời kết bạn.
@@ -185,7 +186,6 @@ function* fetchMessagesMore(action) {
     const response = yield call(() => {
       return getMessages(action.payload.idConversation, action.payload.page)
     })
-    console.log(response)
     // Dispatch action để cập nhật state với danh sách tin nhắn.
     yield put(setMessagesMore(response))
     yield put(plusPage())
