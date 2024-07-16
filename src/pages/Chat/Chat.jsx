@@ -152,7 +152,8 @@ export default function Chat() {
                   <InformationConversation togglePopupViewProfile={togglePopupViewProfile} />
                 </div>
               ) : (
-                <SearchBar />
+                <></>
+                // <SearchBar />
               )}
             </main>
             {toastMessage && <ToastMessage message={toastMessage} />}
