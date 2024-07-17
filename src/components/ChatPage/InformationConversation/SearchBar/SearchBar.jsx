@@ -3,12 +3,13 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 export default function SearchBar(props) {
-  const [isActive, setIsActive] = useState(false)
+  const [activeUserID, setActiveUserID] = useState(null)
+
   let lstMessage = useSelector((state) => state.chat.listSearch)
 
   const dispatch = useDispatch()
   const onSearchClick = (pageMsg, id) =>{
-    
+    setActiveUserID(id)
      const itemSearchIdMessage = {
       idConversation: props.conversation._id,
       page: pageMsg
@@ -25,36 +26,37 @@ export default function SearchBar(props) {
         <label className='font-bold ml-2 mb-2'>Kết quả tìm kiếm</label>
         <p>Danh sách kết quả phù hợp trong hội thoại</p>
 
-        <div className=' h-screen flex flex-col space-y-2 overflow-y-auto'>
-          <div className="mx-2 flex flex-col bg-white ">
+        <div className='h-screen flex flex-col space-y-2 overflow-y-auto'>
             {lstMessage ? lstMessage.map((msg, index) =>
-                <div
+              <div className="mt-6 mx-2 flex flex-col bg-white ">
+                  <div
                     onClick={() => {onSearchClick(msg.pageNumber, msg._id)}}
                     className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
-                      isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'} mb-1 rounded-lg`}>
-                  <div className='relative h-14 w-20'>
-                    <img
-                      src={msg.sender.picture}
-                      alt='user avatar'
-                      className='h-14 w-14 rounded-full object-cover'
-                    />
-                </div>
-                <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
-                  <h3 className='truncate text-sm font-semibold'>{msg.sender.fullName}</h3>
-                  <p className='truncate text-sm text-gray-500 dark:text-slate-500'>{msg.message}</p>
-                </div>
+                      activeUserID === msg._id ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'} mb-1 rounded-lg`}>
+                    <div className='relative h-14 w-20'>
+                      <img
+                        src={msg.sender.picture}
+                        alt='user avatar'
+                        className='h-14 w-14 rounded-full object-cover'
+                      />
+                    </div>
+                    <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
+                      <h3 className='truncate text-sm font-semibold'>{msg.sender.fullName}</h3>
+                      <p className='truncate text-sm text-gray-500 dark:text-slate-500'>{msg.message}</p>
+                    </div>
+                  </div>
+                {index == lstMessage.length - 1 && <div className='h-20 italic font-light'> <p>Hết rồi đừng kéo nữa :3 </p></div>}
               </div>)
             : 
-              <div className=''>
+              <div className='mt-6 mx-2 flex flex-col bg-mainBlue'>
                   <div className=' flex justify-center'>
-                    <img className='w-16 bg-transparent' src='https://www.okcretesolutions.com/wp-content/uploads/search-icon.png' />
+                    <img className='w-40 bg-transparent' src='https://www.okcretesolutions.com/wp-content/uploads/search-icon.png' />
 
                   </div>
-                <h3 className='font-bold ml-2'>Không tìm thấy kết quả</h3>
+                  <h3 className='italic font-medium ml-2 mt-6'>Không tìm thấy kết quả</h3>
               </div>
             }
-            
-          </div>
+          
         </div>
         
       </div>
