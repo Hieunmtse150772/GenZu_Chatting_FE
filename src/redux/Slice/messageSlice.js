@@ -204,24 +204,24 @@ const messageSlice = createSlice({
       }
     },
     searchMessage: (state, action) => {
-      const lstMessage = JSON.parse(JSON.stringify(state.message))
-      const fuse = new Fuse(lstMessage, {
-        keys: ['message'],
-        threshold: 0.5,
-      })
+      // const lstMessage = JSON.parse(JSON.stringify(state.message))
+      // const fuse = new Fuse(lstMessage, {
+      //   keys: ['message'],
+      //   threshold: 0.5,
+      // })
 
-      const result = fuse.search(action.payload)
+      // const result = fuse.search(action.payload)
       // const indexMsg = 0
       // const temp ={
       //   lstMessage:  result.map((res) => res.item),
       //   indexMsg : 0
       // }
 
-      console.log('result search:', result)
-      return {
-        ...state,
-        resultMessage: result.map((res) => res.item),
-      }
+      // console.log('result search:', result)
+      // return {
+      //   ...state,
+      //   resultMessage: result.map((res) => res.item),
+      // }
     },
   },
 })

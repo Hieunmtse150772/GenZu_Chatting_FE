@@ -1,17 +1,62 @@
-import React from 'react'
+import { searchMessageById } from '@/redux/Slice/chatSlice'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-export default function SearchBar() {
+export default function SearchBar(props) {
+  const [isActive, setIsActive] = useState(false)
+  let lstMessage = useSelector((state) => state.chat.listSearch)
+
+  const dispatch = useDispatch()
+  const onSearchClick = (pageMsg, id) =>{
+    
+     const itemSearchIdMessage = {
+      idConversation: props.conversation._id,
+      page: pageMsg
+     }
+      dispatch(searchMessageById(itemSearchIdMessage))
+    props.handleSetMsgId(id)
+  }
+
+  
+
   return (
-    <div className='h-screen'>
-      <div className='dark:bg mx-auto max-w-2xl bg-mainBlue dark:bg-[#333333] dark:opacity-95'>
-        <h1>Kết quả tìm kiếm</h1>
-        <p>Danh sách kết quả trong cuộc hội thoại</p>
-      </div>
-      <div>
-        <h3>message</h3>
-      </div>
-      <div>
-        <h3>file</h3>
+    <div className='dark:bg h-screen w-full bg-mainBlue dark:bg-[#333333] dark:opacity-95'>
+      <div className='flex flex-col space-x-2 mx-auto max-w-2xl border-b-4'>
+        <label className='font-bold ml-2 mb-2'>Kết quả tìm kiếm</label>
+        <p>Danh sách kết quả phù hợp trong hội thoại</p>
+
+        <div className=' h-screen flex flex-col space-y-2 overflow-y-auto'>
+          <div className="mx-2 flex flex-col bg-white ">
+            {lstMessage ? lstMessage.map((msg, index) =>
+                <div
+                    onClick={() => {onSearchClick(msg.pageNumber, msg._id)}}
+                    className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
+                      isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'} mb-1 rounded-lg`}>
+                  <div className='relative h-14 w-20'>
+                    <img
+                      src={msg.sender.picture}
+                      alt='user avatar'
+                      className='h-14 w-14 rounded-full object-cover'
+                    />
+                </div>
+                <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
+                  <h3 className='truncate text-sm font-semibold'>{msg.sender.fullName}</h3>
+                  <p className='truncate text-sm text-gray-500 dark:text-slate-500'>{msg.message}</p>
+                </div>
+              </div>)
+            : 
+              <div className=''>
+                  <div className=' flex justify-center'>
+                    <img className='w-16 bg-transparent' src='https://www.okcretesolutions.com/wp-content/uploads/search-icon.png' />
+
+                  </div>
+                <h3 className='font-bold ml-2'>Không tìm thấy kết quả</h3>
+              </div>
+            }
+            
+          </div>
+        </div>
+        
       </div>
     </div>
   )

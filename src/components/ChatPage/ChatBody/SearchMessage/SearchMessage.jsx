@@ -3,7 +3,8 @@ import { IoIosSearch, IoIosClose, IoIosArrowDown, IoIosArrowUp } from 'react-ico
 import { updateStateSearch } from '@/redux/Slice/messageSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { searchMessage } from '@/redux/Slice/messageSlice'
+import { searchMessageByKeyword } from '@/redux/Slice/chatSlice'
+// import { searchMessage } from '@/redux/Slice/messageSlice'
 
 export default function SearchMessage(props){
     const resultMessage = useSelector((state) => state.message.resultMessage)
@@ -34,8 +35,12 @@ export default function SearchMessage(props){
         // Kiểm tra text khác null, undefined và rỗng
         if (inputStr != null && inputStr != undefined && inputStr != '') {
         
+            const searchItem = {
+                idConversation: props.idConversation,
+                keyword: inputStr
+            }
             // Dispatch action gửi tin nhắn
-            dispatch(searchMessage(inputStr))
+            dispatch(searchMessageByKeyword(searchItem))
             }
         }
     useEffect(() => {
@@ -58,7 +63,7 @@ export default function SearchMessage(props){
                         onClick={handleDeleteStr}>
                     <IoIosClose size={24}/>
                 </button>}
-                {(resultMessage != undefined) && (index > 0 && index < resultMessage.length) 
+                {/* {(resultMessage != undefined) && (index > 0 && index < resultMessage.length) 
                     ? 
                     (   <button className='items-center rounded-md  hover:bg-blue-400 dark:hover:bg-[#357ABD]'
                                 onClick={props.handleArrowUpBtn}>
@@ -66,16 +71,16 @@ export default function SearchMessage(props){
                         </button>)
                     : ( <button type="button" className="text-gray-300" disabled>
                                     <IoIosArrowUp size={24}/>
-                        </button>)}
+                        </button>)} */}
                 
-                {(resultMessage != undefined) && (index >= 0 && index < resultMessage.length-1) ? (<button className='items-center rounded-md  hover:bg-blue-400 dark:hover:bg-[#357ABD]'
+                {/* {(resultMessage != undefined) && (index >= 0 && index < resultMessage.length-1) ? (<button className='items-center rounded-md  hover:bg-blue-400 dark:hover:bg-[#357ABD]'
                                                             onClick={props.handleArrowDownBtn}>
                                                         <IoIosArrowDown size={24}/>
                                                     </button>)
                                                 : (<button type="button" className="text-gray-300" disabled>
                                                         <IoIosArrowDown size={24}/>
                                                     </button>)}
-                
+                 */}
                 <button title='Đóng tìm kiếm'
                         className='items-center rounded-ms  hover:bg-blue-400 dark:hover:bg-[#357ABD]'
                         onClick={handleCloseBtn}>

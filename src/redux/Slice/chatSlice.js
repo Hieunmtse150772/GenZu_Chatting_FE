@@ -47,9 +47,10 @@ const chatSlice = createSlice({
     searchMessageByKeyword: (state, action) => {},
     searchMessageById: (state, action) => {},
     setListSearch: (state, action) => {
+      console.log('setListSearch', action.payload)
       return {
         ...state,
-        listSearch: action.payload,
+        listSearch: action.payload.data,
       }
     },
   },

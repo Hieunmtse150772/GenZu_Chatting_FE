@@ -10,16 +10,17 @@ import RenderMessage from './RenderFIle/RenderFIle'
 import RenderReplyMessage from './RenderFIle/RenderReplyMessage'
 
 const DetailMessage = memo(function DetailMessage(props) {
-    const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
-    const [isOptionSelected, setIsOptionSelected] = useState(false)
-    const [activeMessageOptionID, setActiveMessageOptionID] = useState(null)
-    const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
+  const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
+  const [isOptionSelected, setIsOptionSelected] = useState(false)
+
+  const [activeMessageOptionID, setActiveMessageOptionID] = useState(null)
+  const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
   const [hoveredMessage, setHoveredMessage] = useState(null)
 
 
-  const resultMessage = useSelector((state) => state.message.resultMessage)
-    const messages = useSelector((state) => state.message.message)
-const dispatch = useDispatch()
+  const resultMessage = useSelector((state) => state.chat.listSearch)
+  const messages = useSelector((state) => state.message.message)
+  const dispatch = useDispatch()
 
   const buttonRef = useRef(null)
   const emoteRef = useRef(null)
@@ -89,38 +90,35 @@ const dispatch = useDispatch()
     }
   }, [handleClickOutside])
 
-    useEffect(() => {
+  useEffect(() => {
     props.handleToBottom()
   }, [messages, props])
 
   useEffect(() => {
-    var index = props.indexMsg
+    var index = props.idMessage
     if (!resultMessage || resultMessage.length === 0) return
-        if (props.indexMsg > resultMessage.length - 1) {
-      index = 0
-    }
-        handleSearchMessage(index, props.isSearchMessage)
-  }, [props.isSearchMessage, resultMessage, props.indexMsg])
+    handleSearchMessage(index, props.isSearchMessage)
+  }, [props.isSearchMessage,messages, resultMessage, props.idMessage])
 
   const handleSearchMessage = useCallback(
     (indexMsg, isSearch) => {
-    const idCurrentMsg = resultMessage[indexMsg]._id
-    const myElement = document.getElementById(`${idCurrentMsg}`)
-        if (!isSearch) {
+    const myElement = document.getElementById(`${indexMsg}`)
+    if(!myElement) return 
+
+    if(!isSearch){
       myElement.classList.remove('text-purple-700', 'font-bold')
-    } else {
-      resultMessage.forEach((msg) => {
+    }else{
+      messages.forEach((msg) => {
         const previousElement = document.getElementById(`${msg._id}`)
-        if (previousElement.classList.contains('text-purple-700') && idCurrentMsg !== msg._id) {
+        if (previousElement.classList.contains('text-purple-700') && indexMsg !== msg._id) {
           previousElement.classList.remove('text-purple-700', 'font-bold')
         }
       })
-      myElement.classList.add('text-purple-700', 'font-bold')
-      myElement.scrollIntoView()
     }
-  },
-    [resultMessage],
-  )
+    myElement.classList.add('text-purple-700', 'font-bold')
+    myElement.scrollIntoView()
+    
+  })
     
   return (
     <div

@@ -119,6 +119,8 @@ function createSocketChannel(socket, idConversation) {
     socket.on('new message received', (message) => {
       console.log(message)
     })
+
+    // changed background
     // Trả về hàm unsubscribe để hủy đăng ký lắng nghe các sự kiện khi event channel bị đóng.
     return () => {
       socket.off('connected')
@@ -347,6 +349,9 @@ function* changeBgConversation(action) {
       action.payload.background,
       action.payload.idConversation,
     )
+    // change background => conversationupdate
+
+    // new message => message
     yield put(setChangeBackground(data.data))
   } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
@@ -390,19 +395,26 @@ function* createNewConversationSaga(action) {
 }
 function* searchMessageByKeyword(action) {
   console.log(action.payload)
-  const response = yield call(
-    getMessagesSearch(action.payload.idConversation, action.payload.keyword),
-  )
-  yield put(setListSearch(response.data.data))
-  console.log(response)
+  try{
+    const response = yield call(getMessagesSearch,action.payload.idConversation, action.payload.keyword)
+    yield put(setListSearch(response))
+  }catch(error){
+    console.error('lỗi xảy ra khi tìm kiếm tin nhắn:', error)
+    throw error
+  }
 }
 
 function* searchMessageById(action) {
   console.log(action.payload)
-  const response = yield call(
-    getMessages(action.payload.idConversation, action.payload.page),
-    console.log(response),
-  )
+  try{
+    const response = yield call(getMessages,action.payload.idConversation, action.payload.page)
+    console.log('searchMessageById:', response)
+    yield put(setMessage(response))
+
+  }catch(error){
+    console.error('lỗi xảy ra khi get tin nhắn:', error)
+    throw error
+  }
 }
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.

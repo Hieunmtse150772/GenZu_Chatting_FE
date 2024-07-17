@@ -16,7 +16,7 @@ import {
   setIdConversation,
   setToastMessage,
 } from '@/redux/Slice/userSlice'
-import { connectSocket, resetChat } from '@/redux/Slice/chatSlice'
+import { connectSocket, resetChat, setListSearch } from '@/redux/Slice/chatSlice'
 import { checkCookie, getCookie } from '@/services/Cookies'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 import NoConversations from './NoConversation/NoConversation'
@@ -26,7 +26,11 @@ import SearchBar from '@/components/ChatPage/InformationConversation/SearchBar/S
 export default function Chat() {
   const [isViewProfileClick, setIsViewProfileClick] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
+  const [idMessage, setIdMessage] = useState('')
+
   const dispatch = useDispatch()
+  const isSearchMessage = useSelector((state) => state.message.isSearchMessage)
+
   const toastMessage = useSelector((state) => state?.user?.toastMessage)
   const friendRequestNotification =
     useSelector((state) => state?.user?.friendRequestNotification) || []
@@ -55,6 +59,11 @@ export default function Chat() {
       )
     }
   }
+
+  const handleSetMsgId = (id) =>{
+    setIdMessage(id)
+  }
+
   useLayoutEffect(() => {
     if (!checkCookie()) {
       dispatch(setIdConversation(null))
@@ -130,6 +139,13 @@ export default function Chat() {
     }
   }, [idConversationPreventive, idConversation, lsConversation, navigate])
 
+  useEffect(()=>{
+    if(!isSearchMessage){
+      const data = { data: ''}
+      dispatch(setListSearch(data))
+    }
+  },[isSearchMessage])
+
   return (
     <>
       {!checkCookie() ? (
@@ -141,20 +157,21 @@ export default function Chat() {
               <Sidebar togglePopupViewProfile={togglePopupViewProfile} />
               {/* {!conversation ? <LoadingSpinner /> : <ChatBody toggleInfo={toggleInfo} />} */}
               {conversation ? (
-                <ChatBody toggleInfo={toggleInfo} />
+                <ChatBody isSearchMessage={isSearchMessage} idMessage={idMessage} toggleInfo={toggleInfo} />
               ) : lsConversation == null ? (
                 <LoadingSpinner />
               ) : (
                 <NoConversations />
               )}
-              {showInfo && conversation ? (
+              {showInfo && conversation && !isSearchMessage ? (
                 <div className='w-1/3'>
                   <InformationConversation togglePopupViewProfile={togglePopupViewProfile} />
+                  
                 </div>
-              ) : (
-                <></>
-                // <SearchBar />
-              )}
+              ): isSearchMessage &&
+                  <div className='w-1/3'>
+                    <SearchBar handleSetMsgId={handleSetMsgId} isSearchMessage={isSearchMessage} conversation={conversation}/>
+                  </div>}
             </main>
             {toastMessage && <ToastMessage message={toastMessage} />}
           </div>

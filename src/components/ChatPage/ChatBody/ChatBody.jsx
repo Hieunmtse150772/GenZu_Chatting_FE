@@ -9,7 +9,7 @@ import { getMessagesMore } from '@/redux/Slice/messageSlice'
 import { leaveRoomSlice, setLoadMore } from '@/redux/Slice/chatSlice'
 import LoadMore from './LoadMore/LoadMore'
 import SearchMessage from './SearchMessage/SearchMessage'
-function ChatBody({ toggleInfo }) {
+function ChatBody({isSearchMessage, idMessage, toggleInfo }) {
   // Component ChatBody nhận props toggleInfo
   const [backgroundStyle, setBackgroundStyle] = useState({backgroundColor: '#6699FF'})
 
@@ -17,7 +17,7 @@ function ChatBody({ toggleInfo }) {
   const page = useSelector((state) => state.chat.page)
   const loadMore = useSelector((state) => state.chat.loadMore)
   const totalPage = useSelector((state) => state.message.totalPage)
-  const isSearchMessage = useSelector((state) => state.message.isSearchMessage)
+  // const isSearchMessage = useSelector((state) => state.message.isSearchMessage)
   const resultMessage = useSelector((state) =>  state.message.resultMessage)
   const conversation = useSelector((state) => state.user.conversation)
 
@@ -62,14 +62,6 @@ function ChatBody({ toggleInfo }) {
     // element.scrollTo({ bottom: 0, behavior: 'smooth' });
   }
 
-  // các hàm xử lý tăng/ giảm index khi nhấn arrow search
-  const handleArrowUpBtn = useCallback((e) => {
-    setIndexMessage(--indexMessage)
-  }, [])
-
-  const handleArrowDownBtn = useCallback((e) => {
-    setIndexMessage(++indexMessage)
-  }, [])
 
   useEffect(() => {
     if (!loadMore) {
@@ -87,11 +79,6 @@ function ChatBody({ toggleInfo }) {
     }
   }, [])
 
-  useEffect(() => {
-    if (!isSearchMessage || resultMessage) {
-      setIndexMessage(0)
-    }
-  }, [isSearchMessage, resultMessage])
 
   // let backgroundStyle 
   useLayoutEffect(() =>{
@@ -124,9 +111,7 @@ function ChatBody({ toggleInfo }) {
       {/* Hiển thị thanh tìm kiếm tin nhắn khi được chọn */}
       {isSearchMessage && (
         <SearchMessage
-          indexMgs={indexMessage}
-          handleArrowUpBtn={handleArrowUpBtn}
-          handleArrowDownBtn={handleArrowDownBtn}
+          idConversation={idConversation.idConversation}
         />
       )}
       {/* Hiển thị component ChatHeader với props toggleInfo được truyền vào */}
@@ -142,7 +127,7 @@ function ChatBody({ toggleInfo }) {
       >
         <DetailMessage
           handleToBottom={goToBottom}
-          indexMsg={indexMessage}
+          idMessage={idMessage}
           isSearchMessage={isSearchMessage}
         />{' '}
         {/* Hiển thị component DetailMessage với props handleToBottom được truyền vào */}
