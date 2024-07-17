@@ -7,6 +7,8 @@ import { setAnswerClick } from '../../../../redux/Slice/messageSlice' // Import 
 import { answerSuggestion } from '@/utils/answerSuggestion' // Import hàm xử lý logic trả lời câu hỏi tự động
 import { useDispatch } from 'react-redux' // Import useDispatch để gửi actions Redux
 import { useRef, useState, useEffect, memo } from 'react' // Import các hooks từ React
+import { textToSpeech } from '@/services/TranslationService'
+import { TiMicrophoneOutline } from 'react-icons/ti'
 
 const FeatureAI = memo(function FeatureAI(props) {
   // Refs
@@ -84,7 +86,28 @@ const FeatureAI = memo(function FeatureAI(props) {
   const handleTranslation = () => {
     dispatch(translationMessage({ message: props.message, id: props.id })) // Gửi action Redux để dịch nội dung tin nhắn
   }
-
+  //ham xu ly su kien text to speech
+  function base64ToBlob(base64, mime) {
+    const byteCharacters = atob(base64)
+    const byteNumbers = new Array(byteCharacters.length)
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i)
+    }
+    const byteArray = new Uint8Array(byteNumbers)
+    return new Blob([byteArray], { type: mime })
+  }
+  const handleTextToSpeech = async () => {
+    try {
+      const response = await textToSpeech(props.message, 'en-US', 'bwyneth')
+      console.log(response)
+      const audioBlob = base64ToBlob(response.audio_data, `audio/${response.audio_format}`)
+      const audioUrl = URL.createObjectURL(audioBlob)
+      const audio = new Audio(audioUrl)
+      audio.play()
+    } catch (err) {
+      console.log('Error:', err)
+    }
+  }
   // Render component
   return (
     <div className='relative'>
@@ -97,6 +120,16 @@ const FeatureAI = memo(function FeatureAI(props) {
             onClick={handleTranslation}
           >
             <RiTranslate size={14} />
+          </button>
+        </li>
+        {/* Nút text to speech" */}
+        <li className='mr-1 p-1'>
+          <button
+            id='setting'
+            className='rounded-md p-1 hover:bg-blue-400'
+            onClick={handleTextToSpeech}
+          >
+            <TiMicrophoneOutline size={14} />
           </button>
         </li>
         {/* Nút "Trả lời nhanh" */}

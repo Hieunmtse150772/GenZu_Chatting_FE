@@ -24,3 +24,34 @@ export const translateText = async (
     throw error // Rethrow the error to propagate it further
   }
 }
+
+export const textToSpeech = async (
+  input = 'Hello, This is Genzu Chat',
+  language = 'en-US',
+  voice_id = 'bwyneth',
+) => {
+  const options = {
+    method: 'POST',
+    url: 'https://api.sws.speechify.com/v1/audio/speech',
+    headers: {
+      accept: '*/*',
+      'content-type': 'application/json',
+      Authorization: import.meta.env.VITE_API_TTS_KEY,
+    },
+    data: {
+      audio_format: 'mp3',
+      input: input,
+      language: language,
+      model: 'simba-base',
+      options: { loudness_normalization: true },
+      voice_id: voice_id,
+    },
+  }
+  try {
+    const response = await axios.request(options)
+    return response.data // Đảm bảo trả về dữ liệu
+  } catch (error) {
+    console.error('Error fetching TTS:', error)
+    throw error // Ném lại lỗi để có thể xử lý ở nơi gọi hàm
+  }
+}

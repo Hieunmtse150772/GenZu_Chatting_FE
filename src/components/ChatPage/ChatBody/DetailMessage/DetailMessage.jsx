@@ -284,3 +284,4 @@ const dispatch = useDispatch()
 })
 
 export default DetailMessage
+
