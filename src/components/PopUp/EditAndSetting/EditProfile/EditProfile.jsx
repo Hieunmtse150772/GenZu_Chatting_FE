@@ -25,7 +25,6 @@ const EditProfile = ({ user, token }) => {
     return () => {
       // Cleanup URL object to avoid memory leaks
       if (previewImage && previewImage.startsWith('blob:')) {
-        console.log('trigger')
         URL.revokeObjectURL(previewImage)
       }
     }

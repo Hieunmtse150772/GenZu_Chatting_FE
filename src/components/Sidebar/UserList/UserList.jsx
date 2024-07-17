@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import UserCard from '../UserCard/UserCard'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -27,6 +27,12 @@ const UserList = ({ togglePopupViewProfile }) => {
       dispatch(setConversation(id))
     }
   }
+
+  useEffect(() => {
+    if (groupChats.length > 0) {
+      navigate(`/chat/${groupChats[0]._id}`)
+    }
+  }, [groupChats.length])
 
   return (
     <section className='h-full w-full'>

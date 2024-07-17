@@ -16,6 +16,7 @@ import {
   updateMessage,
 } from '@/redux/Slice/messageSlice'
 import {
+  deleteGroupById,
   setChangeBackground,
   setFriendRequestNotification,
   setFriendRequestReply,
@@ -69,6 +70,8 @@ function createSocketChannel(socket, idConversation) {
     socket.on('notification', (data) => {
       if (data.success && data.actionCode === 3006) {
         emit(setNewLsConversation(data.data))
+      } else if (data.success && data.actionCode === 3004) {
+        emit(deleteGroupById(data.data))
       }
       console.log('notification', data)
     })
@@ -76,7 +79,13 @@ function createSocketChannel(socket, idConversation) {
       console.log('response group', res)
       if (res.success && res.messageCode === 3001) {
         emit(setNewLsConversation(res.data))
+      } else if (res.success && res.messageCode === 3004) {
+        emit(deleteGroupById(res.data))
       }
+    })
+    socket.on('delete group', (res) => {
+      console.log('delete', res)
+      emit(deleteConversation(res))
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
@@ -119,8 +128,6 @@ function createSocketChannel(socket, idConversation) {
     socket.on('new message received', (message) => {
       console.log(message)
     })
-
-    // changed background
     // Trả về hàm unsubscribe để hủy đăng ký lắng nghe các sự kiện khi event channel bị đóng.
     return () => {
       socket.off('connected')
@@ -349,9 +356,6 @@ function* changeBgConversation(action) {
       action.payload.background,
       action.payload.idConversation,
     )
-    // change background => conversationupdate
-
-    // new message => message
     yield put(setChangeBackground(data.data))
   } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
@@ -376,6 +380,14 @@ function* createGroupChatSaga(action) {
     console.log(error)
   }
 }
+
+function* deleteGroupChatSaga(action) {
+  try {
+    yield call([socket, 'emit'], 'delete group', action.payload)
+  } catch (error) {
+    console.log(error)
+  }
+}
 function* LogoutSaga(action) {
   try {
     yield call([socket, 'emit'], 'logout', action.payload)
@@ -395,26 +407,19 @@ function* createNewConversationSaga(action) {
 }
 function* searchMessageByKeyword(action) {
   console.log(action.payload)
-  try{
-    const response = yield call(getMessagesSearch,action.payload.idConversation, action.payload.keyword)
-    yield put(setListSearch(response))
-  }catch(error){
-    console.error('lỗi xảy ra khi tìm kiếm tin nhắn:', error)
-    throw error
-  }
+  const response = yield call(
+    getMessagesSearch(action.payload.idConversation, action.payload.keyword),
+  )
+  yield put(setListSearch(response.data.data))
+  console.log(response)
 }
 
 function* searchMessageById(action) {
   console.log(action.payload)
-  try{
-    const response = yield call(getMessages,action.payload.idConversation, action.payload.page)
-    console.log('searchMessageById:', response)
-    yield put(setMessage(response))
-
-  }catch(error){
-    console.error('lỗi xảy ra khi get tin nhắn:', error)
-    throw error
-  }
+  const response = yield call(
+    getMessages(action.payload.idConversation, action.payload.page),
+    console.log(response),
+  )
 }
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
@@ -432,6 +437,7 @@ export default function* chatSaga() {
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/getMessagesMore', fetchMessagesMore)
   yield takeLatest('user/createGroupChat', createGroupChatSaga)
+  yield takeLatest('user/deleteGroupChat', deleteGroupChatSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)

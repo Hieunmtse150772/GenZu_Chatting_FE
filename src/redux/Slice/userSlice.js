@@ -65,7 +65,8 @@ const userSlice = createSlice({
         idConversation: action.payload,
       }
     },
-createGroupChat: (state, action) => {},
+    createGroupChat: (state, action) => {},
+    deleteGroupChat: (state, action) => {},
     getIdConversation: (state, action) => {},
     getLsConversation: (state, action) => {},
     setLsConversation: (state, action) => {
@@ -95,6 +96,12 @@ createGroupChat: (state, action) => {},
         lsGroupChats: action.payload,
       }
     },
+    deleteGroupById: (state, action) => {
+      state.lsGroupChats = state.lsGroupChats.filter(
+        (groupChat) => groupChat._id !== action.payload,
+      )
+    },
+    setLatestConversation: (state, action) => {},
     setLsPersonalChats: (state, action) => {
       return {
         ...state,
@@ -138,13 +145,15 @@ createGroupChat: (state, action) => {},
     clearUserSlice: () => initialState,
     loginSlice: (state, action) => {},
     logoutSlice: (state, action) => {},
-    handleChangeBackground: (state, action) =>{},
-    setChangeBackground: (state, action) =>{
-      let conversation = JSON.parse(JSON.stringify(state.lsConversation)).find( (item) => item._id == action.payload._id,)
+    handleChangeBackground: (state, action) => {},
+    setChangeBackground: (state, action) => {
+      let conversation = JSON.parse(JSON.stringify(state.lsConversation)).find(
+        (item) => item._id == action.payload._id,
+      )
 
       const conversItem = {
         background: action.payload.background,
-        avatar : conversation.avatar,
+        avatar: conversation.avatar,
         deleteBy: conversation.deleteBy,
         blockUsers: conversation.blockUsers,
         _id: conversation._id,
@@ -154,15 +163,15 @@ createGroupChat: (state, action) => {},
         createdAt: conversation.createdAt,
         updatedAt: conversation.updatedAt,
         __v: conversation.__v,
-        latestMessage: conversation.latestMessage
+        latestMessage: conversation.latestMessage,
       }
 
-      if(conversation){
+      if (conversation) {
         conversation = conversItem
       }
       return {
         ...state,
-        conversation: conversation
+        conversation: conversation,
       }
     },
   },
@@ -195,7 +204,9 @@ export const {
   clearUserSlice,
   loginSlice,
   logoutSlice,
-createGroupChat,
+  createGroupChat,
+  deleteGroupChat,
+  deleteGroupById,
   setNewLsConversation,
   handleChangeBackground,
   setChangeBackground,
