@@ -408,18 +408,19 @@ function* createNewConversationSaga(action) {
 function* searchMessageByKeyword(action) {
   console.log(action.payload)
   const response = yield call(
-    getMessagesSearch(action.payload.idConversation, action.payload.keyword),
+    getMessagesSearch,action.payload.idConversation, action.payload.keyword
   )
-  yield put(setListSearch(response.data.data))
+  yield put(setListSearch(response))
   console.log(response)
 }
 
 function* searchMessageById(action) {
   console.log(action.payload)
   const response = yield call(
-    getMessages(action.payload.idConversation, action.payload.page),
-    console.log(response),
+    getMessages,action.payload.idConversation, action.payload.page
   )
+  yield put(setMessage(response))
+
 }
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
