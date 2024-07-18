@@ -28,11 +28,11 @@ const UserList = ({ togglePopupViewProfile }) => {
     }
   }
 
-  useEffect(() => {
-    if (groupChats.length > 0) {
-      navigate(`/chat/${groupChats[0]._id}`)
-    }
-  }, [groupChats.length])
+  // useEffect(() => {
+  //   if (groupChats.length > 0) {
+  //     navigate(`/chat/${groupChats[0]._id}`)
+  //   }
+  // }, [groupChats.length])
 
   return (
     <section className='h-full w-full'>

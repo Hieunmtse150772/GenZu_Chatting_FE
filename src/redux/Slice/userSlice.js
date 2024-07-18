@@ -90,10 +90,35 @@ const userSlice = createSlice({
         }
       }
     },
+    updateConversationByGroupId: (state, action) => {
+      const { groupId, updatedConversation } = action.payload
+      const conversationIndex = state.lsConversation.findIndex(
+        (conversation) => conversation.groupId === groupId,
+      )
+
+      if (conversationIndex !== -1) {
+        state.lsConversation[conversationIndex] = {
+          ...state.lsConversation[conversationIndex],
+          ...updatedConversation,
+        }
+      } else {
+        console.error('Conversation not found')
+      }
+    },
     setLsGroupChat: (state, action) => {
       return {
         ...state,
         lsGroupChats: action.payload,
+      }
+    },
+    updateGroupMembers: (state, action) => {
+      const { idConversation, users } = action.payload
+      console.log('idConversation', idConversation)
+      const groupChatIndex = state.lsGroupChats.findIndex((group) => group._id === idConversation)
+      console.log('groupIndex', groupChatIndex)
+
+      if (groupChatIndex !== -1) {
+        state.lsGroupChats[groupChatIndex].users = users
       }
     },
     deleteGroupById: (state, action) => {
@@ -101,6 +126,21 @@ const userSlice = createSlice({
         (groupChat) => groupChat._id !== action.payload,
       )
     },
+    addNewMemberToGroup: (state, action) => {
+      const { idUser, idConversation } = action.payload
+      // Tìm group tương ứng với idConversation
+      const group = state.lsGroupChats.find((group) => group._id === idConversation)
+      if (group) {
+        // Thêm idUser vào danh sách members của group nếu chưa có
+        if (!group.users.includes(idUser)) {
+          group.users.push(idUser)
+        }
+      } else {
+        // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
+        console.error('Group not found')
+      }
+    },
+    addMemberToGroup: (state, action) => {},
     setLatestConversation: (state, action) => {},
     setLsPersonalChats: (state, action) => {
       return {
@@ -205,9 +245,13 @@ export const {
   loginSlice,
   logoutSlice,
   createGroupChat,
+  addMemberToGroup,
+  addNewMemberToGroup,
+  updateGroupMembers,
   deleteGroupChat,
   deleteGroupById,
   setNewLsConversation,
+  updateConversationByGroupId,
   handleChangeBackground,
   setChangeBackground,
 } = userSlice.actions

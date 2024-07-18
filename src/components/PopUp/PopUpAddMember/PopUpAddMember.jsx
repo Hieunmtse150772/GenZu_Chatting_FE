@@ -147,6 +147,7 @@ export default function PopUpAddMember({ isVisible, onClose }) {
   return (
     <>
       <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+        {console.log(group)}
         <div
           ref={popupRef}
           className='relative h-screen w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-lg dark:bg-[#1E1E1E]'

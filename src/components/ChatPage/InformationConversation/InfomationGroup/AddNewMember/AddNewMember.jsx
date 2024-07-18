@@ -2,19 +2,22 @@ import React, { useEffect, useState, useRef } from 'react'
 import userService from '@/services/userService'
 import { useParams } from 'react-router-dom'
 import { MdOutlineClose } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
+import { addNewMemberToGroup } from '@/redux/Slice/userSlice'
 
 const AddNewMember = ({ isVisible, onClose }) => {
   const [loading, setLoading] = useState(true)
   const [friends, setFriends] = useState([])
   const [groupMembers, setGroupMembers] = useState([])
+  const [addedMembers, setAddedMembers] = useState(new Set()) // State to track added members
+  const dispatch = useDispatch()
+  const { idConversation } = useParams()
   const popupRef = useRef()
-  const idConversation = useParams()
 
   useEffect(() => {
     const fetchFriends = async () => {
       try {
         const response = await userService.getAllFriends()
-        console.log('add new member', response)
         if (response && Array.isArray(response)) {
           const friends = response
             .map((item) => ({
@@ -25,7 +28,7 @@ const AddNewMember = ({ isVisible, onClose }) => {
             }))
             .filter((friend) => {
               // Lọc ra những bạn bè có ít nhất một phần tử trong groupConversation có _id trùng với idConversation
-              return friend.groupConversation.some((gc) => gc?._id === idConversation)
+              return friend.groupConversation.every((gc) => gc?._id === idConversation)
             })
 
           setFriends(friends)
@@ -39,7 +42,7 @@ const AddNewMember = ({ isVisible, onClose }) => {
       }
     }
     fetchFriends()
-  }, [])
+  }, [idConversation])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -59,8 +62,10 @@ const AddNewMember = ({ isVisible, onClose }) => {
     }
   }, [isVisible, onClose])
 
-  const handleAddToGroup = (friend) => {
+  const handleAddToGroup = (friend, idUser, idConversation) => {
     setGroupMembers([...groupMembers, friend])
+    setAddedMembers(new Set(addedMembers).add(idUser)) // Update added members state
+    dispatch(addNewMemberToGroup({ groupId: idConversation, users: [idUser] }))
   }
 
   if (!isVisible) return null
@@ -97,11 +102,17 @@ const AddNewMember = ({ isVisible, onClose }) => {
                       <p className='text-sm text-gray-500'>{friend?.friend?.email}</p>
                     </div>
                   </div>
+                  {console.log('idUser', friend.friend._id)}
                   <button
-                    className='rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600'
-                    onClick={() => handleAddToGroup(friend)}
+                    className={`rounded-lg px-4 py-2 text-white ${
+                      addedMembers.has(friend.friend?._id)
+                        ? 'cursor-not-allowed bg-gray-500'
+                        : 'bg-blue-500 hover:bg-blue-600'
+                    }`}
+                    onClick={() => handleAddToGroup(friend, friend.friend?._id, idConversation)}
+                    disabled={addedMembers.has(friend.friend?._id)}
                   >
-                    Add to Group
+                    {addedMembers.has(friend.friend?._id) ? 'Added' : 'Add to Group'}
                   </button>
                 </li>
               ))}

@@ -1,11 +1,11 @@
 // Import các actions cần thiết để cập nhật state trong Redux store.
 import {
-minusPage,
+  minusPage,
   plusPage,
   setIsTyping,
   setListSearch,
   setLoadMore,
-setLsPage,
+  setLsPage,
   setPage,
   setSocketConnected,
 } from '@/redux/Slice/chatSlice'
@@ -19,13 +19,16 @@ import {
   updateMessage,
 } from '@/redux/Slice/messageSlice'
 import {
+  addMemberToGroup,
   deleteGroupById,
   setChangeBackground,
   setFriendRequestNotification,
   setFriendRequestReply,
+  updateConversationByGroupId,
   setNewFriendRequestNotification,
   setNewLsConversation,
   setNewLsFriends,
+  updateGroupMembers,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -84,11 +87,19 @@ function createSocketChannel(socket, idConversation) {
         emit(setNewLsConversation(res.data))
       } else if (res.success && res.messageCode === 3004) {
         emit(deleteGroupById(res.data))
+      } else if (res.success && res.messageCode === 3006) {
+        const idConversation = res.data._id
+        const users = res.data
+        emit(updateConversationByGroupId({ idConversation, users }))
       }
     })
     socket.on('delete group', (res) => {
       console.log('delete', res)
       emit(deleteConversation(res))
+    })
+    socket.on('add member', (res) => {
+      console.log('add member', res)
+      emit(addMemberToGroup(res))
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
@@ -415,6 +426,14 @@ function* deleteGroupChatSaga(action) {
     console.log(error)
   }
 }
+
+function* addNewMemberToGroupSaga(action) {
+  try {
+    yield call([socket, 'emit'], 'add member', action.payload)
+  } catch (error) {
+    console.log(error)
+  }
+}
 function* LogoutSaga(action) {
   try {
     yield call([socket, 'emit'], 'logout', action.payload)
@@ -466,9 +485,10 @@ export default function* chatSaga() {
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/getMessagesMore', fetchMessagesMore)
-yield takeLatest('chat/getMessageMoreBottom', fetchMessagesMoreBottom)
+  yield takeLatest('chat/getMessageMoreBottom', fetchMessagesMoreBottom)
   yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('user/deleteGroupChat', deleteGroupChatSaga)
+  yield takeLatest('user/addNewMemberToGroup', addNewMemberToGroupSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
