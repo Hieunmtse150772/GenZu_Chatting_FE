@@ -98,7 +98,7 @@ function Chat() {
       dispatch(getLsConversation())
       dispatch(getFriends())
     }
-  }, [])
+  }, [idConversation])
   useLayoutEffect(() => {
     console.log(lsConversation)
     if (checkCookie() && lsConversation && idConversation.idConversation !== 'undefined') {

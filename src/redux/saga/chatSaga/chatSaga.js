@@ -174,12 +174,12 @@ function* handleSocketConnect(action) {
   socket = io(import.meta.env.VITE_ENDPOINT, {
     extraHeaders: { Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}` },
   })
-  console.log('checl check')
   // Lấy thông tin người dùng từ cookie.
   const user = JSON.parse(getCookie('userLogin')).user
 
   // Gửi sự kiện 'setup' và 'join chat' đến server.
   socket.emit('setup', user)
+  console.log('check join chat')
   socket.emit('join chat', { conversation: action.payload.idConversation, user: user._id })
   socket.emit('login', user._id)
   // Tạo event channel để lắng nghe các sự kiện socket.io.
