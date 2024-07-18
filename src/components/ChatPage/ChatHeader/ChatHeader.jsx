@@ -86,7 +86,7 @@ function ChatHeader({ toggleInfo }) {
               )}
             </div>
           </div>
-          <div className='flex space-x-2 dark:text-white md:space-x-6'>
+          <div className='flex space-x-2 text-black dark:text-white md:space-x-6'>
             <button className='rounded-md p-2 hover:bg-blue-400 dark:hover:bg-[#357ABD]'>
               <MdPhone size={22} />
             </button>

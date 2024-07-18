@@ -60,7 +60,7 @@ const UserList = ({ togglePopupViewProfile }) => {
           {t('group_chat')}
         </button>
       </div>
-      <div className='mt-4 h-full overflow-y-auto'>
+      <div className='mt-4 h-full overflow-y-auto text-black'>
         {lsChats.length == 0 && groupChats.length == 0 ? (
           lsConversation != null ? (
             lsFriends.length > 0 ? (

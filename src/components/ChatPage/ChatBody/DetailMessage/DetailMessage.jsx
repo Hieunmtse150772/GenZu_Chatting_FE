@@ -111,6 +111,7 @@ const DetailMessage = memo(function DetailMessage(props) {
     }else{
       messages.forEach((msg) => {
         const previousElement = document.getElementById(`${msg._id}`)
+        if(!previousElement) return
         if (previousElement.classList.contains('text-purple-700') && indexMsg !== msg._id) {
           previousElement.classList.remove('text-purple-700', 'font-bold')
         }
@@ -146,9 +147,9 @@ const DetailMessage = memo(function DetailMessage(props) {
             <div
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
-                  ? 'opacity-100 dark:text-white'
+                  ? 'opacity-100 text-cyan-900 dark:text-white'
                   : hoveredMessage == item._id
-                    ? 'opacity-100 dark:text-white'
+                    ? 'opacity-100 text-cyan-900 dark:text-white'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
               ref={optionRef}
@@ -195,7 +196,7 @@ const DetailMessage = memo(function DetailMessage(props) {
 
               {/* Nút emoji */}
               <div
-                    className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
+                    className={`absolute text-cyan-900 bottom-px right-px p-0.5 transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110 hover:text-cyan-600 duration-300 dark:text-white dark:hover:text-white rounded-md${
                       hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                     }`}
                     ref={buttonRef}
@@ -235,7 +236,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               </div>
               {/* Nút emoji */}
               <div
-                  className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
+                  className={`absolute text-cyan-900 bottom-px right-px p-0.5 transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110 hover:text-cyan-600 duration-300 dark:text-white dark:hover:text-white rounded-md${
                     hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                   }`}
                   ref={buttonRef}
@@ -267,9 +268,9 @@ const DetailMessage = memo(function DetailMessage(props) {
             <div
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
-                  ? 'opacity-100 dark:text-white'
+                  ? 'opacity-100 text-cyan-900 dark:text-white'
                   : hoveredMessage == item._id
-                    ? 'opacity-100 dark:text-white'
+                    ? 'opacity-100 text-cyan-900 dark:text-white'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
               ref={optionRef}

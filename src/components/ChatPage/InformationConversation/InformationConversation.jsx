@@ -20,7 +20,7 @@ function InformationConversation(props) {
   const [timeOffline, setTimeOffline] = useState('')
   const [offlineTime, setOfflineTime] = useState(null)
   const [isOpenChangeBackground, setIsOpenChangeBackground] = useState(false)
-
+  
   const dispatch = useDispatch()
   const cookie = getCookie('userLogin')
   const [token, SetToken] = useState('')
@@ -115,29 +115,20 @@ function InformationConversation(props) {
             </a>
             <div>
               <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
-                <DropdownItem
-                  icon={IoIosSearch}
-                  label={'Search chat'}
-                  dropdownStyle={'p-2'}
-                  iconStyle={'h-9 w-9 p-2'}
-                  onClick={handleSearchBtn}
-                />
+                <DropdownItem icon={IoIosSearch} label={'Search chat'}
+                              dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                              iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'} 
+                              onClick={handleSearchBtn}/>
                 <hr />
-                <DropdownItem
-                  icon={FaRegImage}
-                  label={'List of images'}
-                  dropdownStyle={'p-2'}
-                  iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
-                />
+                <DropdownItem icon={FaRegImage} label={'List of images'}
+                              dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                              iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'} 
+                              onClick={() =>{}} />
                 <hr />
-                <DropdownItem
-                  icon={MdOutlineGTranslate}
-                  label={'Auto translate'}
-                  dropdownStyle={'p-2'}
-                  iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
-                />
+                <DropdownItem icon={MdOutlineGTranslate} label={'Auto translate'}
+                              dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                              iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'} 
+                              onClick={() =>{}} />
                 <div className='flex flex-wrap gap-[2.45%]'>
                   <div className='my-2 w-[22.5%]'>
                     <img
@@ -148,13 +139,10 @@ function InformationConversation(props) {
                  
                 </div>
                 <hr />
-                <DropdownItem
-                  icon={PiSelectionBackground}
-                  label={'Change background'}
-                  dropdownStyle={'p-2'}
-                  iconStyle={'h-9 w-9 p-2'}
-                  onClick={togglePopupChangeBackground}
-                />
+                <DropdownItem icon={PiSelectionBackground} label={'Change background'}
+                              dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                              iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'} 
+                              onClick={togglePopupChangeBackground} />
               </ul>
             </div>
           </div>

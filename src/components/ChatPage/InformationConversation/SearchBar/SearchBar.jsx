@@ -62,7 +62,7 @@ export default function SearchBar(props) {
             <div className='mx-2 mt-6 flex flex-col bg-mainBlue'>
               <div className='flex justify-center'>
                 <img
-                  className='w-40 bg-transparent'
+                  className='w-40'
                   src='https://www.okcretesolutions.com/wp-content/uploads/search-icon.png'
                 />
               </div>

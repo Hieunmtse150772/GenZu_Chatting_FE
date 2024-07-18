@@ -56,7 +56,7 @@ export default function SearchMessage(props){
                     onChange={handleChangeInput}
                     onKeyDown={handleKeyPress}
                     value={inputStr}
-                    className='flex-1 rounded-full border px-4 py-2 focus:outline outline-cyan-600 mr-2'
+                    className='flex-1 bg-white dark:bg-black dark:text-white rounded-full border px-4 py-2 focus:outline outline-cyan-600 mr-2'
                 />
                 { inputStr && <button title='Xóa'
                         className='items-center rounded-md  hover:bg-blue-400 dark:hover:bg-[#357ABD]'

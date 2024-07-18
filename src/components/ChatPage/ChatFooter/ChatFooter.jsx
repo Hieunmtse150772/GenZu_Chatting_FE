@@ -521,7 +521,7 @@ const ChatFooter = () => {
               onFocus={handleFocus}
               ref={inputRef}
               value={inputStr}
-              className={`mr-2 flex-1 rounded-full border px-4 py-2 outline-cyan-600 focus:outline ${
+              className={`mr-2 bg-white dark:bg-black dark:text-white flex-1 rounded-full border px-4 py-2 outline-cyan-600 focus:outline ${
                 isSpoiled ? 'show' : 'hide'
               }`}
               style={{

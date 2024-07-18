@@ -44,7 +44,7 @@ export default function SelectImage(props){
                 ref={imageRef}
                 onChange={(e) => handleFileChange(e, 'image')}
             />
-            <button className="border-gray-400" onClick={handleRemove}>remove</button>
+            <button className="border-gray-400 italic font-light" onClick={handleRemove}>remove</button>
         </div>
     )
 }

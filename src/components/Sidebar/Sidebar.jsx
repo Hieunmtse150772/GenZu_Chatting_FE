@@ -3,6 +3,8 @@ import { IoIosLogOut, IoIosMenu } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
 import { IoIosNotificationsOutline } from 'react-icons/io'
 import userIcon from '@/assets/user_icon.jpg'
+import chatLogo from '@/assets/logo.png'
+
 import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
 import SearchInput from '../Sidebar/SearchInput/SearchInput'
 import UserList from '../Sidebar/UserList/UserList'
@@ -112,7 +114,11 @@ const Sidebar = ({ togglePopupViewProfile }) => {
       >
         <div className='no-scrollbar relative h-full w-80 overflow-x-hidden overflow-y-scroll border-slate-500 bg-lightTheme p-4 shadow-2xl dark:bg-darkTheme sm:max-w-[12rem] md:w-[22rem] lg:max-w-[20rem]'>
           <div className='mb-4 flex items-center justify-between'>
-            <p className='text-xl font-bold dark:text-white'>App</p>
+            <img  className='bg-transparent w-20'
+                  src={chatLogo} 
+                  alt='App GenZu' 
+                  />
+            {/* <p className='text-xl font-bold text-black dark:text-white'>App</p> */}
             <div className='flex justify-between'>
               <div onClick={handleNotificationClick} className='relative'>
                 <IoIosNotificationsOutline className='h-7 w-7 cursor-pointer text-black outline-none hover:opacity-60 dark:text-white' />
@@ -157,11 +163,11 @@ const Sidebar = ({ togglePopupViewProfile }) => {
             <div className='ml-4 flex cursor-pointer items-center outline-none'>
               <LiaUserPlusSolid
                 onClick={togglePopupFindFriend}
-                className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white'
+                className='ml-2 h-6 w-6 text-black cursor-pointer hover:opacity-60 dark:text-white'
               />
               <LiaUserFriendsSolid
                 onClick={togglePopupAddMember}
-                className='ml-2 h-6 w-6 cursor-pointer hover:opacity-60 dark:text-white'
+                className='ml-2 h-6 w-6 text-black cursor-pointer hover:opacity-60 dark:text-white'
               />
             </div>
           </div>
@@ -174,7 +180,7 @@ const Sidebar = ({ togglePopupViewProfile }) => {
               <UserList togglePopupViewProfile={togglePopupViewProfile} />
             )}
           </div>
-          <div className='absolute bottom-4 left-4 flex w-full items-center justify-between pr-8'>
+          <div className='absolute bottom-1 left-4 flex w-full items-center justify-between pr-8'>
             <Switcher />
             <PiSignOutBold
               onClick={() => {
