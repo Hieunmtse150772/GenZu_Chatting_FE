@@ -23,7 +23,7 @@ export default function SelectColor(props){
     }
     return(
         <div>
-            <label for="color-picker" className="w-5/12 mb-1 font-semibold">Select a color</label>
+            <label id="color-picker" className="w-5/12 mb-1 font-semibold">Select a color</label>
             <div className='flex flex-wrap'>
                 {lstColor.map((item, index)=>
                     <div 
