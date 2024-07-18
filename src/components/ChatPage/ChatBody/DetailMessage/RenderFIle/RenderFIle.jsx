@@ -66,6 +66,14 @@ const RenderMessage = ({ item }) => {
           )
         }
       }
+      
+      if(item.message === '7008'){
+        return (
+          <p className='text-gray-600 font-light italic'>{item.sender?.fullName +
+                  ` vừa thay đổi background`}
+          </p>
+        )
+      }
       break
     default:
       return null

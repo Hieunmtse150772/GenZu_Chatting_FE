@@ -147,6 +147,7 @@ const userSlice = createSlice({
     logoutSlice: (state, action) => {},
     handleChangeBackground: (state, action) => {},
     setChangeBackground: (state, action) => {
+      console.log('setChangeBackground:', action.payload)
       let conversation = JSON.parse(JSON.stringify(state.lsConversation)).find(
         (item) => item._id == action.payload._id,
       )

@@ -140,7 +140,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
                   ? 'opacity-100 dark:text-white'
-                  : hoveredMessage == item._id
+                  : hoveredMessage == item._id && item.messageType != 'notification'
                     ? 'opacity-100 dark:text-white'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
@@ -187,20 +187,23 @@ const DetailMessage = memo(function DetailMessage(props) {
               )}
 
               {/* Nút emoji */}
-              <div
-                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
-                  hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                }`}
-                ref={buttonRef}
-                onClick={() => handleEmoteClick(item._id)}
-              >
-                {/* Hiển thị danh sách emoji đã react */}
-                {item.emojiBy.length !== 0 ? (
-                  item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
-                ) : (
-                  <MdOutlineEmojiEmotions size={14} />
-                )}
-              </div>
+              { item.messageType != 'notification' && 
+                  <div
+                    className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
+                      hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                    }`}
+                    ref={buttonRef}
+                    onClick={() => handleEmoteClick(item._id)}
+                  >
+                  {/* Hiển thị danh sách emoji đã react */}
+                  {item.emojiBy.length !== 0 ? (
+                    item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
+                  ) : (
+                    <MdOutlineEmojiEmotions size={14} />
+                  )}
+                </div>
+              }
+              
             </div>
           </div>
         ) : (
@@ -226,20 +229,22 @@ const DetailMessage = memo(function DetailMessage(props) {
                 )}
               </div>
               {/* Nút emoji */}
-              <div
-                className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
-                  hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                }`}
-                ref={buttonRef}
-                onClick={() => handleEmoteClick(item._id)}
-              >
-                {/* Hiển thị danh sách emoji đã react */}
-                {item.emojiBy.length != 0 ? (
-                  item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
-                ) : (
-                  <MdOutlineEmojiEmotions size={14} />
-                )}
-              </div>
+              {item.messageType != 'notification' && 
+                <div
+                  className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
+                    hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  }`}
+                  ref={buttonRef}
+                  onClick={() => handleEmoteClick(item._id)}
+                >
+                  {/* Hiển thị danh sách emoji đã react */}
+                  {item.emojiBy.length != 0 ? (
+                    item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
+                  ) : (
+                    <MdOutlineEmojiEmotions size={14} />
+                  )}
+                </div>
+              }
               {/* Component FeatureEmoji */}
               {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
                 <div className='absolute z-10' ref={emoteRef}>
@@ -260,7 +265,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
                   ? 'opacity-100 dark:text-white'
-                  : hoveredMessage == item._id
+                  : hoveredMessage == item._id && item.messageType != 'notification'
                     ? 'opacity-100 dark:text-white'
                     : 'opacity-0 group-hover:opacity-100'
               }`}

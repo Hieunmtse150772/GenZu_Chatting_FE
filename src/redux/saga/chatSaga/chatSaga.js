@@ -92,7 +92,7 @@ function createSocketChannel(socket, idConversation) {
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
-      console.log('co messsage moi ')
+      console.log('co messsage moi ', message)
       if (message.conversation._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message))
@@ -130,6 +130,11 @@ function createSocketChannel(socket, idConversation) {
     })
     socket.on('new message received', (message) => {
       console.log(message)
+    })
+
+    socket.on('changed background', (background) => {
+      console.log('background', background)
+      emit(setChangeBackground(background))
     })
     // Trả về hàm unsubscribe để hủy đăng ký lắng nghe các sự kiện khi event channel bị đóng.
     return () => {
@@ -376,7 +381,10 @@ function* changeBgConversation(action) {
       action.payload.background,
       action.payload.idConversation,
     )
-    yield put(setChangeBackground(data.data))
+    console.log('changeBgConversation:', data.data.conversationUpdate)
+    yield put(setChangeBackground(data.data.conversationUpdate))
+    yield call([socket, 'emit'], 'change background', data.data.conversationUpdate)
+    yield call([socket, 'emit'], 'new message', data.data.message)
   } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }
