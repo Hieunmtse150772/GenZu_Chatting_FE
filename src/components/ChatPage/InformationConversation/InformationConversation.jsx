@@ -2,7 +2,7 @@ import { IoIosSearch } from 'react-icons/io'
 import { FaRegImage } from 'react-icons/fa'
 import { SlOptions } from 'react-icons/sl'
 import { MdOutlineGTranslate } from 'react-icons/md'
-import { PiSelectionBackground } from "react-icons/pi";
+import { PiSelectionBackground } from 'react-icons/pi'
 // import DropdownInfoItem from './DropdownInfoItem'
 import DropdownItem from '@/components/Sidebar/DropdownItem/DropdownItem'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import InfomationGroup from './InfomationGroup/InfomationGroup'
 import { updateStateSearch } from '@/redux/Slice/messageSlice'
-import ChangeBackground from '@/components/PopUp/ChangeBackground/ChangeBackground';
+import ChangeBackground from '@/components/PopUp/ChangeBackground/ChangeBackground'
 
 function InformationConversation(props) {
   const personalChat = useSelector((state) => state.user.conversation)
@@ -20,7 +20,7 @@ function InformationConversation(props) {
   const [timeOffline, setTimeOffline] = useState('')
   const [offlineTime, setOfflineTime] = useState(null)
   const [isOpenChangeBackground, setIsOpenChangeBackground] = useState(false)
-  
+
   const dispatch = useDispatch()
   const cookie = getCookie('userLogin')
   const [token, SetToken] = useState('')
@@ -29,7 +29,7 @@ function InformationConversation(props) {
     props.togglePopupViewProfile()
   }
 
-  const togglePopupChangeBackground = (e) =>{
+  const togglePopupChangeBackground = (e) => {
     setIsOpenChangeBackground(!isOpenChangeBackground)
   }
 
@@ -100,36 +100,114 @@ function InformationConversation(props) {
               {' '}
               {customer?.fullName}{' '}
             </h3>
-            { customer?.is_online ? (<span className='text-sm text-green-500 dark:text-green-400'> Online Now</span>)
-                                  : (<span className='text-sm text-gray-500 dark:text-slate-500'>Active {timeOffline} ago</span>)
-            }
+            {customer?.is_online ? (
+              <span className='text-sm text-green-500 dark:text-green-400'> Online Now</span>
+            ) : (
+              <span className='text-sm text-gray-500 dark:text-slate-500'>
+                Active {timeOffline} ago
+              </span>
+            )}
             <a
               className='my-4 inline-flex cursor-pointer items-center rounded-lg bg-black px-8 py-4 text-center text-sm font-medium text-white hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800'
               onClick={togglePopupViewProfile}
             >
-              {('view_profile')}
+              {'view_profile'}
             </a>
             <div>
               <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
-                <DropdownItem icon={IoIosSearch} label={'Search chat'}
-                              dropdownStyle={'p-2'}
-                              iconStyle={'h-9 w-9 p-2'} 
-                              onClick={handleSearchBtn}/>
+                <DropdownItem
+                  icon={IoIosSearch}
+                  label={'Search chat'}
+                  dropdownStyle={'p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                  onClick={handleSearchBtn}
+                />
                 <hr />
-                <DropdownItem icon={FaRegImage} label={'List of images'}
-                              dropdownStyle={'p-2'}
-                              iconStyle={'h-9 w-9 p-2'} 
-                              onClick={() =>{}} />
+                <DropdownItem
+                  icon={FaRegImage}
+                  label={'List of images'}
+                  dropdownStyle={'p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                  onClick={() => {}}
+                />
                 <hr />
-                <DropdownItem icon={MdOutlineGTranslate} label={'Auto translate'}
-                              dropdownStyle={'p-2'}
-                              iconStyle={'h-9 w-9 p-2'} 
-                              onClick={() =>{}} />
+                <DropdownItem
+                  icon={MdOutlineGTranslate}
+                  label={'Auto translate'}
+                  dropdownStyle={'p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                  onClick={() => {}}
+                />
+                <div className='flex flex-wrap gap-[1.25%]'>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                  <div className='w-1/5'>
+                    <img
+                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
+                      alt=''
+                    />
+                  </div>
+                </div>
                 <hr />
-                <DropdownItem icon={PiSelectionBackground} label={'Change background'}
-                              dropdownStyle={'p-2'}
-                              iconStyle={'h-9 w-9 p-2'} 
-                              onClick={togglePopupChangeBackground} />
+                <DropdownItem
+                  icon={PiSelectionBackground}
+                  label={'Change background'}
+                  dropdownStyle={'p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                  onClick={togglePopupChangeBackground}
+                />
               </ul>
             </div>
           </div>

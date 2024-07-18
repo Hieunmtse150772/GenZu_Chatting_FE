@@ -7,7 +7,7 @@ import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
 import SearchInput from '../Sidebar/SearchInput/SearchInput'
 import UserList from '../Sidebar/UserList/UserList'
 import Switcher from '../Sidebar/Switcher/Switcher'
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect, useCallback, memo } from 'react'
 import { PiSignOutBold } from 'react-icons/pi'
 import { getCookie, removeCookie } from '../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
@@ -204,4 +204,4 @@ const Sidebar = ({ togglePopupViewProfile }) => {
   )
 }
 
-export default Sidebar
+export default memo(Sidebar)

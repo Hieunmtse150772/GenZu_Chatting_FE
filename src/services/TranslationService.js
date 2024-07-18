@@ -28,7 +28,7 @@ export const translateText = async (
 export const textToSpeech = async (
   input = 'Hello, This is Genzu Chat',
   language = 'en-US',
-  voice_id = 'bwyneth',
+  voice_id = 'emily',
 ) => {
   console.log(input, language, voice_id)
   const options = {

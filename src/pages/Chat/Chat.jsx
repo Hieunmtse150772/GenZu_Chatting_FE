@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import ChatBody from '../../components/ChatPage/ChatBody/ChatBody'
 import ToastMessage from '../../components/ToastMessage/ToastMessage'
@@ -23,7 +23,7 @@ import NoConversations from './NoConversation/NoConversation'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 import SearchBar from '@/components/ChatPage/InformationConversation/SearchBar/SearchBar'
 
-export default function Chat() {
+function Chat() {
   const [isViewProfileClick, setIsViewProfileClick] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
   const [idMessage, setIdMessage] = useState('')
@@ -60,7 +60,7 @@ export default function Chat() {
     }
   }
 
-  const handleSetMsgId = (id) =>{
+  const handleSetMsgId = (id) => {
     setIdMessage(id)
   }
 
@@ -139,12 +139,12 @@ export default function Chat() {
     }
   }, [idConversationPreventive, idConversation, lsConversation, navigate])
 
-  useEffect(()=>{
-    if(!isSearchMessage){
-      const data = { data: ''}
+  useEffect(() => {
+    if (!isSearchMessage) {
+      const data = { data: '' }
       dispatch(setListSearch(data))
     }
-  },[isSearchMessage])
+  }, [isSearchMessage])
 
   return (
     <>
@@ -152,12 +152,17 @@ export default function Chat() {
         <LoadingSpinner />
       ) : (
         <div className='fixed w-full'>
+          {console.log('check chat component')}
           <div className='Login relative'>
             <main className='flex'>
               <Sidebar togglePopupViewProfile={togglePopupViewProfile} />
               {/* {!conversation ? <LoadingSpinner /> : <ChatBody toggleInfo={toggleInfo} />} */}
               {conversation ? (
-                <ChatBody isSearchMessage={isSearchMessage} idMessage={idMessage} toggleInfo={toggleInfo} />
+                <ChatBody
+                  isSearchMessage={isSearchMessage}
+                  idMessage={idMessage}
+                  toggleInfo={toggleInfo}
+                />
               ) : lsConversation == null ? (
                 <LoadingSpinner />
               ) : (
@@ -166,12 +171,18 @@ export default function Chat() {
               {showInfo && conversation && !isSearchMessage ? (
                 <div className='w-1/3'>
                   <InformationConversation togglePopupViewProfile={togglePopupViewProfile} />
-                  
                 </div>
-              ): isSearchMessage &&
+              ) : (
+                isSearchMessage && (
                   <div className='w-1/3'>
-                    <SearchBar handleSetMsgId={handleSetMsgId} isSearchMessage={isSearchMessage} conversation={conversation}/>
-                  </div>}
+                    <SearchBar
+                      handleSetMsgId={handleSetMsgId}
+                      isSearchMessage={isSearchMessage}
+                      conversation={conversation}
+                    />
+                  </div>
+                )
+              )}
             </main>
             {toastMessage && <ToastMessage message={toastMessage} />}
           </div>
@@ -181,3 +192,5 @@ export default function Chat() {
     </>
   )
 }
+
+export default memo(Chat)

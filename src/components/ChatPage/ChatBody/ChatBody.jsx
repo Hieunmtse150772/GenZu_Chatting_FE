@@ -88,7 +88,7 @@ function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
         dispatch(leaveRoomSlice(idConversation))
       }
     }
-  }, [])
+  }, [idConversation])
 
   // let backgroundStyle
   useLayoutEffect(() => {
