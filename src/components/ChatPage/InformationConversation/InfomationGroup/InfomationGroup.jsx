@@ -10,12 +10,21 @@ import { MdOutlineAddLink } from 'react-icons/md'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 import DropdownItem from '@/components/Sidebar/DropdownItem/DropdownItem'
 import { deleteGroupChat } from '@/redux/Slice/userSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import AddNewMember from './AddNewMember/AddNewMember'
+import ViewMember from './ViewMember/ViewMember'
 
 const InfomationGroup = ({ conversation }) => {
   const dispatch = useDispatch()
-  const [isAddMemberVisible, setIsAddMemberVisible] = useState(false) // State to manage the visibility of the AddNewMember popup
+  // State to manage the visibility of the AddNewMember popup
+  const [isAddMemberVisible, setIsAddMemberVisible] = useState(false)
+  const [isViewMemberVisible, setIsViewMemberVisible] = useState(false)
+  const { idConversation } = useParams()
+  const listGroupChats = useSelector((state) => state.user?.lsGroupChats)
+  const groupAdminId = listGroupChats.find((group) => group._id === idConversation).groupAdmin?._id
+  const totalMembers = listGroupChats.find((group) => group._id === idConversation).users
+  const countMembers = listGroupChats.find((group) => group._id === idConversation).users.length
 
   const handleDeleteGroup = (idGroup) => {
     dispatch(deleteGroupChat({ id: idGroup }))
@@ -23,6 +32,14 @@ const InfomationGroup = ({ conversation }) => {
 
   const handleAddNewMemberClick = () => {
     setIsAddMemberVisible(true) // Show the AddNewMember popup
+  }
+
+  const handleViewMemberClick = () => {
+    setIsViewMemberVisible(true)
+  }
+
+  const handleViewMemberClose = () => {
+    setIsViewMemberVisible(false)
   }
 
   const handleAddMemberClose = () => {
@@ -45,10 +62,10 @@ const InfomationGroup = ({ conversation }) => {
         <ul className='mb-2 cursor-pointer flex-col gap-2 overflow-x-hidden rounded-lg bg-white px-4 py-2 shadow-lg dark:bg-[#1E1E1E]'>
           <DropdownItem
             icon={LiaUserFriendsSolid}
-            label={'5 thành viên'}
+            label={`${countMembers} thành viên`}
             dropdownStyle={'p-2'}
             iconStyle={'h-9 w-9 p-2'}
-            onClick={() => {}}
+            onClick={handleViewMemberClick}
           />
           <DropdownItem
             icon={MdOutlineAddLink}
@@ -102,6 +119,14 @@ const InfomationGroup = ({ conversation }) => {
       {/* AddNewMember Popup */}
       {isAddMemberVisible && (
         <AddNewMember isVisible={isAddMemberVisible} onClose={handleAddMemberClose} />
+      )}
+      {isViewMemberVisible && (
+        <ViewMember
+          isVisible={isViewMemberVisible}
+          members={totalMembers}
+          groupAdminId={groupAdminId}
+          onClose={handleViewMemberClose}
+        />
       )}
     </div>
   )
