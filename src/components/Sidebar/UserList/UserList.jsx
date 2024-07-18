@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react'
 import UserCard from '../UserCard/UserCard'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import UserCardSkeleton from '../UserCard/UserCardSkeleton/UserCardSkeleton'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +19,7 @@ const UserList = ({ togglePopupViewProfile }) => {
   const lsConversation = useSelector((state) => state.user.lsConversation)
   const conversation = useSelector((state) => state.user.conversation)
   const lsFriends = useSelector((state) => state.user.lsFriends)
+  const idConversation = useParams()
   const dispatch = useDispatch()
   const handleUserClick = (id) => {
     navigate(`/chat/${id}`)
@@ -29,13 +30,14 @@ const UserList = ({ togglePopupViewProfile }) => {
   }
 
   // useEffect(() => {
-  //   if (groupChats.length > 0) {
+  //   if (groupChats.length > 0 ) {
   //     navigate(`/chat/${groupChats[0]._id}`)
   //   }
   // }, [groupChats.length])
 
   return (
     <section className='h-full w-full'>
+      {console.log('groupchats', groupChats)}
       <div className='mt-4 flex'>
         <button
           onClick={() => setActiveTab('personal')}

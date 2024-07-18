@@ -27,8 +27,10 @@ const AddNewMember = ({ isVisible, onClose }) => {
               groupConversation: item?.groupConversation,
             }))
             .filter((friend) => {
-              // Lọc ra những bạn bè có ít nhất một phần tử trong groupConversation có _id trùng với idConversation
-              return friend.groupConversation.every((gc) => gc?._id === idConversation)
+              const isNotInGroup = !friend.groupConversation.some(
+                (gc) => gc?._id === idConversation,
+              )
+              return isNotInGroup
             })
 
           setFriends(friends)
@@ -102,7 +104,6 @@ const AddNewMember = ({ isVisible, onClose }) => {
                       <p className='text-sm text-gray-500'>{friend?.friend?.email}</p>
                     </div>
                   </div>
-                  {console.log('idUser', friend.friend._id)}
                   <button
                     className={`rounded-lg px-4 py-2 text-white ${
                       addedMembers.has(friend.friend?._id)
