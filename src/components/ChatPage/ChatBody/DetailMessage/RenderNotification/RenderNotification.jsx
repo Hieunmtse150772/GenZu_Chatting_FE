@@ -34,7 +34,7 @@ const RenderNotification = ({ item }) => {
       
     if(item.message === '7008'){
       return (
-        <p className='text-gray-600 font-light italic'>{item.sender?.fullName +
+        <p>{item.sender?.fullName +
                 ` vừa thay đổi background`}
         </p>
       )

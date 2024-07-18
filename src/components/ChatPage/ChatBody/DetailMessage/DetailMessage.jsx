@@ -131,7 +131,7 @@ const DetailMessage = memo(function DetailMessage(props) {
       {messages.map((item, index) =>
         // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
         item.messageType === 'notification' ?
-            <div className='flex justify-center '>
+            <div key={index} className='flex justify-center text-gray-600 font-light italic'>
                 <RenderNotification item={item} />
             </div>
         :
