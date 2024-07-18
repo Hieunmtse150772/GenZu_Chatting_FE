@@ -30,6 +30,7 @@ export const textToSpeech = async (
   language = 'en-US',
   voice_id = 'bwyneth',
 ) => {
+  console.log(input, language, voice_id)
   const options = {
     method: 'POST',
     url: 'https://api.sws.speechify.com/v1/audio/speech',

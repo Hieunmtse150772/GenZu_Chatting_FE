@@ -99,7 +99,6 @@ const FeatureAI = memo(function FeatureAI(props) {
   const handleTextToSpeech = async () => {
     try {
       const response = await textToSpeech(props.message, 'en-US', 'bwyneth')
-      console.log(response)
       const audioBlob = base64ToBlob(response.audio_data, `audio/${response.audio_format}`)
       const audioUrl = URL.createObjectURL(audioBlob)
       const audio = new Audio(audioUrl)

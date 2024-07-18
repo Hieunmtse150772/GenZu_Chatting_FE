@@ -1,9 +1,12 @@
 // Import các actions cần thiết để cập nhật state trong Redux store.
 import {
+  minusPage,
   plusPage,
   setIsTyping,
   setListSearch,
   setLoadMore,
+  setLsPage,
+  setPage,
   setSocketConnected,
 } from '@/redux/Slice/chatSlice'
 import {
@@ -200,12 +203,29 @@ function* fetchMessagesMore(action) {
   console.log(action.payload)
   try {
     // Gọi API để lấy danh sách tin nhắn.
+    console.log(action.payload.page)
     const response = yield call(() => {
       return getMessages(action.payload.idConversation, action.payload.page)
     })
     // Dispatch action để cập nhật state với danh sách tin nhắn.
     yield put(setMessagesMore(response))
     yield put(plusPage())
+    yield put(setLoadMore(false))
+  } catch (error) {
+    console.error('Lỗi khi lấy lsMessages:', error)
+  }
+}
+function* fetchMessagesMoreBottom(action) {
+  console.log(action.payload)
+  try {
+    // Gọi API để lấy danh sách tin nhắn.
+    console.log(action.payload.page)
+    const response = yield call(() => {
+      return getMessages(action.payload.idConversation, action.payload.page)
+    })
+    // Dispatch action để cập nhật state với danh sách tin nhắn.
+    yield put(setMessagesMore(response))
+    yield put(minusPage())
     yield put(setLoadMore(false))
   } catch (error) {
     console.error('Lỗi khi lấy lsMessages:', error)
@@ -408,7 +428,9 @@ function* createNewConversationSaga(action) {
 function* searchMessageByKeyword(action) {
   console.log(action.payload)
   const response = yield call(
-    getMessagesSearch,action.payload.idConversation, action.payload.keyword
+    getMessagesSearch,
+    action.payload.idConversation,
+    action.payload.keyword,
   )
   yield put(setListSearch(response))
   console.log(response)
@@ -416,11 +438,11 @@ function* searchMessageByKeyword(action) {
 
 function* searchMessageById(action) {
   console.log(action.payload)
-  const response = yield call(
-    getMessages,action.payload.idConversation, action.payload.page
-  )
+  const response = yield call(getMessages, action.payload.idConversation, action.payload.page)
+  console.log(response)
+  yield put(setPage(response.currentPage.page + 1))
+  yield put(setLsPage(response.currentPage.page))
   yield put(setMessage(response))
-
 }
 /**
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
@@ -437,6 +459,7 @@ export default function* chatSaga() {
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/getMessagesMore', fetchMessagesMore)
+  yield takeLatest('chat/getMessageMoreBottom', fetchMessagesMoreBottom)
   yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('user/deleteGroupChat', deleteGroupChatSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)

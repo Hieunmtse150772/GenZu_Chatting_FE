@@ -9,6 +9,7 @@ const initialState = {
   loadMore: false,
   listSearch: '',
   page: 2,
+  minPage: 1,
 }
 const chatSlice = createSlice({
   name: 'chat',
@@ -40,6 +41,18 @@ const chatSlice = createSlice({
         page: state.page + 1,
       }
     },
+    minusPage: (state) => {
+      return {
+        ...state,
+        minPage: state.minPage - 1,
+      }
+    },
+    setPage: (state, action) => {
+      return {
+        ...state,
+        page: action.payload,
+      }
+    },
     resetChat: () => {
       return initialState
     },
@@ -53,13 +66,21 @@ const chatSlice = createSlice({
         listSearch: action.payload.data,
       }
     },
+    setLsPage: (state, action) => {
+      return { ...state, minPage: action.payload }
+    },
+    getMessageMoreBottom: (state, action) => {},
   },
 })
 
 export const {
   setLoadMore,
+  setLsPage,
+  getMessageMoreBottom,
+  setPage,
   setListSearch,
   setLoading,
+  minusPage,
   setSocketConnected,
   searchMessageById,
   setTyping,

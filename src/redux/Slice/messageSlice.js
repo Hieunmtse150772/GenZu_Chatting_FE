@@ -146,6 +146,13 @@ const messageSlice = createSlice({
         message: [...state.message, ...action.payload.Messages],
       }
     },
+    setMessagesMoreBottom: (state, action) => {
+      console.log(action.payload.Messages)
+      return {
+        ...state,
+        message: [...action.payload.Messages, ...state.message],
+      }
+    },
     setNewMessage: (state, action) => {
       const newMs = action.payload
       console.log('new mesg', newMs)
@@ -203,26 +210,7 @@ const messageSlice = createSlice({
         isSearchMessage: action.payload,
       }
     },
-    searchMessage: (state, action) => {
-      // const lstMessage = JSON.parse(JSON.stringify(state.message))
-      // const fuse = new Fuse(lstMessage, {
-      //   keys: ['message'],
-      //   threshold: 0.5,
-      // })
-
-      // const result = fuse.search(action.payload)
-      // const indexMsg = 0
-      // const temp ={
-      //   lstMessage:  result.map((res) => res.item),
-      //   indexMsg : 0
-      // }
-
-      // console.log('result search:', result)
-      // return {
-      //   ...state,
-      //   resultMessage: result.map((res) => res.item),
-      // }
-    },
+    searchMessage: (state, action) => {},
   },
 })
 
@@ -236,6 +224,7 @@ export const {
   selectEmoji,
   deleteEmoji,
   handleEmojiOnMessage,
+  setMessagesMoreBottom,
   setEmojiOnMessage,
   setMessageSpoiled,
   setAnswerSuggestion,

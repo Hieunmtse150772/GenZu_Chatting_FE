@@ -6,19 +6,20 @@ import { IoMdArrowRoundDown } from 'react-icons/io' // Import icon IoMdArrowRoun
 import { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react' // Import hook useEffect, useState từ thư viện react
 import { useParams } from 'react-router-dom'
 import { getMessagesMore } from '@/redux/Slice/messageSlice'
-import { leaveRoomSlice, setLoadMore } from '@/redux/Slice/chatSlice'
+import { getMessageMoreBottom, leaveRoomSlice, setLoadMore } from '@/redux/Slice/chatSlice'
 import LoadMore from './LoadMore/LoadMore'
 import SearchMessage from './SearchMessage/SearchMessage'
-function ChatBody({isSearchMessage, idMessage, toggleInfo }) {
+function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
   // Component ChatBody nhận props toggleInfo
-  const [backgroundStyle, setBackgroundStyle] = useState({backgroundColor: '#6699FF'})
+  const [backgroundStyle, setBackgroundStyle] = useState({ backgroundColor: '#6699FF' })
 
   let [indexMessage, setIndexMessage] = useState(0)
   const page = useSelector((state) => state.chat.page)
   const loadMore = useSelector((state) => state.chat.loadMore)
   const totalPage = useSelector((state) => state.message.totalPage)
+  const minPage = useSelector((state) => state.chat.minPage)
   // const isSearchMessage = useSelector((state) => state.message.isSearchMessage)
-  const resultMessage = useSelector((state) =>  state.message.resultMessage)
+  const resultMessage = useSelector((state) => state.message.resultMessage)
   const conversation = useSelector((state) => state.user.conversation)
 
   const idConversation = useParams()
@@ -51,6 +52,18 @@ function ChatBody({isSearchMessage, idMessage, toggleInfo }) {
       setScrollHeight(element.scrollHeight)
     }
   }
+  const handleScrollToBottom = (e) => {
+    const element = document.getElementById('messages-list')
+    console.log(element.scrollHeight - element.scrollTop - 1, element.clientHeight)
+
+    if (element.scrollHeight - element.scrollTop - 1 - element.clientHeight < 2) {
+      // Gọi API để lấy thêm tin nhắn ở đây
+      console.log('check')
+      dispatch(getMessageMoreBottom({ idConversation: idConversation.idConversation, page: page }))
+      dispatch(setLoadMore(true))
+      setScrollHeight(element.scrollHeight)
+    }
+  }
   // Hàm xử lý sự kiện click vào nút "Go To Bottom"
   const goToBottom = (e) => {
     const element = document.getElementById('messages-list') // Lấy element có id là "messages-list"
@@ -61,7 +74,6 @@ function ChatBody({isSearchMessage, idMessage, toggleInfo }) {
     elementBottomBtn.classList.add('hidden')
     // element.scrollTo({ bottom: 0, behavior: 'smooth' });
   }
-
 
   useEffect(() => {
     if (!loadMore) {
@@ -79,23 +91,22 @@ function ChatBody({isSearchMessage, idMessage, toggleInfo }) {
     }
   }, [])
 
-
-  // let backgroundStyle 
-  useLayoutEffect(() =>{
+  // let backgroundStyle
+  useLayoutEffect(() => {
     let style
-    if(conversation.background == null) return 
-    const backgroundType = conversation.background.backgroundType;
+    if (conversation.background == null) return
+    const backgroundType = conversation.background.backgroundType
     const url = conversation.background.url
-    switch(backgroundType){
+    switch (backgroundType) {
       case 'color':
         style = {
-          backgroundColor: url
+          backgroundColor: url,
         }
         break
       case 'image':
         style = {
           backgroundImage: `url(${url})`,
-          backgroundSize: 'cover'
+          backgroundSize: 'cover',
         }
         break
       default:
@@ -109,19 +120,16 @@ function ChatBody({isSearchMessage, idMessage, toggleInfo }) {
       <ChatHeader toggleInfo={toggleInfo} />
       {loadMore ? <LoadMore /> : ''}
       {/* Hiển thị thanh tìm kiếm tin nhắn khi được chọn */}
-      {isSearchMessage && (
-        <SearchMessage
-          idConversation={idConversation.idConversation}
-        />
-      )}
+      {isSearchMessage && <SearchMessage idConversation={idConversation.idConversation} />}
       {/* Hiển thị component ChatHeader với props toggleInfo được truyền vào */}
       <div
         id='messages-list'
-        className='no-scrollbar h-screen flex flex-col space-y-2 overflow-y-auto'
+        className='no-scrollbar flex h-screen flex-col space-y-2 overflow-y-auto'
         style={backgroundStyle}
         onScroll={(e) => {
           showGoToBottomBtn(e)
           page > totalPage ? '' : handleScrollToTop(e)
+          minPage > 1 ? handleScrollToBottom(e) : ''
         }}
         ref={messagesListRef} // Gắn ref cho danh sách tin nhắn
       >
