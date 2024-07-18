@@ -59,7 +59,7 @@ export default function SearchBar(props) {
               </div>
             ))
           ) : (
-            <div className='mx-2 mt-6 flex flex-col bg-mainBlue'>
+            <div className='mx-2 mt-6 flex flex-col bg-mainBlue dark:bg-transparent'>
               <div className='flex justify-center'>
                 <img
                   className='w-40'
