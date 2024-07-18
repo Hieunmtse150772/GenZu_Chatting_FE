@@ -8,6 +8,7 @@ import './DetailMessage.css'
 import { getCookie } from '@/services/Cookies'
 import RenderMessage from './RenderFIle/RenderFIle'
 import RenderReplyMessage from './RenderFIle/RenderReplyMessage'
+import RenderNotification from './RenderNotification/RenderNotification'
 
 const DetailMessage = memo(function DetailMessage(props) {
   const [isEmoteBtnClick, setEmoteBtnClick] = useState(false)
@@ -126,8 +127,14 @@ const DetailMessage = memo(function DetailMessage(props) {
       className={`mx-2 flex flex-col-reverse ${messages.length >= 10 ? 'h-fit': 'h-full'}`}
       
     >
+
       {messages.map((item, index) =>
         // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
+        item.messageType === 'notification' ?
+            <div className='flex justify-center '>
+                <RenderNotification item={item} />
+            </div>
+        :
         item.sender && sessionId === item.sender._id ? (
           <div
             key={index}
@@ -140,7 +147,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
                   ? 'opacity-100 dark:text-white'
-                  : hoveredMessage == item._id && item.messageType != 'notification'
+                  : hoveredMessage == item._id
                     ? 'opacity-100 dark:text-white'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
@@ -187,8 +194,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               )}
 
               {/* Nút emoji */}
-              { item.messageType != 'notification' && 
-                  <div
+              <div
                     className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
                       hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                     }`}
@@ -201,8 +207,7 @@ const DetailMessage = memo(function DetailMessage(props) {
                   ) : (
                     <MdOutlineEmojiEmotions size={14} />
                   )}
-                </div>
-              }
+              </div>
               
             </div>
           </div>
@@ -229,8 +234,7 @@ const DetailMessage = memo(function DetailMessage(props) {
                 )}
               </div>
               {/* Nút emoji */}
-              {item.messageType != 'notification' && 
-                <div
+              <div
                   className={`absolute bottom-px right-px p-0.5 hover:bg-blue-400 dark:text-white rounded-md${
                     hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                   }`}
@@ -243,8 +247,7 @@ const DetailMessage = memo(function DetailMessage(props) {
                   ) : (
                     <MdOutlineEmojiEmotions size={14} />
                   )}
-                </div>
-              }
+              </div>
               {/* Component FeatureEmoji */}
               {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
                 <div className='absolute z-10' ref={emoteRef}>
@@ -265,7 +268,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
                   ? 'opacity-100 dark:text-white'
-                  : hoveredMessage == item._id && item.messageType != 'notification'
+                  : hoveredMessage == item._id
                     ? 'opacity-100 dark:text-white'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
@@ -280,7 +283,7 @@ const DetailMessage = memo(function DetailMessage(props) {
               />
             </div>
           </div>
-        ),
+        )
       )}
     </div>
   )
