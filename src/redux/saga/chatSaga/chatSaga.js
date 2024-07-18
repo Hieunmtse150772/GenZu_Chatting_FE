@@ -30,6 +30,8 @@ import {
   setNewLsConversation,
   setNewLsFriends,
   updateGroupMembers,
+  deleteMemberFromGroupInStore,
+  deleteMemberInGroup,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -89,14 +91,22 @@ function createSocketChannel(socket, idConversation) {
       } else if (res.success && res.messageCode === 3004) {
         emit(deleteGroupById(res.data))
       } else if (res.success && res.messageCode === 3006) {
-        const idConversation = res.data._id
-        const users = res.data
-        emit(updateConversationByGroupId({ idConversation, users }))
+        const groupId = res.data._id
+        const updatedConversation = res.data.users
+        emit(updateConversationByGroupId({ groupId, updatedConversation }))
+      } else if (res.success && res.messageCode === 3007) {
+        const groupId = res.data._id
+        const updatedConversation = res.data.users
+        emit(updateConversationByGroupId({ groupId, updatedConversation }))
       }
     })
     socket.on('delete group', (res) => {
       console.log('delete', res)
       emit(deleteConversation(res))
+    })
+    socket.on('delete member', (res) => {
+      console.log('delete member')
+      emit(deleteMemberInGroup(res))
     })
     socket.on('add member', (res) => {
       console.log('add member', res)
@@ -174,6 +184,7 @@ function* handleSocketConnect(action) {
   socket = io(import.meta.env.VITE_ENDPOINT, {
     extraHeaders: { Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}` },
   })
+  console.log('checl check')
   // Lấy thông tin người dùng từ cookie.
   const user = JSON.parse(getCookie('userLogin')).user
 
@@ -429,6 +440,14 @@ function* deleteGroupChatSaga(action) {
   }
 }
 
+function* deleteMemberInGroupSaga(action) {
+  try {
+    yield call([socket, 'emit'], 'delete member', action.payload)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 function* addNewMemberToGroupSaga(action) {
   try {
     yield call([socket, 'emit'], 'add member', action.payload)
@@ -491,6 +510,7 @@ export default function* chatSaga() {
   yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('user/deleteGroupChat', deleteGroupChatSaga)
   yield takeLatest('user/addNewMemberToGroup', addNewMemberToGroupSaga)
+  yield takeLatest('user/removeMemberFromGroup', deleteMemberInGroupSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)

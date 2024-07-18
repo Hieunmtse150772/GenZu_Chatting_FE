@@ -92,8 +92,9 @@ const userSlice = createSlice({
     },
     updateConversationByGroupId: (state, action) => {
       const { groupId, updatedConversation } = action.payload
+      console.log('trigger groupId', groupId)
       const conversationIndex = state.lsConversation.findIndex(
-        (conversation) => conversation.groupId === groupId,
+        (conversation) => conversation._id === groupId,
       )
 
       if (conversationIndex !== -1) {
@@ -121,6 +122,21 @@ const userSlice = createSlice({
         state.lsGroupChats[groupChatIndex].users = users
       }
     },
+    deleteMemberFromGroupInStore: (state, action) => {
+      const { idUser, idConversation } = action.payload
+      console.log(idUser)
+      console.log(idConversation)
+      // Tìm group tương ứng với idConversation
+      const group = state.lsGroupChats.find((group) => group._id === idConversation)
+      console.log('trigger', group)
+      if (group) {
+        // Loại bỏ idUser khỏi danh sách members của group nếu có
+        group.users = group.users.filter((userId) => userId !== idUser)
+      } else {
+        // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
+        console.error('Group not found')
+      }
+    },
     deleteGroupById: (state, action) => {
       state.lsGroupChats = state.lsGroupChats.filter(
         (groupChat) => groupChat._id !== action.payload,
@@ -140,8 +156,23 @@ const userSlice = createSlice({
         console.error('Group not found')
       }
     },
+    removeMemberFromGroup: (state, action) => {
+      const { groupId, memberId } = action.payload
+      console.log(groupId)
+      console.log('idMember', memberId)
+      // Tìm group tương ứng với idConversation
+      const group = state.lsGroupChats.find((group) => group._id === groupId)
+      if (group) {
+        // Loại bỏ idUser khỏi danh sách members của group nếu có
+        group.users = group.users.filter((userId) => userId._id !== memberId)
+      } else {
+        // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
+        console.error('Group not found')
+      }
+    },
     addMemberToGroup: (state, action) => {},
     setLatestConversation: (state, action) => {},
+    deleteMemberInGroup: (state, action) => {},
     setLsPersonalChats: (state, action) => {
       return {
         ...state,
@@ -247,6 +278,9 @@ export const {
   createGroupChat,
   addMemberToGroup,
   addNewMemberToGroup,
+  deleteMemberInGroup,
+  removeMemberFromGroup,
+  deleteMemberFromGroupInStore,
   updateGroupMembers,
   deleteGroupChat,
   deleteGroupById,
