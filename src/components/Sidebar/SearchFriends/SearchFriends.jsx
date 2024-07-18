@@ -8,8 +8,10 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setConversation } from '@/redux/Slice/userSlice'
 import { createNewConversation } from '@/redux/Slice/chatSlice'
-export default function SearchFriends({ user }) {
+export default function
+  SearchFriends({ user }) {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
+  const [isCreateNewConversation, setIsCreateNewConversation] = useState(false)
   const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
   const navigate = useNavigate()
@@ -36,6 +38,7 @@ export default function SearchFriends({ user }) {
     dispatch(setConversation(id))
   }
   const handleUserNoConversationClcik = (id) => {
+    setIsCreateNewConversation(true)
     dispatch(createNewConversation(id))
   }
   useEffect(() => {
@@ -150,6 +153,7 @@ export default function SearchFriends({ user }) {
           className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
             isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
           } mb-1 rounded-lg`}
+          aria-disabled={isCreateNewConversation}
         >
           <img
             src={user.info.picture}

@@ -33,7 +33,6 @@ export const getMessagesSearch = async (conversationId, keyword) => {
 }
 // lay 40 tin nhan gan tin nhan dich
 
-
 export const sendMessageApi = async (message, id) => {
   console.log(message)
   try {
@@ -100,6 +99,16 @@ export const changeBackground = (background, idConversation) => {
     return axiosClient.patch(`/conversations/background?id=${idConversation}`, background)
   } catch (error) {
     console.error('Lỗi khi thay đổi background cuộc hội thoại:', error)
+    throw error // Ném lỗi để saga có thể bắt
+  }
+}
+export const fetchLsImage = async ( idConversation) => {
+   try {
+    const response = await axiosClient.get(`messages/images/${idConversation}`)
+    console.log('getLsImage:', response.data)
+    return response.data.data
+  } catch (error) {
+    console.error('Lỗi khi gửi tin nhắn qua API:', error)
     throw error // Ném lỗi để saga có thể bắt
   }
 }

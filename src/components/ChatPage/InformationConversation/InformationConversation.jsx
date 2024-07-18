@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next'
 import InfomationGroup from './InfomationGroup/InfomationGroup'
 import { updateStateSearch } from '@/redux/Slice/messageSlice'
 import ChangeBackground from '@/components/PopUp/ChangeBackground/ChangeBackground'
+import { fetchLsImage } from '@/services/messageService'
+import { useParams } from 'react-router-dom'
 
 function InformationConversation(props) {
   const personalChat = useSelector((state) => state.user.conversation)
@@ -20,7 +22,7 @@ function InformationConversation(props) {
   const [timeOffline, setTimeOffline] = useState('')
   const [offlineTime, setOfflineTime] = useState(null)
   const [isOpenChangeBackground, setIsOpenChangeBackground] = useState(false)
-
+  const [lsImage, setLsImage] = useState()
   const dispatch = useDispatch()
   const cookie = getCookie('userLogin')
   const [token, SetToken] = useState('')
@@ -32,7 +34,7 @@ function InformationConversation(props) {
   const togglePopupChangeBackground = (e) => {
     setIsOpenChangeBackground(!isOpenChangeBackground)
   }
-
+  const idConversation = useParams()
   const handleSearchBtn = (e) => {
     dispatch(updateStateSearch(true))
   }
@@ -50,7 +52,11 @@ function InformationConversation(props) {
       )
     }
   }, [personalChat])
-
+  const hanldeGetLsImage = async () => {
+    const response = await fetchLsImage(idConversation.idConversation)
+    console.log(response)
+    setLsImage(response)
+  }
   useEffect(() => {
     const calculateOfflineTime = () => {
       const offlineDate = new Date(offlineTime)
@@ -128,8 +134,20 @@ function InformationConversation(props) {
                   label={'List of images'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={hanldeGetLsImage}
                 />
+                {lsImage ? (
+                  <div className='flex flex-wrap gap-[2.45%]'>
+                    {lsImage.map((image, index) => (
+                      <div key={index} className='my-2 w-[22.5%]'>
+                        <img src={image.message} alt='Image not Found ' />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <></>
+                )}
+
                 <hr />
                 <DropdownItem
                   icon={MdOutlineGTranslate}
@@ -138,15 +156,6 @@ function InformationConversation(props) {
                   iconStyle={'h-9 w-9 p-2'}
                   onClick={() => {}}
                 />
-                <div className='flex flex-wrap gap-[2.45%]'>
-                  <div className='my-2 w-[22.5%]'>
-                    <img
-                      src='https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg'
-                      alt=''
-                    />
-                  </div>
-                 
-                </div>
                 <hr />
                 <DropdownItem
                   icon={PiSelectionBackground}
