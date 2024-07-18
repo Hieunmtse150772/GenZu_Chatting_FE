@@ -1,11 +1,11 @@
 // Import các actions cần thiết để cập nhật state trong Redux store.
 import {
-  minusPage,
+minusPage,
   plusPage,
   setIsTyping,
   setListSearch,
   setLoadMore,
-  setLsPage,
+setLsPage,
   setPage,
   setSocketConnected,
 } from '@/redux/Slice/chatSlice'
@@ -148,6 +148,7 @@ function createSocketChannel(socket, idConversation) {
       socket.off('received request')
       socket.off('recall received')
       socket.off('new message received')
+      socket.off('changed background')
     }
   })
 }
@@ -208,7 +209,6 @@ function* fetchMessagesMore(action) {
   console.log(action.payload)
   try {
     // Gọi API để lấy danh sách tin nhắn.
-    console.log(action.payload.page)
     const response = yield call(() => {
       return getMessages(action.payload.idConversation, action.payload.page)
     })
@@ -381,7 +381,6 @@ function* changeBgConversation(action) {
       action.payload.background,
       action.payload.idConversation,
     )
-    console.log('changeBgConversation:', data.data.conversationUpdate)
     yield put(setChangeBackground(data.data.conversationUpdate))
     yield call([socket, 'emit'], 'change background', data.data.conversationUpdate)
     yield call([socket, 'emit'], 'new message', data.data.message)
@@ -467,7 +466,7 @@ export default function* chatSaga() {
   yield takeLatest('chat/connectSocket', handleSocketConnect)
   yield takeLatest('message/getMessagesById', fetchMessages)
   yield takeLatest('message/getMessagesMore', fetchMessagesMore)
-  yield takeLatest('chat/getMessageMoreBottom', fetchMessagesMoreBottom)
+yield takeLatest('chat/getMessageMoreBottom', fetchMessagesMoreBottom)
   yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('user/deleteGroupChat', deleteGroupChatSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
