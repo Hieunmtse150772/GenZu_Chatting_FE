@@ -191,8 +191,11 @@ const ChatFooter = () => {
   const handleSendMsg = () => {
     // Nếu có file được chọn, tiến hành gửi file
     if (selectedFile?.file) {
+      if (!isUploading) {
+        console.log('check')
+        handleSendFile()
+      }
       setIsUploading(true)
-      handleSendFile()
     }
     // Kiểm tra inputStr khác null, undefined và rỗng
     if (inputStr != null && inputStr != undefined && inputStr != '') {

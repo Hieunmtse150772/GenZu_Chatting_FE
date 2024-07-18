@@ -22,7 +22,7 @@ export default function Preview({ previewUrl, onDelete, isUploading }) {
           <TiDeleteOutline />
         </button>
 
-        {!isUploading && (
+        {isUploading && (
           <div className='absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50'>
             <div className='flex flex-col items-center rounded-md p-4'>
               <div className='h-8 w-8 animate-spin rounded-full border-t-2 border-gray-200'></div>
