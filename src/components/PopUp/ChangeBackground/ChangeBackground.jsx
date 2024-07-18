@@ -40,13 +40,13 @@ export default function ChangeBackground({ onClose}){
                 <div className='relative flex flex-col justify-around rounded-lg bg-mainBlue p-6 shadow-lg'>
                 
                     <button
-                        className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
+                        className='absolute right-2 top-2 transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110 hover:text-gray-700 duration-300 text-gray-500 '
                         onClick={onClose}
                     >
                         &times;
                     </button>
-                    <div className="bg-white">
-                        <div className="flex">
+                    <div className="bg-white dark:bg-darkTheme">
+                        <div className="flex text-black dark:text-white">
                             <div className="flex-initial w-56 px-2 border-4 ">
                                 <SelectBackground handleCallBack={handleBackgroundSelected}/>
 
@@ -65,7 +65,7 @@ export default function ChangeBackground({ onClose}){
                                     <p> Hủy </p>
                             </button>
                             <button className="inline-flex items-center gap-x-2 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold
-                                            text-black shadow-sm hover:bg-blue-500 hover:text-white focus-visible:outline 
+                                            text-black dark:text-white shadow-sm hover:text-blue-500 dark:hover:text-neutral-300 focus-visible:outline 
                                             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
                                     onClick={handleChange}>
                                     <p> Xác nhận </p>
