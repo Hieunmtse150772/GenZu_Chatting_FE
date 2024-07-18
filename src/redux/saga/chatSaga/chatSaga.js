@@ -17,6 +17,7 @@ import {
   setDeleteHistoryMessage,
   setMessagesMore,
   updateMessage,
+  setMessagesMoreBottom,
 } from '@/redux/Slice/messageSlice'
 import {
   addMemberToGroup,
@@ -240,7 +241,8 @@ function* fetchMessagesMoreBottom(action) {
       return getMessages(action.payload.idConversation, action.payload.page)
     })
     // Dispatch action để cập nhật state với danh sách tin nhắn.
-    yield put(setMessagesMore(response))
+    console.log(response.Messages)
+    yield put(setMessagesMoreBottom(response))
     yield put(minusPage())
     yield put(setLoadMore(false))
   } catch (error) {

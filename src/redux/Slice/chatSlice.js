@@ -9,7 +9,7 @@ const initialState = {
   loadMore: false,
   listSearch: '',
   page: 2,
-  minPage: 1,
+  minPage: 0,
 }
 const chatSlice = createSlice({
   name: 'chat',
@@ -67,7 +67,7 @@ const chatSlice = createSlice({
       }
     },
     setLsPage: (state, action) => {
-      return { ...state, minPage: action.payload }
+      return { ...state, minPage: action.payload -1 }
     },
     getMessageMoreBottom: (state, action) => {},
   },

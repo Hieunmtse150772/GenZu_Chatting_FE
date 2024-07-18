@@ -54,12 +54,12 @@ function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
   }
   const handleScrollToBottom = (e) => {
     const element = document.getElementById('messages-list')
-    console.log(element.scrollHeight - element.scrollTop - 1, element.clientHeight)
-
     if (element.scrollHeight - element.scrollTop - 1 - element.clientHeight < 2) {
       // Gọi API để lấy thêm tin nhắn ở đây
-      console.log('check')
-      dispatch(getMessageMoreBottom({ idConversation: idConversation.idConversation, page: page }))
+
+      dispatch(
+        getMessageMoreBottom({ idConversation: idConversation.idConversation, page: minPage }),
+      )
       dispatch(setLoadMore(true))
       setScrollHeight(element.scrollHeight)
     }
@@ -77,7 +77,6 @@ function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
 
   useEffect(() => {
     if (!loadMore) {
-      console.log(scrollHeight)
       const element = document.getElementById('messages-list')
       element.scrollTop = element.scrollTop - scrollHeight + 904
     }
@@ -129,7 +128,7 @@ function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
         onScroll={(e) => {
           showGoToBottomBtn(e)
           page > totalPage ? '' : handleScrollToTop(e)
-          minPage > 1 ? handleScrollToBottom(e) : ''
+          minPage > 0 ? handleScrollToBottom(e) : ''
         }}
         ref={messagesListRef} // Gắn ref cho danh sách tin nhắn
       >
