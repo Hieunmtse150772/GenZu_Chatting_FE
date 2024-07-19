@@ -93,14 +93,16 @@ const userSlice = createSlice({
     updateConversationByGroupId: (state, action) => {
       const { groupId, updatedConversation } = action.payload
       console.log('trigger groupId', groupId)
-      const conversationIndex = state.lsConversation.findIndex(
+      console.log(updatedConversation)
+      const conversationIndex = state.lsGroupChats.findIndex(
         (conversation) => conversation._id === groupId,
       )
 
       if (conversationIndex !== -1) {
-        state.lsConversation[conversationIndex] = {
-          ...state.lsConversation[conversationIndex],
-          ...updatedConversation,
+        console.log('1')
+        state.lsGroupChats[conversationIndex] = {
+          ...state.lsGroupChats[conversationIndex],
+          users: updatedConversation,
         }
       } else {
         console.error('Conversation not found')
@@ -143,18 +145,18 @@ const userSlice = createSlice({
       )
     },
     addNewMemberToGroup: (state, action) => {
-      const { idUser, idConversation } = action.payload
+      const { groupId, users } = action.payload
       // Tìm group tương ứng với idConversation
-      const group = state.lsGroupChats.find((group) => group._id === idConversation)
-      if (group) {
-        // Thêm idUser vào danh sách members của group nếu chưa có
-        if (!group.users.includes(idUser)) {
-          group.users.push(idUser)
-        }
-      } else {
-        // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
-        console.error('Group not found')
-      }
+      const group = state.lsGroupChats.find((group) => group._id === groupId)
+      // if (group) {
+      //   // Thêm idUser vào danh sách members của group nếu chưa có
+      //   if (!group.users.includes(users)) {
+      //     group.users.push(users)
+      //   }
+      // } else {
+      //   // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
+      //   console.error('Group not found')
+      // }
     },
     removeMemberFromGroup: (state, action) => {
       const { groupId, memberId } = action.payload

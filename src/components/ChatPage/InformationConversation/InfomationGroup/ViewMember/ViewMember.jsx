@@ -27,7 +27,9 @@ const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
   }, [isVisible, onClose])
 
   const handleRemoveMember = (idConversation, idMember) => {
-    dispatch(removeMemberFromGroup({ groupId: idConversation, memberId: idMember }))
+    const groupId = idConversation
+    const memberId = idMember
+    dispatch(removeMemberFromGroup({ groupId, memberId }))
   }
 
   return (

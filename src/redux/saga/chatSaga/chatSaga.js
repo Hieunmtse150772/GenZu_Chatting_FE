@@ -81,6 +81,8 @@ function createSocketChannel(socket, idConversation) {
         emit(setNewLsConversation(data.data))
       } else if (data.success && data.actionCode === 3004) {
         emit(deleteGroupById(data.data))
+      } else if (data.success && data.actionCode === 2001) {
+        emit(deleteGroupById(data.data))
       }
       console.log('notification', data)
     })
@@ -115,7 +117,7 @@ function createSocketChannel(socket, idConversation) {
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
       console.log('co messsage moi ', message)
-      if (message.conversation._id == idConversation) {
+      if (message.conversation?._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message))
       }
