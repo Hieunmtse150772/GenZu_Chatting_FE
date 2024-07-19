@@ -1,19 +1,16 @@
 import { IoIosSearch } from 'react-icons/io'
 import { FaRegImage } from 'react-icons/fa'
-import { SlOptions } from 'react-icons/sl'
 import { MdOutlineGTranslate } from 'react-icons/md'
 import { PiSelectionBackground } from 'react-icons/pi'
 // import DropdownInfoItem from './DropdownInfoItem'
 import DropdownItem from '@/components/Sidebar/DropdownItem/DropdownItem'
-import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 import { useEffect, useState } from 'react'
 import { getCookie } from '@/services/Cookies'
 import { useDispatch, useSelector } from 'react-redux'
-import { useTranslation } from 'react-i18next'
 import InfomationGroup from './InfomationGroup/InfomationGroup'
 import { updateStateSearch } from '@/redux/Slice/messageSlice'
 import ChangeBackground from '@/components/PopUp/ChangeBackground/ChangeBackground'
-import { fetchLsImage } from '@/services/messageService'
+import { fetchLsImage, fetchLsVideo } from '@/services/messageService'
 import { useParams } from 'react-router-dom'
 
 function InformationConversation(props) {
@@ -22,10 +19,12 @@ function InformationConversation(props) {
   const [timeOffline, setTimeOffline] = useState('')
   const [offlineTime, setOfflineTime] = useState(null)
   const [isOpenChangeBackground, setIsOpenChangeBackground] = useState(false)
+
+  const [showImage, setShowImage] = useState(false)
   const [lsImage, setLsImage] = useState()
+  const [showVideo, setShowVideo] = useState(false)
+  const [lsVideo, setLsVideo] = useState()
   const dispatch = useDispatch()
-  const cookie = getCookie('userLogin')
-  const [token, SetToken] = useState('')
 
   const togglePopupViewProfile = () => {
     props.togglePopupViewProfile()
@@ -53,9 +52,28 @@ function InformationConversation(props) {
     }
   }, [personalChat])
   const hanldeGetLsImage = async () => {
+    console.log('check')
+    console.log(showImage)
+    if (showImage == false) {
+      GetLsImage()
+    }
+    setShowImage(!showImage)
+  }
+  const GetLsImage = async () => {
     const response = await fetchLsImage(idConversation.idConversation)
-    console.log(response)
     setLsImage(response)
+  }
+  const hanldeGetLsVideo = async () => {
+    console.log('check')
+    console.log(showVideo)
+    if (showVideo == false) {
+      GetLsVideo()
+    }
+    setShowVideo(!showVideo)
+  }
+  const GetLsVideo = async () => {
+    const response = await fetchLsVideo(idConversation.idConversation)
+    setLsVideo(response)
   }
   useEffect(() => {
     const calculateOfflineTime = () => {
@@ -121,11 +139,13 @@ function InformationConversation(props) {
             </a>
             <div>
               <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
-                <DropdownItem icon={IoIosSearch} 
-                              label={'Search chat'}
-                              dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
-                              iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'} 
-                              onClick={handleSearchBtn}/>
+                <DropdownItem
+                  icon={IoIosSearch}
+                  label={'Search chat'}
+                  dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                  iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
+                  onClick={handleSearchBtn}
+                />
                 <hr />
                 <DropdownItem
                   icon={FaRegImage}
@@ -134,19 +154,53 @@ function InformationConversation(props) {
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={hanldeGetLsImage}
                 />
-                {lsImage ? (
-                  <div className='flex flex-wrap gap-[2.45%]'>
-                    {lsImage.map((image, index) => (
-                      <div key={index} className='my-2 w-[22.5%]'>
-                        <img src={image.message} alt='Image not Found ' />
+                {showImage ? (
+                  <div className='flex max-h-[calc(3*100px)] flex-wrap gap-[2.45%] overflow-y-auto'>
+                    {lsImage?.map((image, index) => (
+                      <div key={index} className='my-2 h-20 w-20'>
+                        <img
+                          src={image.message}
+                          className='h-full w-full object-cover'
+                          alt='Image not Found '
+                        />
                       </div>
                     ))}
                   </div>
                 ) : (
                   <></>
                 )}
-
                 <hr />
+                <DropdownItem
+                  icon={FaRegImage}
+                  label={'List of Video'}
+                  dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                  iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
+                  onClick={hanldeGetLsVideo}
+                />
+                {showVideo ? (
+                  lsVideo ? (
+                    <div className='flex max-h-[calc(3*100px)] flex-wrap gap-[2.45%] overflow-y-auto'>
+                      {lsVideo?.map((video, index) => (
+                        <div key={index} className='my-2 h-28 w-28'>
+                          <video
+                            src={video.message}
+                            className='h-full w-full object-cover'
+                            controls
+                            alt='Video not Found '
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ) : lsVideo?.length == 0 ? (
+                    <></>
+                  ) : (
+                    <h1>Is loading</h1>
+                  )
+                ) : (
+                  <></>
+                )}
+                <hr />
+
                 <DropdownItem
                   icon={MdOutlineGTranslate}
                   label={'Auto translate'}
@@ -155,11 +209,13 @@ function InformationConversation(props) {
                   onClick={() => {}}
                 />
                 <hr />
-                <DropdownItem icon={PiSelectionBackground}
-                              label={'Change background'}
-                              dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
-                              iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'} 
-                              onClick={togglePopupChangeBackground} />
+                <DropdownItem
+                  icon={PiSelectionBackground}
+                  label={'Change background'}
+                  dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                  iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
+                  onClick={togglePopupChangeBackground}
+                />
               </ul>
             </div>
           </div>

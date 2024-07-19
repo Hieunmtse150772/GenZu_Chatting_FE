@@ -102,10 +102,20 @@ export const changeBackground = (background, idConversation) => {
     throw error // Ném lỗi để saga có thể bắt
   }
 }
-export const fetchLsImage = async ( idConversation) => {
-   try {
+export const fetchLsImage = async (idConversation) => {
+  try {
     const response = await axiosClient.get(`messages/images/${idConversation}`)
     console.log('getLsImage:', response.data)
+    return response.data.data
+  } catch (error) {
+    console.error('Lỗi khi gửi tin nhắn qua API:', error)
+    throw error // Ném lỗi để saga có thể bắt
+  }
+}
+export const fetchLsVideo = async (idConversation) => {
+  try {
+    const response = await axiosClient.get(`messages/videos/${idConversation}`)
+    console.log('getLsVideo:', response.data)
     return response.data.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)
