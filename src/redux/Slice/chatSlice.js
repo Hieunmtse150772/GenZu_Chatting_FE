@@ -10,7 +10,7 @@ const initialState = {
   listSearch: '',
   page: 2,
   minPage: 0,
-  isCreateNewConversation: false,
+  isCreateNewConversation: null,
 }
 const chatSlice = createSlice({
   name: 'chat',
@@ -71,10 +71,10 @@ const chatSlice = createSlice({
       return { ...state, minPage: action.payload - 1 }
     },
     getMessageMoreBottom: (state, action) => {},
-    setIsCreateNewConversation: (state) => {
+    setIsCreateNewConversation: (state,action) => {
       return {
         ...state,
-        isCreateNewConversation: !state.isCreateNewConversation,
+        isCreateNewConversation: action.payload,
       }
     },
   },

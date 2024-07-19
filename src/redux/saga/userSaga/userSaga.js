@@ -9,7 +9,8 @@ import {
 } from '@/redux/Slice/userSlice'
 import { getConversations } from '@/services/messageService'
 import userService from '@/services/userService'
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { all } from 'axios'
+import { call, fork, put, spawn, takeEvery, takeLatest } from 'redux-saga/effects'
 // Export hàm `fetchIdConversation`
 function* fetchIdConversation() {
   console.log('firstConversationId')
@@ -28,6 +29,7 @@ function* fetchIdConversation() {
   }
 }
 function* fetchConversation() {
+  console.log('check conver')
   try {
     const response = yield call(getConversations)
     yield put(setLsConversation(response.data))
@@ -39,6 +41,7 @@ function* fetchConversation() {
   }
 }
 function* fetchLsFriends() {
+  console.log('check fr')
   try {
     const response = yield call(userService.getAllFriends)
     console.log(response)
@@ -47,11 +50,20 @@ function* fetchLsFriends() {
     console.log('error fetch friends in Saga', error)
   }
 }
-
+function* fetchConversationAndFriends() {
+  console.log('check conver and friend')
+  try {
+    yield fork(fetchConversation)
+    yield fork(fetchLsFriends)
+  } catch (error) {
+    console.error('Lỗi khi gọi fetchConversationAndFriends:', error.message)
+  }
+}
 function* authSaga() {
   yield takeLatest('user/getIdConversation', fetchIdConversation)
   yield takeLatest('user/getLsConversation', fetchConversation)
   yield takeLatest('user/getFriends', fetchLsFriends)
+  yield takeEvery('user/getFriendsAndConversation', fetchConversationAndFriends)
 }
 
 export default authSaga

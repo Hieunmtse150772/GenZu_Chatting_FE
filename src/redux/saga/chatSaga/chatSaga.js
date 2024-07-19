@@ -500,7 +500,8 @@ function* createNewConversationSaga(action) {
     conversation: response.data,
     userId: JSON.parse(getCookie('userLogin')).user?._id,
   })
-  yield put(setIsCreateNewConversation())
+
+  yield put(setIsCreateNewConversation(response.data._id))
 }
 function* searchMessageByKeyword(action) {
   console.log(action.payload)

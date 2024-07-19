@@ -10,6 +10,7 @@ import { getMessagesById } from '../../redux/Slice/messageSlice'
 import {
   clearToastMessage,
   getFriends,
+  getFriendsAndConversation,
   getLsConversation,
   loginSlice,
   setConversation,
@@ -95,13 +96,12 @@ function Chat() {
   useLayoutEffect(() => {
     if (checkCookie()) {
       dispatch(connectSocket(idConversation))
-      dispatch(getLsConversation())
-      dispatch(getFriends())
+      dispatch(getFriendsAndConversation())
     }
   }, [idConversation])
   useLayoutEffect(() => {
     console.log(lsConversation)
-    if (checkCookie() && lsConversation && idConversation.idConversation !== 'undefined') {
+    if (checkCookie() && idConversation.idConversation !== 'undefined') {
       dispatch(getMessagesById(idConversation))
       dispatch(setIdConversation(idConversation.idConversation))
       dispatch(resetChat())

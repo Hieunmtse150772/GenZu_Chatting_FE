@@ -48,9 +48,9 @@ export default function SearchFriends({ user }) {
     }
   }, [])
   useEffect(() => {
-    if (isCreateConversationSucces == true) {
-      dispatch(setIsCreateNewConversation())
-      navigate('chat/')
+    if (isCreateConversationSucces != null) {
+      navigate(`/chat/${isCreateConversationSucces}`)
+      dispatch(setIsCreateNewConversation(null))
     }
   }, [isCreateConversationSucces])
 
@@ -59,7 +59,7 @@ export default function SearchFriends({ user }) {
       {console.log(user)}
       {user.isChat === false ? (
         <p>User không trong cuộc trò chuyện</p>
-      ) : user.conversation.length > 0 ? (
+      ) : user?.conversation?.length > 0 ? (
         <div
           onClick={() => {
             handleUserClick(user.conversation[0]._id)

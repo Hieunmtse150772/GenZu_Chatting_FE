@@ -244,6 +244,7 @@ const userSlice = createSlice({
         conversation: conversation,
       }
     },
+    getFriendsAndConversation: () => {},
   },
 })
 
@@ -255,6 +256,7 @@ export const {
   updateUser,
   setNewLsFriends,
   setIdConversation,
+  getFriendsAndConversation,
   getIdConversation,
   setLsConversation,
   getLsConversation,
