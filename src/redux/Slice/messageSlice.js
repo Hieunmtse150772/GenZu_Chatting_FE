@@ -33,10 +33,11 @@ const messageSlice = createSlice({
           emojiBy: value.emojiBy,
           status: value.status,
           replyMessage: value.replyMessage || null,
-          translations:value.translations || null
+          translations: value.translations || null,
         })),
       }
     },
+    sendMessageGroup: (state, action) => {},
     updateMessage: (state, action) => {
       const index = state.message.findIndex((item) => item._id == action.payload._id)
 
@@ -155,6 +156,8 @@ const messageSlice = createSlice({
       }
     },
     setNewMessage: (state, action) => {
+      console.log('new mesg')
+
       const newMs = action.payload
       console.log('new mesg', newMs)
       return {
@@ -218,6 +221,7 @@ const messageSlice = createSlice({
 export const {
   sendMessage,
   setMessage,
+  sendMessageGroup,
   setReplyTo,
   clearReplyTo,
   getMessagesMore,

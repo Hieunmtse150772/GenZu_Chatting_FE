@@ -92,14 +92,11 @@ const userSlice = createSlice({
     },
     updateConversationByGroupId: (state, action) => {
       const { groupId, updatedConversation } = action.payload
-      console.log('trigger groupId', groupId)
-      console.log(updatedConversation)
       const conversationIndex = state.lsGroupChats.findIndex(
         (conversation) => conversation._id === groupId,
       )
 
       if (conversationIndex !== -1) {
-        console.log('1')
         state.lsGroupChats[conversationIndex] = {
           ...state.lsGroupChats[conversationIndex],
           users: updatedConversation,

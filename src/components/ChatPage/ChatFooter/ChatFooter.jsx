@@ -4,7 +4,12 @@ import { MdOutlineKeyboardVoice, MdAttachFile, MdInsertEmoticon } from 'react-ic
 import { LuSend } from 'react-icons/lu'
 import { FaFile, FaImage, FaVideo } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { sendMessage, deleteEmoji, clearReplyTo } from '../../../redux/Slice/messageSlice'
+import {
+  sendMessage,
+  deleteEmoji,
+  clearReplyTo,
+  sendMessageGroup,
+} from '../../../redux/Slice/messageSlice'
 import AttachmentButton from '../../Button/AttachmentButton'
 import { VscBold } from 'react-icons/vsc'
 import { GoItalic } from 'react-icons/go'
@@ -85,6 +90,7 @@ const ChatFooter = () => {
   const selectedEmojis = useSelector((state) => state.message.selectedEmojis)
   // Lấy gợi ý trả lời từ AI từ store Redux
   const answerSuggestionAI = useSelector((state) => state.message.answerAI)
+  const conversation = useSelector((state) => state.user.conversation)
   // Lấy tham số từ URL
   const param = useParams()
 
@@ -198,40 +204,78 @@ const ChatFooter = () => {
       setIsUploading(true)
     }
     // Kiểm tra inputStr khác null, undefined và rỗng
-    if (inputStr != null && inputStr != undefined && inputStr != '') {
-      if (replyMessage) {
-        console.log('1', replyMessage)
+    if (conversation.isGroupChat) {
+      if (inputStr != null && inputStr != undefined && inputStr != '') {
+        if (replyMessage) {
+          console.log('1', replyMessage)
+        }
+        // Tạo object messageData chứa thông tin tin nhắn
+        const messageData = {
+          message: inputStr, // Nội dung tin nhắn
+          styles: {
+            // Định dạng văn bản
+            fontSize: 10,
+            bold: boldActive,
+            italic: italicActive,
+            underline: underlineActive,
+          },
+          emojiBy: [],
+          isSpoiled: isSpoiled,
+          idConversation: param,
+          replyMessage: replyMessage ? replyMessage._id : null,
+        }
+        // Dispatch action gửi tin nhắn
+        dispatch(sendMessageGroup(messageData))
+        // Xóa emoji đã chọn
+        dispatch(deleteEmoji())
+        // Xóa nội dung input field sau khi gửi
+        setInputStr('')
+        // Reset định dạng văn bản
+        setBoldActive(false)
+        setItalicActive(false)
+        setUnderlineActive(false)
+        // Reset trạng thái tin nhắn "spoiled"
+        setIsSpoiled(true)
+        dispatch(clearReplyTo())
+        // Ẩn gợi ý trả lời từ AI
+        setShowAnswerSuggestion(!showAnswerSuggestion)
       }
-      // Tạo object messageData chứa thông tin tin nhắn
-      const messageData = {
-        message: inputStr, // Nội dung tin nhắn
-        styles: {
-          // Định dạng văn bản
-          fontSize: 10,
-          bold: boldActive,
-          italic: italicActive,
-          underline: underlineActive,
-        },
-        emojiBy: [],
-        isSpoiled: isSpoiled,
-        idConversation: param,
-        replyMessage: replyMessage ? replyMessage._id : null,
+    } else {
+      if (inputStr != null && inputStr != undefined && inputStr != '') {
+        if (replyMessage) {
+          console.log('1', replyMessage)
+        }
+        // Tạo object messageData chứa thông tin tin nhắn
+        const messageData = {
+          message: inputStr, // Nội dung tin nhắn
+          styles: {
+            // Định dạng văn bản
+            fontSize: 10,
+            bold: boldActive,
+            italic: italicActive,
+            underline: underlineActive,
+          },
+          emojiBy: [],
+          isSpoiled: isSpoiled,
+          idConversation: param,
+          replyMessage: replyMessage ? replyMessage._id : null,
+        }
+        // Dispatch action gửi tin nhắn
+        dispatch(sendMessage(messageData))
+        // Xóa emoji đã chọn
+        dispatch(deleteEmoji())
+        // Xóa nội dung input field sau khi gửi
+        setInputStr('')
+        // Reset định dạng văn bản
+        setBoldActive(false)
+        setItalicActive(false)
+        setUnderlineActive(false)
+        // Reset trạng thái tin nhắn "spoiled"
+        setIsSpoiled(true)
+        dispatch(clearReplyTo())
+        // Ẩn gợi ý trả lời từ AI
+        setShowAnswerSuggestion(!showAnswerSuggestion)
       }
-      // Dispatch action gửi tin nhắn
-      dispatch(sendMessage(messageData))
-      // Xóa emoji đã chọn
-      dispatch(deleteEmoji())
-      // Xóa nội dung input field sau khi gửi
-      setInputStr('')
-      // Reset định dạng văn bản
-      setBoldActive(false)
-      setItalicActive(false)
-      setUnderlineActive(false)
-      // Reset trạng thái tin nhắn "spoiled"
-      setIsSpoiled(true)
-      dispatch(clearReplyTo())
-      // Ẩn gợi ý trả lời từ AI
-      setShowAnswerSuggestion(!showAnswerSuggestion)
     }
   }
 
@@ -521,7 +565,7 @@ const ChatFooter = () => {
               onFocus={handleFocus}
               ref={inputRef}
               value={inputStr}
-              className={`mr-2 bg-white dark:bg-black dark:text-white flex-1 rounded-full border px-4 py-2 outline-cyan-600 focus:outline ${
+              className={`mr-2 flex-1 rounded-full border bg-white px-4 py-2 outline-cyan-600 focus:outline dark:bg-black dark:text-white ${
                 isSpoiled ? 'show' : 'hide'
               }`}
               style={{

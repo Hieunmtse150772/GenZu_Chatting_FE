@@ -123,6 +123,9 @@ function createSocketChannel(socket, idConversation) {
         emit(setNewMessage(message))
       }
     })
+    socket.on('response send message', (res) => {
+      emit(setNewMessage(res.data))
+    })
 
     // Lắng nghe các sự kiện liên quan đến lời mời kết bạn.
     socket.on('received request', (newRequest) => {
@@ -187,14 +190,13 @@ function* handleSocketConnect(action) {
   socket = io(import.meta.env.VITE_ENDPOINT, {
     extraHeaders: { Authorization: `Bearer ${JSON.parse(getCookie('userLogin')).accessToken}` },
   })
-  console.log('checl check')
   // Lấy thông tin người dùng từ cookie.
   const user = JSON.parse(getCookie('userLogin')).user
 
   // Gửi sự kiện 'setup' và 'join chat' đến server.
   socket.emit('setup', user)
   console.log('check join chat')
-  socket.emit('join chat', { conversation: action.payload.idConversation, user: user._id })
+  socket.emit('join chat', action.payload.idConversation)
   socket.emit('login', user._id)
   // Tạo event channel để lắng nghe các sự kiện socket.io.
   const socketChannel = yield call(createSocketChannel, socket, action.payload.idConversation)
@@ -325,6 +327,31 @@ function* sendMessageSaga(action) {
   }
 }
 
+function* sendMessageGroupSaga(action) {
+  const inforChat = {
+    message: action.payload.message,
+    isSpoiled: action.payload.isSpoiled,
+    conversationId: action.payload.idConversation?.idConversation,
+    messageType: action.payload.messageType ? action.payload.messageType : 'text',
+    styles: action.payload.styles,
+    emojiBy: action.payload.emojiBy,
+  }
+
+  try {
+    yield call([socket, 'emit'], 'send message', inforChat)
+
+    // Gửi sự kiện 'stop_typing' đến server.
+    yield call([socket, 'emit'], 'stop_typing', action.payload.idConversation.idConversation)
+
+    // Gửi sự kiện 'new message' đến server.
+    console.log('send message success')
+
+    // Dispatch action để cập nhật state với tin nhắn mới.
+  } catch (error) {
+    console.error('Failed to send message', error)
+  }
+}
+
 /**
  * Saga để dịch văn bản.
  * @param {object} action - Redux action.
@@ -332,7 +359,6 @@ function* sendMessageSaga(action) {
 function* translationTextSaga(action) {
   try {
     // Gọi service để dịch văn bản.
-    console.log(action.payload)
     const message = yield call(() => {
       return translateText(
         action.payload.id,
@@ -466,6 +492,7 @@ function* LogoutSaga(action) {
   }
 }
 function* createNewConversationSaga(action) {
+  console.log(action.payload)
   const response = yield call(createNewConversationService, action.payload)
   yield put(setNewLsConversation(response.data))
   console.log(response.data)
@@ -502,6 +529,7 @@ export default function* chatSaga() {
   yield takeLatest('user/setReadNotification', sendReadNotification)
   // yield takeLatest('user/setFriendRequestNotification', sendAddFriendRequest)
   yield takeLatest('chat/searchMessageById', searchMessageById)
+  yield takeLatest('message/sendMessageGroup', sendMessageGroupSaga)
   yield takeLatest('message/recallMessageSlice', recallMessageSaga)
   yield takeLatest('user/sendReplyFriendRequest', replyAddFriendRequest)
   yield takeLatest('user/alertFriendRequest', sendAddFriendRequest)
