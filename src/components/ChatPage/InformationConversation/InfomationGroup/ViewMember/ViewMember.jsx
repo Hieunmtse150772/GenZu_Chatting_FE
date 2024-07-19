@@ -1,9 +1,13 @@
 import { useRef, useState, useEffect } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
+import { removeMemberFromGroup } from '@/redux/Slice/userSlice'
+import { useDispatch } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
-  const [loading, setLoading] = useState(false)
+  const { idConversation } = useParams()
   const popupRef = useRef()
+  const dispatch = useDispatch()
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -21,6 +25,12 @@ const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isVisible, onClose])
+
+  const handleRemoveMember = (idConversation, idMember) => {
+    const groupId = idConversation
+    const memberId = idMember
+    dispatch(removeMemberFromGroup({ groupId, memberId }))
+  }
 
   return (
     <>
@@ -54,10 +64,9 @@ const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
                 {member._id !== groupAdminId ? (
                   <button
                     className={`rounded-lg bg-red-500 px-4 py-2 text-white`}
-                    // onClick={() => handleAddToGroup(friend, friend.friend?._id, idConversation)}
+                    onClick={() => handleRemoveMember(idConversation, member?._id)}
                     // disabled={addedMembers.has(friend.friend?._id)}
                   >
-                    {/* {addedMembers.has(friend.friend?._id) ? 'Added' : 'Add to Group'} */}
                     Remove
                   </button>
                 ) : (
