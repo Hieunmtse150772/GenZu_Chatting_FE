@@ -1,5 +1,5 @@
 import { getCookie } from '@/services/Cookies'
-import React from 'react'
+import React, { memo } from 'react'
 
 const RenderMessage = ({ item }) => {
   const userId = JSON.parse(getCookie('userLogin')).user._id
@@ -66,7 +66,7 @@ const RenderMessage = ({ item }) => {
     //       )
     //     }
     //   }
-      
+
     //   if(item.message === '7008'){
     //     return (
     //       <p className='text-gray-600 font-light italic'>{item.sender?.fullName +
@@ -80,4 +80,4 @@ const RenderMessage = ({ item }) => {
   }
 }
 
-export default RenderMessage
+export default memo(RenderMessage)

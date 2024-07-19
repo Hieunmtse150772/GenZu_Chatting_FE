@@ -33,6 +33,7 @@ const messageSlice = createSlice({
           emojiBy: value.emojiBy,
           status: value.status,
           replyMessage: value.replyMessage || null,
+          translations:value.translations || null
         })),
       }
     },

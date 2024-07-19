@@ -5,13 +5,13 @@ import { CgMoreO, CgProfile } from 'react-icons/cg'
 import DropdownItem from '../DropdownItem/DropdownItem'
 import { MdBlock, MdOutlineDelete, MdPhone, MdVideocam } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setConversation } from '@/redux/Slice/userSlice'
-import { createNewConversation } from '@/redux/Slice/chatSlice'
-export default function
-  SearchFriends({ user }) {
+import { createNewConversation, setIsCreateNewConversation } from '@/redux/Slice/chatSlice'
+export default function SearchFriends({ user }) {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
-  const [isCreateNewConversation, setIsCreateNewConversation] = useState(false)
+  const [isCreateNewConversation, setCreateNewConversation] = useState(false)
+  const isCreateConversationSucces = useSelector((state) => state.chat.isCreateNewConversation)
   const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
   const navigate = useNavigate()
@@ -38,7 +38,7 @@ export default function
     dispatch(setConversation(id))
   }
   const handleUserNoConversationClcik = (id) => {
-    setIsCreateNewConversation(true)
+    setCreateNewConversation(true)
     dispatch(createNewConversation(id))
   }
   useEffect(() => {
@@ -47,6 +47,12 @@ export default function
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+  useEffect(() => {
+    if (isCreateConversationSucces == true) {
+      dispatch(setIsCreateNewConversation())
+      navigate('chat/')
+    }
+  }, [isCreateConversationSucces])
 
   return (
     <>
@@ -152,8 +158,7 @@ export default function
           }}
           className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
             isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
-          } mb-1 rounded-lg`}
-          aria-disabled={isCreateNewConversation}
+          } mb-1 rounded-lg ${isCreateNewConversation ? 'disabled' : ''}`}
         >
           <img
             src={user.info.picture}

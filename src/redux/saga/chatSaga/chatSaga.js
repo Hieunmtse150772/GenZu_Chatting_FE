@@ -2,6 +2,7 @@
 import {
   minusPage,
   plusPage,
+  setIsCreateNewConversation,
   setIsTyping,
   setListSearch,
   setLoadMore,
@@ -318,10 +319,10 @@ function* sendMessageSaga(action) {
 function* translationTextSaga(action) {
   try {
     // Gọi service để dịch văn bản.
-
+    console.log(action.payload)
     const message = yield call(() => {
       return translateText(
-        action.payload.message,
+        action.payload.id,
         JSON.parse(getCookie('userLogin'))?.user?.languageTranslate,
       )
     })
@@ -444,7 +445,6 @@ function* LogoutSaga(action) {
   }
 }
 function* createNewConversationSaga(action) {
-  console.log(action.payload)
   const response = yield call(createNewConversationService, action.payload)
   yield put(setNewLsConversation(response.data))
   console.log(response.data)
@@ -452,6 +452,7 @@ function* createNewConversationSaga(action) {
     conversation: response.data,
     userId: JSON.parse(getCookie('userLogin')).user?._id,
   })
+  yield put(setIsCreateNewConversation())
 }
 function* searchMessageByKeyword(action) {
   console.log(action.payload)

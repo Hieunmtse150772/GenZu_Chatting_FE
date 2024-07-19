@@ -10,6 +10,7 @@ const initialState = {
   listSearch: '',
   page: 2,
   minPage: 0,
+  isCreateNewConversation: false,
 }
 const chatSlice = createSlice({
   name: 'chat',
@@ -67,15 +68,22 @@ const chatSlice = createSlice({
       }
     },
     setLsPage: (state, action) => {
-      return { ...state, minPage: action.payload -1 }
+      return { ...state, minPage: action.payload - 1 }
     },
     getMessageMoreBottom: (state, action) => {},
+    setIsCreateNewConversation: (state) => {
+      return {
+        ...state,
+        isCreateNewConversation: !state.isCreateNewConversation,
+      }
+    },
   },
 })
 
 export const {
   setLoadMore,
   setLsPage,
+  setIsCreateNewConversation,
   getMessageMoreBottom,
   setPage,
   setListSearch,

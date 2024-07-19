@@ -1,21 +1,20 @@
 // src/services/translationService.js
+import axiosClient from '@/utils/axiosClient'
 import axios from 'axios'
 
 const apiKey = import.meta.env.VITE_GOOGLE_TRANSLATION_API_KEY_TRANSLATION
 const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`
 
-export const translateText = async (
-  text = 'GenzuChat Là số 1 trên thế giới',
-  targetLang = 'en',
-) => {
+export const translateText = async (id = '', targetLang = 'en') => {
+  console.log(id, targetLang)
   try {
-    const response = await axios.post(url, {
-      q: text,
-      target: targetLang,
+    const response = await axiosClient.post('messages/translate', {
+      messageIds: [id],
+      languageCode: targetLang,
     })
-
-    if (response.data.data && response.data.data.translations) {
-      return response.data.data.translations[0].translatedText
+    console.log(response.data)
+    if (response.data.data && response.data.data[0].translations[targetLang]) {
+      return response.data.data[0].translations[targetLang]
     } else {
       throw new Error('Unexpected response format from translation service')
     }
