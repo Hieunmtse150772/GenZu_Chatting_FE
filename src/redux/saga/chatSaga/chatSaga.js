@@ -33,6 +33,7 @@ import {
   updateGroupMembers,
   deleteMemberFromGroupInStore,
   deleteMemberInGroup,
+  updateGroupChat,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -114,6 +115,10 @@ function createSocketChannel(socket, idConversation) {
     socket.on('add member', (res) => {
       console.log('add member', res)
       emit(addMemberToGroup(res))
+    })
+    socket.on('update group', (res) => {
+      console.log('update group', res)
+      emit(updateGroupChat(res))
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
@@ -461,6 +466,14 @@ function* createGroupChatSaga(action) {
   }
 }
 
+function* updateGroupChatSaga(action) {
+  try {
+    yield call([socket, 'emit'], 'update group', action.payload)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 function* deleteGroupChatSaga(action) {
   try {
     yield call([socket, 'emit'], 'delete group', action.payload)
@@ -542,6 +555,7 @@ export default function* chatSaga() {
   yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('user/deleteGroupChat', deleteGroupChatSaga)
   yield takeLatest('user/addNewMemberToGroup', addNewMemberToGroupSaga)
+  yield takeLatest('user/updateGroupChat', updateGroupChatSaga)
   yield takeLatest('user/removeMemberFromGroup', deleteMemberInGroupSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
