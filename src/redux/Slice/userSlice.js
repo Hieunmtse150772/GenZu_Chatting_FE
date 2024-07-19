@@ -155,6 +155,7 @@ const userSlice = createSlice({
       //   console.error('Group not found')
       // }
     },
+    updateGroupChat: (state, action) => {},
     removeMemberFromGroup: (state, action) => {
       const { groupId, memberId } = action.payload
       console.log(groupId)
@@ -275,6 +276,7 @@ export const {
   loginSlice,
   logoutSlice,
   createGroupChat,
+  updateGroupChat,
   addMemberToGroup,
   addNewMemberToGroup,
   deleteMemberInGroup,

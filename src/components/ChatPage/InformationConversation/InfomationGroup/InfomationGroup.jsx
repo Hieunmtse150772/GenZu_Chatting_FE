@@ -6,6 +6,7 @@ import { LiaUserFriendsSolid } from 'react-icons/lia'
 import { MdDeleteOutline } from 'react-icons/md'
 import { IoLogInOutline } from 'react-icons/io5'
 import { IoIosAddCircleOutline } from 'react-icons/io'
+import { FaRegEdit } from 'react-icons/fa'
 import { MdOutlineAddLink } from 'react-icons/md'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 import DropdownItem from '@/components/Sidebar/DropdownItem/DropdownItem'
@@ -14,12 +15,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AddNewMember from './AddNewMember/AddNewMember'
 import ViewMember from './ViewMember/ViewMember'
+import UpdateGroup from './UpdateGroup/UpdateGroup'
 
 const InfomationGroup = ({ conversation }) => {
   const dispatch = useDispatch()
   // State to manage the visibility of the AddNewMember popup
   const [isAddMemberVisible, setIsAddMemberVisible] = useState(false)
   const [isViewMemberVisible, setIsViewMemberVisible] = useState(false)
+  const [isUpdateGroupVisible, setIsUpdateGroupVisible] = useState(false)
   const { idConversation } = useParams()
   const listGroupChats = useSelector((state) => state.user?.lsGroupChats)
   const groupAdminId = listGroupChats.find((group) => group._id === idConversation).groupAdmin?._id
@@ -38,12 +41,20 @@ const InfomationGroup = ({ conversation }) => {
     setIsViewMemberVisible(true)
   }
 
+  const handleOpenUpdateGroup = () => {
+    setIsUpdateGroupVisible(true)
+  }
+
   const handleViewMemberClose = () => {
     setIsViewMemberVisible(false)
   }
 
   const handleAddMemberClose = () => {
     setIsAddMemberVisible(false) // Hide the AddNewMember popup
+  }
+
+  const handleUpdateGroupClose = () => {
+    setIsUpdateGroupVisible(false) // Hide the Update group popup
   }
 
   return (
@@ -93,6 +104,13 @@ const InfomationGroup = ({ conversation }) => {
             onClick={() => {}}
           />
           <DropdownItem
+            icon={FaRegEdit}
+            label={'Update group'}
+            dropdownStyle={'p-2'}
+            iconStyle={'h-9 w-9 p-2'}
+            onClick={handleOpenUpdateGroup}
+          />
+          <DropdownItem
             icon={IoIosAddCircleOutline}
             label={'Add new member'}
             dropdownStyle={'p-2'}
@@ -127,6 +145,10 @@ const InfomationGroup = ({ conversation }) => {
           groupAdminId={groupAdminId}
           onClose={handleViewMemberClose}
         />
+      )}
+      {/* Update group */}
+      {isUpdateGroupVisible && (
+        <UpdateGroup isVisible={isUpdateGroupVisible} onClose={handleUpdateGroupClose} />
       )}
     </div>
   )
