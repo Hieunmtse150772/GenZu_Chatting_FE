@@ -1,7 +1,7 @@
 import { getCookie } from '@/services/Cookies'
 import React, { memo } from 'react'
 
-const RenderMessage = ({ item }) => {
+const RenderMessage = ({ item, autoTranslate }) => {
   const userId = JSON.parse(getCookie('userLogin')).user._id
 
   switch (item.messageType) {
@@ -36,7 +36,12 @@ const RenderMessage = ({ item }) => {
         </a>
       )
     case 'text':
-      return <p>{item.message}</p>
+      return (
+        <p>
+          {console.log(autoTranslate)}
+          {item.message}
+        </p>
+      )
     // case 'notification':
     //   if (item.message === '3001' || item.message === '3006') {
     //     if (item.affected_user_id && item.sender._id === userId && item.conversation.isGroupChat) {

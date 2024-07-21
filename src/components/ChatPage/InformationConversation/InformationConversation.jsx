@@ -137,7 +137,7 @@ function InformationConversation(props) {
             >
               {'view_profile'}
             </a>
-            <div>
+            <div className='w-11/12'>
               <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
                 <DropdownItem
                   icon={IoIosSearch}
@@ -155,9 +155,9 @@ function InformationConversation(props) {
                   onClick={hanldeGetLsImage}
                 />
                 {showImage ? (
-                  <div className='flex max-h-[calc(3*100px)] flex-wrap gap-[2.45%] overflow-y-auto'>
+                  <div className='flex max-h-[calc(3*100px)] flex-wrap gap-[3%] overflow-y-auto'>
                     {lsImage?.map((image, index) => (
-                      <div key={index} className='my-2 h-20 w-20'>
+                      <div key={index} className='my-2 h-[5.5rem] w-[5.5rem]'>
                         <img
                           src={image.message}
                           className='h-full w-full object-cover'

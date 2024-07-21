@@ -60,7 +60,7 @@ const UserList = ({ togglePopupViewProfile }) => {
           {t('group_chat')}
         </button>
       </div>
-      <div className='mt-4 h-full overflow-y-auto text-black'>
+      <div className='no-scrollbar mt-4 h-full overflow-y-auto text-black'>
         {lsChats.length == 0 && groupChats.length == 0 ? (
           lsConversation != null ? (
             lsFriends.length > 0 ? (
@@ -79,12 +79,19 @@ const UserList = ({ togglePopupViewProfile }) => {
               lsChats.map((item) => {
                 let userInfo
                 if (item.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id) {
+                  console.log(item)
                   userInfo = {
                     name: item.users[1]?.fullName,
                     picture: item.users[1]?.picture,
                     is_online: item.users[1]?.is_online,
                     latestMessage: item?.latestMessage?.message,
                     isGroupChat: false,
+                    isRead:
+                      item?.latestMessage?.readBy.findIndex(
+                        (id) => id == JSON.parse(getCookie('userLogin')).user._id,
+                      ) >= 0
+                        ? true
+                        : false,
                   }
                 } else {
                   userInfo = {
@@ -93,6 +100,12 @@ const UserList = ({ togglePopupViewProfile }) => {
                     is_online: item.users[0]?.is_online,
                     latestMessage: item?.latestMessage?.message,
                     isGroupChat: false,
+                    isRead:
+                      item?.latestMessage?.readBy.findIndex(
+                        (id) => id == JSON.parse(getCookie('userLogin')).user._id,
+                      ) >= 0
+                        ? true
+                        : false,
                   }
                 }
                 return (
@@ -116,6 +129,12 @@ const UserList = ({ togglePopupViewProfile }) => {
                   isGroupChat: true,
                   latestMessage: item?.latestMessage?.message,
                   is_online: null,
+                  isRead:
+                    item?.latestMessage?.readBy.findIndex(
+                      (id) => id == JSON.parse(getCookie('userLogin')).user._id,
+                    ) >= 0
+                      ? true
+                      : false,
                 }
                 return (
                   <UserCard

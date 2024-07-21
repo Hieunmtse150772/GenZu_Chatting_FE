@@ -17,7 +17,7 @@ import {
   setIdConversation,
   setToastMessage,
 } from '@/redux/Slice/userSlice'
-import { connectSocket, resetChat, setListSearch } from '@/redux/Slice/chatSlice'
+import { connectSocket, resetChat, setListSearch, watchMessageSlice } from '@/redux/Slice/chatSlice'
 import { checkCookie, getCookie } from '@/services/Cookies'
 import LoadingSpinner from './ChatSkeleton/ChatSkeleton'
 import NoConversations from './NoConversation/NoConversation'
@@ -112,6 +112,7 @@ function Chat() {
   useEffect(() => {
     if (checkCookie() && idConversation.idConversation !== 'undefined') {
       dispatch(loginSlice(JSON.parse(getCookie('userLogin'))?.user._id))
+      dispatch(watchMessageSlice())
     }
   }, [dispatch, idConversation])
   ///

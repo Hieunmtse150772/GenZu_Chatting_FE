@@ -71,12 +71,13 @@ const chatSlice = createSlice({
       return { ...state, minPage: action.payload - 1 }
     },
     getMessageMoreBottom: (state, action) => {},
-    setIsCreateNewConversation: (state,action) => {
+    setIsCreateNewConversation: (state, action) => {
       return {
         ...state,
         isCreateNewConversation: action.payload,
       }
     },
+    watchMessageSlice: (state, action) => {},
   },
 })
 
@@ -85,6 +86,7 @@ export const {
   setLsPage,
   setIsCreateNewConversation,
   getMessageMoreBottom,
+  watchMessageSlice,
   setPage,
   setListSearch,
   setLoading,

@@ -34,6 +34,7 @@ import {
   deleteMemberFromGroupInStore,
   deleteMemberInGroup,
   updateGroupChat,
+  updateConversation,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -162,6 +163,7 @@ function createSocketChannel(socket, idConversation) {
       console.log(conversation)
     })
     socket.on('new message received', (message) => {
+      emit(updateConversation(message))
       console.log(message)
     })
 
@@ -446,7 +448,13 @@ function* changeBgConversation(action) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }
 }
-
+function* watchMessageSocket(action) {
+  try {
+    yield call([socket, 'emit'], 'watch message', action.payload)
+  } catch (error) {
+    console.log(error)
+  }
+}
 function* recallMessageSaga(action) {
   console.log(action.payload)
   try {
@@ -565,4 +573,5 @@ export default function* chatSaga() {
   yield takeLatest('chat/createNewConversation', createNewConversationSaga)
   yield takeLatest('user/handleChangeBackground', changeBgConversation)
   yield takeLatest('chat/searchMessageByKeyword', searchMessageByKeyword)
+  yield takeLatest('chat/watchMessageSlice', watchMessageSocket)
 }

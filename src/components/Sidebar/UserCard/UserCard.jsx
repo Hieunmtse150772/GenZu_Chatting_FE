@@ -48,7 +48,7 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
         onClick={onUserCardClick}
         className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
           isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
-        } mb-1 rounded-lg`}
+        } mb-1 rounded-lg ${!user.isRead ? 'border-2 border-blue-400' : ''}`}
       >
         <div className='relative h-14 w-20'>
           <img

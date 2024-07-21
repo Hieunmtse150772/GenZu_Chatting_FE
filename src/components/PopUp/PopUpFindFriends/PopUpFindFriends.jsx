@@ -136,8 +136,9 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
       <div
         ref={popupRef}
-        className='relative flex justify-around rounded-lg bg-white p-6 shadow-lg'
+        className='relative mx-2 flex h-[28rem] w-[28rem] flex-col justify-around rounded-lg bg-white p-6 shadow-lg'
       >
+        <h1>Find your friends</h1>
         <button
           className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
           onClick={onClose}
@@ -145,7 +146,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
           &times;
         </button>
 
-        <div className='relative mx-auto mt-10 max-w-md rounded-lg bg-white p-6 shadow-xl'>
+        <div className='relative mx-2 mt-10 h-4/5 max-w-md rounded-lg bg-slate-50 p-6 shadow-xl'>
           {
             <div
               className={`${
@@ -175,7 +176,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
           </div>
 
           {searchResult.user && (
-            <ul className='mt-4'>
+            <ul className='no-scrollbar mt-4 h-4/5 overflow-y-auto'>
               {searchResult.user.map((user, index) => {
                 const isFriend = friendLists.some((friend) => friend?.info?._id === user._id)
                 return (

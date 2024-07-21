@@ -90,7 +90,15 @@ const userSlice = createSlice({
         }
       }
     },
+    updateConversation: (state, action) => {
+      console.log(action.payload)
+      const index = state.lsConversation.findIndex(
+        (item) => item._id == action.payload.conversation._id,
+      )
+      console.log(index)
+    },
     updateConversationByGroupId: (state, action) => {
+      console.log(action.payload)
       const { groupId, updatedConversation } = action.payload
       const conversationIndex = state.lsGroupChats.findIndex(
         (conversation) => conversation._id === groupId,
@@ -260,6 +268,7 @@ export const {
   getFriendsAndConversation,
   getIdConversation,
   setLsConversation,
+  updateConversation,
   getLsConversation,
   setLsGroupChat,
   setLsPersonalChats,

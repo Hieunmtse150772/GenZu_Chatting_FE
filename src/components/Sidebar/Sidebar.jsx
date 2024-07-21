@@ -9,13 +9,13 @@ import { LiaUserPlusSolid, LiaUserFriendsSolid } from 'react-icons/lia'
 import SearchInput from '../Sidebar/SearchInput/SearchInput'
 import UserList from '../Sidebar/UserList/UserList'
 import Switcher from '../Sidebar/Switcher/Switcher'
-import { useRef, useState, useEffect, useCallback, memo } from 'react'
+import { useRef, useState, useEffect, useCallback, memo, Suspense, lazy } from 'react'
 import { PiSignOutBold } from 'react-icons/pi'
 import { getCookie, removeCookie } from '../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
 import EditAndSetting from '../PopUp/EditAndSetting/EditAndSetting'
 import PopUpFindFriends from '../PopUp/PopUpFindFriends/PopUpFindFriends'
-import PopUpAddMenber from '../PopUp/PopUpAddMember/PopUpAddMember'
+const PopUpAddMenber = lazy(() => import('../PopUp/PopUpAddMember/PopUpAddMember'))
 import userService from '../../services/userService'
 import UserInfoFriendRequest from './UserInfoFriendRequest/UserInfoFriendRequest'
 import { clearUserSlice, logoutSlice } from '@/redux/Slice/userSlice'
@@ -114,10 +114,7 @@ const Sidebar = ({ togglePopupViewProfile }) => {
       >
         <div className='no-scrollbar relative h-full w-80 overflow-x-hidden overflow-y-scroll border-slate-500 bg-lightTheme p-4 shadow-2xl dark:bg-darkTheme sm:max-w-[12rem] md:w-[22rem] lg:max-w-[20rem]'>
           <div className='mb-4 flex items-center justify-between'>
-            <img  className='bg-transparent w-20'
-                  src={chatLogo} 
-                  alt='App GenZu' 
-                  />
+            <img className='w-20 bg-transparent' src={chatLogo} alt='App GenZu' />
             {/* <p className='text-xl font-bold text-black dark:text-white'>App</p> */}
             <div className='flex justify-between'>
               <div onClick={handleNotificationClick} className='relative'>
@@ -163,11 +160,11 @@ const Sidebar = ({ togglePopupViewProfile }) => {
             <div className='ml-4 flex cursor-pointer items-center outline-none'>
               <LiaUserPlusSolid
                 onClick={togglePopupFindFriend}
-                className='ml-2 h-6 w-6 text-black cursor-pointer hover:opacity-60 dark:text-white'
+                className='ml-2 h-6 w-6 cursor-pointer text-black hover:opacity-60 dark:text-white'
               />
               <LiaUserFriendsSolid
                 onClick={togglePopupAddMember}
-                className='ml-2 h-6 w-6 text-black cursor-pointer hover:opacity-60 dark:text-white'
+                className='ml-2 h-6 w-6 cursor-pointer text-black hover:opacity-60 dark:text-white'
               />
             </div>
           </div>
@@ -205,7 +202,9 @@ const Sidebar = ({ togglePopupViewProfile }) => {
       )}
       <EditAndSetting isVisible={isPopupVisible} onClose={togglePopup} />
       <PopUpFindFriends isVisible={isPopupVisibleFindFriends} onClose={togglePopupFindFriend} />
-      <PopUpAddMenber isVisible={isPopupVisibleAddMember} onClose={togglePopupAddMember} />
+      <Suspense>
+        <PopUpAddMenber isVisible={isPopupVisibleAddMember} onClose={togglePopupAddMember} />
+      </Suspense>
     </>
   )
 }

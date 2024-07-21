@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, memo, useCallback,  } from 'react'
+import React, { useRef, useState, useEffect, memo, useCallback } from 'react'
 import FeatureAI from '../FeatureAI/FeatureAI'
 import { useSelector, useDispatch } from 'react-redux'
 import { MdOutlineEmojiEmotions } from 'react-icons/md'
@@ -18,9 +18,13 @@ const DetailMessage = memo(function DetailMessage(props) {
   const [activeMessageEmoteID, setActiveMessageEmoteID] = useState(null)
   const [hoveredMessage, setHoveredMessage] = useState(null)
 
-
   const resultMessage = useSelector((state) => state.chat.listSearch)
   const messages = useSelector((state) => state.message.message)
+  const autoTranslate = useSelector((state) => state.user.conversation.autoTranslateList)
+  const ownerTranslate =
+    autoTranslate?.findIndex((e) => e == JSON.parse(getCookie('userLogin')).user._id) == -1
+      ? false
+      : true
   const dispatch = useDispatch()
 
   const buttonRef = useRef(null)
@@ -28,7 +32,7 @@ const DetailMessage = memo(function DetailMessage(props) {
   const optionRef = useRef(null)
 
   const session = Object.values(JSON.parse(getCookie('userLogin')))
-    const sessionId = Object.keys(session)?.map((key) => {
+  const sessionId = Object.keys(session)?.map((key) => {
     return session[key]._id
   })[2]
 
@@ -41,8 +45,8 @@ const DetailMessage = memo(function DetailMessage(props) {
   }, [])
 
   const handleMessageHover = useCallback((id_message) => {
-        setHoveredMessage(id_message)
-    }, [])
+    setHoveredMessage(id_message)
+  }, [])
 
   const handleEmoteClick = useCallback(
     (id_message) => {
@@ -76,17 +80,17 @@ const DetailMessage = memo(function DetailMessage(props) {
 
   const handleSpoiledClick = useCallback(
     (id_message) => {
-        const message = messages.find((msg) => msg.id_message === id_message)
-    if (message && !message.isSpoiled) {
-      dispatch(setMessageSpoiled({ id_message }))
-    }
-  },
+      const message = messages.find((msg) => msg.id_message === id_message)
+      if (message && !message.isSpoiled) {
+        dispatch(setMessageSpoiled({ id_message }))
+      }
+    },
     [dispatch, messages],
   )
 
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => {
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [handleClickOutside])
@@ -99,19 +103,18 @@ const DetailMessage = memo(function DetailMessage(props) {
     var index = props.idMessage
     if (!resultMessage || resultMessage.length === 0) return
     handleSearchMessage(index, props.isSearchMessage)
-  }, [props.isSearchMessage,messages, resultMessage, props.idMessage])
+  }, [props.isSearchMessage, messages, resultMessage, props.idMessage])
 
-  const handleSearchMessage = useCallback(
-    (indexMsg, isSearch) => {
+  const handleSearchMessage = useCallback((indexMsg, isSearch) => {
     const myElement = document.getElementById(`${indexMsg}`)
-    if(!myElement) return 
+    if (!myElement) return
 
-    if(!isSearch){
+    if (!isSearch) {
       myElement.classList.remove('text-purple-700', 'font-bold')
-    }else{
+    } else {
       messages.forEach((msg) => {
         const previousElement = document.getElementById(`${msg._id}`)
-        if(!previousElement) return
+        if (!previousElement) return
         if (previousElement.classList.contains('text-purple-700') && indexMsg !== msg._id) {
           previousElement.classList.remove('text-purple-700', 'font-bold')
         }
@@ -119,24 +122,19 @@ const DetailMessage = memo(function DetailMessage(props) {
     }
     myElement.classList.add('text-purple-700', 'font-bold')
     myElement.scrollIntoView()
-    
   })
-    
   return (
     <div
       id='messages'
-      className={`mx-2 flex flex-col-reverse ${messages.length >= 10 ? 'h-fit': 'h-full'}`}
-      
+      className={`mx-2 flex flex-col-reverse ${messages.length >= 10 ? 'h-fit' : 'h-full'}`}
     >
-
       {messages.map((item, index) =>
         // Nếu người gửi tin nhắn là user hiện tại thì hiển thị tin nhắn ở bên phải
-        item.messageType === 'notification' ?
-            <div key={index} className='flex justify-center text-gray-600 font-light italic'>
-                <RenderNotification item={item} />
-            </div>
-        :
-        item.sender && sessionId === item.sender._id ? (
+        item.messageType === 'notification' ? (
+          <div key={index} className='flex justify-center font-light italic text-gray-600'>
+            <RenderNotification item={item} />
+          </div>
+        ) : item.sender && sessionId === item.sender._id ? (
           <div
             key={index}
             className={`flex ${item.sender && sessionId === item.sender._id ? 'justify-end' : ''} ${item.status === 'recalled' ? 'pointer-events-none opacity-50' : ''}`}
@@ -147,9 +145,9 @@ const DetailMessage = memo(function DetailMessage(props) {
             <div
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
-                  ? 'opacity-100 text-cyan-900 dark:text-cyan-700'
+                  ? 'text-cyan-900 opacity-100 dark:text-cyan-700'
                   : hoveredMessage == item._id
-                    ? 'opacity-100 text-cyan-900 dark:text-cyan-700'
+                    ? 'text-cyan-900 opacity-100 dark:text-cyan-700'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
               ref={optionRef}
@@ -174,7 +172,7 @@ const DetailMessage = memo(function DetailMessage(props) {
                 }}
                 onClick={() => handleSpoiledClick(item._id)}
               >
-                                {item.replyMessage ? (
+                {item.replyMessage ? (
                   <RenderReplyMessage item={item} />
                 ) : (
                   <RenderMessage item={item} />
@@ -196,20 +194,19 @@ const DetailMessage = memo(function DetailMessage(props) {
 
               {/* Nút emoji */}
               <div
-                    className={`absolute text-cyan-900 bottom-px right-px p-0.5 transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110 hover:text-cyan-600 duration-300 dark:text-cyan-700 dark:hover:text-cyan-500 rounded-md${
-                      hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                    }`}
-                    ref={buttonRef}
-                    onClick={() => handleEmoteClick(item._id)}
-                  >
-                  {/* Hiển thị danh sách emoji đã react */}
-                  {item.emojiBy.length !== 0 ? (
-                    item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
-                  ) : (
-                    <MdOutlineEmojiEmotions size={14} />
-                  )}
+                className={`absolute bottom-px right-px p-0.5 text-cyan-900 transition delay-75 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:text-cyan-600 dark:text-cyan-700 dark:hover:text-cyan-500 rounded-md${
+                  hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                }`}
+                ref={buttonRef}
+                onClick={() => handleEmoteClick(item._id)}
+              >
+                {/* Hiển thị danh sách emoji đã react */}
+                {item.emojiBy.length !== 0 ? (
+                  item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
+                ) : (
+                  <MdOutlineEmojiEmotions size={14} />
+                )}
               </div>
-              
             </div>
           </div>
         ) : (
@@ -228,26 +225,26 @@ const DetailMessage = memo(function DetailMessage(props) {
                 id={item._id}
                 className='my-4 max-w-xs break-words rounded-lg bg-gray-300 p-2 text-black'
               >
-                                {item.replyMessage ? (
+                {item.replyMessage ? (
                   <RenderReplyMessage item={item} />
                 ) : (
-                  <RenderMessage item={item} />
+                  <RenderMessage item={item} autoTranslate={ownerTranslate} />
                 )}
               </div>
               {/* Nút emoji */}
               <div
-                  className={`absolute text-cyan-900 bottom-px right-px p-0.5 transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110 hover:text-cyan-600 duration-300 dark:text-cyan-700 dark:hover:text-cyan-500 rounded-md${
-                    hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                  }`}
-                  ref={buttonRef}
-                  onClick={() => handleEmoteClick(item._id)}
-                >
-                  {/* Hiển thị danh sách emoji đã react */}
-                  {item.emojiBy.length != 0 ? (
-                    item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
-                  ) : (
-                    <MdOutlineEmojiEmotions size={14} />
-                  )}
+                className={`absolute bottom-px right-px p-0.5 text-cyan-900 transition delay-75 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:text-cyan-600 dark:text-cyan-700 dark:hover:text-cyan-500 rounded-md${
+                  hoveredMessage === item._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                }`}
+                ref={buttonRef}
+                onClick={() => handleEmoteClick(item._id)}
+              >
+                {/* Hiển thị danh sách emoji đã react */}
+                {item.emojiBy.length != 0 ? (
+                  item.emojiBy.map((emote, index) => emote.emoji != null && emote.emoji)
+                ) : (
+                  <MdOutlineEmojiEmotions size={14} />
+                )}
               </div>
               {/* Component FeatureEmoji */}
               {isEmoteBtnClick && activeMessageEmoteID == item._id ? (
@@ -268,9 +265,9 @@ const DetailMessage = memo(function DetailMessage(props) {
             <div
               className={`${
                 isOptionSelected && activeMessageOptionID == item._id
-                  ? 'opacity-100 text-cyan-900 dark:text-cyan-700'
+                  ? 'text-cyan-900 opacity-100 dark:text-cyan-700'
                   : hoveredMessage == item._id
-                    ? 'opacity-100 text-cyan-900 dark:text-cyan-700'
+                    ? 'text-cyan-900 opacity-100 dark:text-cyan-700'
                     : 'opacity-0 group-hover:opacity-100'
               }`}
               ref={optionRef}
@@ -284,11 +281,10 @@ const DetailMessage = memo(function DetailMessage(props) {
               />
             </div>
           </div>
-        )
+        ),
       )}
     </div>
   )
 })
 
 export default DetailMessage
-
