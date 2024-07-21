@@ -148,7 +148,11 @@ const InfomationGroup = ({ conversation }) => {
       )}
       {/* Update group */}
       {isUpdateGroupVisible && (
-        <UpdateGroup isVisible={isUpdateGroupVisible} onClose={handleUpdateGroupClose} />
+        <UpdateGroup
+          isVisible={isUpdateGroupVisible}
+          onClose={handleUpdateGroupClose}
+          group={conversation}
+        />
       )}
     </div>
   )
