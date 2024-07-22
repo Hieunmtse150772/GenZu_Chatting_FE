@@ -19,6 +19,7 @@ import {
   setMessagesMore,
   updateMessage,
   setMessagesMoreBottom,
+  updateGroupChatInStoreMessageSlice,
 } from '@/redux/Slice/messageSlice'
 import {
   addMemberToGroup,
@@ -32,6 +33,7 @@ import {
   setNewLsFriends,
   updateGroupMembers,
   deleteMemberFromGroupInStore,
+  updateConversationGroupChat,
   deleteMemberInGroup,
   updateGroupChat,
   updateConversation,
@@ -109,7 +111,15 @@ function createSocketChannel(socket, idConversation) {
         // update group in redux here
         const conversationId = res.data?._id
         const updatedData = res.data
+        const updateConversation = {
+          avatar: res.data.avatar,
+          background: res.data.background,
+          chatName: res.data.chatName,
+          _id: res.data._id,
+          isGroupChat: res.data.isGroupChat,
+        }
         emit(updateGroupChatInStore({ conversationId, updatedData }))
+        emit(updateConversationGroupChat({ conversationId, updatedData: updateConversation }))
       }
     })
     socket.on('delete group', (res) => {

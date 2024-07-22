@@ -201,6 +201,25 @@ const messageSlice = createSlice({
         }),
       }
     },
+    updateGroupChatInStoreMessageSlice: (state, action) => {
+      const { conversationId, updatedData } = action.payload
+
+      // Sử dụng map để tạo một mảng mới với conversation được cập nhật
+      state.message = state.message.map((conversation) => {
+        if (conversation.conversation._id === conversationId) {
+          // Nếu tìm thấy conversation cần cập nhật, tạo một object mới với dữ liệu cập nhật
+          return {
+            ...conversation,
+            conversation: {
+              ...conversation.conversation,
+              ...updatedData,
+            },
+          }
+        }
+        // Nếu không phải conversation cần cập nhật, giữ nguyên
+        return conversation
+      })
+    },
     deleteConversation: (state, action) => {},
     setDeleteHistoryMessage: (state, action) => {
       return {
@@ -240,6 +259,7 @@ export const {
   setTranslationMessage,
   recallMessageSlice,
   deleteConversation,
+  updateGroupChatInStoreMessageSlice,
   setDeleteHistoryMessage,
   setDeleteMessageOneSite,
   updateMessage,

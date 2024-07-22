@@ -25,8 +25,9 @@ const InfomationGroup = ({ conversation }) => {
   const [isUpdateGroupVisible, setIsUpdateGroupVisible] = useState(false)
   const { idConversation } = useParams()
   const listGroupChats = useSelector((state) => state.user?.lsGroupChats)
-  const groupAdminId = listGroupChats.find((group) => group._id === idConversation).groupAdmin?._id
-  const totalMembers = listGroupChats.find((group) => group._id === idConversation).users
+  const groupAdminId =
+    listGroupChats.find((group) => group._id === idConversation)?.groupAdmin?._id || []
+  const totalMembers = listGroupChats.find((group) => group._id === idConversation).users || []
   const countMembers = listGroupChats.find((group) => group._id === idConversation).users.length
 
   const handleDeleteGroup = (idGroup) => {

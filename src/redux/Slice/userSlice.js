@@ -98,6 +98,16 @@ const userSlice = createSlice({
       )
       console.log(index)
     },
+    updateConversationGroupChat: (state, action) => {
+      const { conversationId, updatedData } = action.payload
+
+      if (state.conversation._id === conversationId) {
+        state.conversation = {
+          ...state.conversation,
+          ...updatedData,
+        }
+      }
+    },
     updateConversationByGroupId: (state, action) => {
       console.log(action.payload)
       const { groupId, updatedConversation } = action.payload
@@ -326,6 +336,7 @@ export const {
   deleteGroupById,
   setNewLsConversation,
   updateConversationByGroupId,
+  updateConversationGroupChat,
   handleChangeBackground,
   setChangeBackground,
   handleBlockUser,
