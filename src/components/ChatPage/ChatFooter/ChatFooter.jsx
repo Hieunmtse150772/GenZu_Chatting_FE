@@ -110,12 +110,10 @@ const ChatFooter = () => {
 
   // set lại user Id bị blocked từ conversation.blockedUsers cho lần render đầu tiên
   let idUserBlocked = idUserBlocked_2()
-  console.log('chat footer block user 1:', idUserBlocked)
 
-  idUserBlocked = idUserBlocked ? conversation.users?.find((item) => item._id === idUserBlocked) 
+  idUserBlocked = idUserBlocked && !conversation.isGroupChat ? conversation.users?.find((item) => item._id === idUserBlocked) 
                                 : conversation.blockedUsers?.find((item) => item === userId)
   
-  console.log('chat footer block user:', idUserBlocked)
   // Lấy tham số từ URL
   const param = useParams()
 
