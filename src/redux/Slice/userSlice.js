@@ -302,7 +302,7 @@ export const {
   loginSlice,
   logoutSlice,
   createGroupChat,
-updateGroupChat,
+  updateGroupChat,
   addMemberToGroup,
   addNewMemberToGroup,
   deleteMemberInGroup,

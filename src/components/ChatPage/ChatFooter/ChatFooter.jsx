@@ -96,6 +96,30 @@ const ChatFooter = () => {
   // const lstBlockUser = useSelector((state) => state.user.lstBlockUsers)
   const userId = JSON.parse(getCookie('userLogin')).user._id
   let idUserBlocked = useSelector((state) => state.user.userBlocked)
+  console.log('chat footer user block 0:', idUserBlocked)
+  const idUserBlocked_2 = () =>{ 
+    for(var item of conversation.blockedUsers){
+      for(var item_2 of conversation.users){
+        if(item === item_2._id){
+          return item
+        }
+      }
+  }}
+  // const idUserBlocked_2 = conversation.blockedUsers.map((item )=> {
+  //   conversation.users.map((item_2) => {
+  //     console.log('chat footer item:', item)
+  //     console.log('chat footer item_2:', item_2._id)
+
+  //     if(item === item_2._id){
+  //       return item
+  //     }
+  //   })
+  // })
+  // console.log('chat footer idUserBlocked_2:', idUserBlocked_2)
+  // set lại user Id bị blocked từ conversation.blockedUsers cho lần render đầu tiên
+  idUserBlocked = idUserBlocked == undefined ? idUserBlocked_2() : idUserBlocked
+  console.log('chat footer user block 1:', idUserBlocked)
+
   idUserBlocked = idUserBlocked ? conversation.users.find((item) => item._id === idUserBlocked) 
                                 : conversation.blockedUsers.find((item) => item === userId) 
   console.log('chat footer user block:', idUserBlocked)
