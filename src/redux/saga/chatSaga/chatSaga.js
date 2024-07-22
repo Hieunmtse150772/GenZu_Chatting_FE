@@ -103,6 +103,8 @@ function createSocketChannel(socket, idConversation) {
         const groupId = res.data._id
         const updatedConversation = res.data.users
         emit(updateConversationByGroupId({ groupId, updatedConversation }))
+      } else if (res.success && res.messageCode === 3002) {
+        // update group in redux here
       }
     })
     socket.on('delete group', (res) => {
@@ -235,7 +237,7 @@ function* fetchMessages(action) {
     })
     // Dispatch action để cập nhật state với danh sách tin nhắn.
     // console.log(response.Messages[0])
-    yield call(watchMessageSocket(response?.Messages[0]))
+    yield call(watchMessageSocket, response?.Messages[0])
     yield put(setMessage(response))
   } catch (error) {
     console.error('Lỗi khi lấy lsMessages:', error)
