@@ -93,23 +93,29 @@ const ChatFooter = () => {
   const answerSuggestionAI = useSelector((state) => state.message.answerAI)
   const conversation = useSelector((state) => state.user.conversation)
 
-  // const lstBlockUser = useSelector((state) => state.user.lstBlockUsers)
+  const lstBlockUser = useSelector((state) => state.user?.lstBlockUsers)
+  console.log('chat footer list block user:', lstBlockUser)
   const userId = JSON.parse(getCookie('userLogin')).user._id
-  let idUserBlocked = useSelector((state) => state.user.userBlocked)
-  console.log('chat footer user block 0:', idUserBlocked)
+  // let idUserBlocked = useSelector((state) => state.user.userBlocked)
+  // console.log('chat footer user block 0:', idUserBlocked)
   const idUserBlocked_2 = () =>{ 
-    for(var item of conversation.blockedUsers){
+    if(!lstBlockUser) return 
+    for(var item of lstBlockUser){
       for(var item_2 of conversation.users){
-        if(item === item_2._id){
-          return item
+        if(item._id === item_2._id){
+          return item._id
         }
       }
-  }}
+  }} 
+
   // set lại user Id bị blocked từ conversation.blockedUsers cho lần render đầu tiên
-  idUserBlocked = idUserBlocked == undefined ? idUserBlocked_2() : idUserBlocked
+  let idUserBlocked = idUserBlocked_2()
+  console.log('chat footer block user 1:', idUserBlocked)
 
   idUserBlocked = idUserBlocked ? conversation.users?.find((item) => item._id === idUserBlocked) 
                                 : conversation.blockedUsers?.find((item) => item === userId)
+  
+  console.log('chat footer block user:', idUserBlocked)
   // Lấy tham số từ URL
   const param = useParams()
 

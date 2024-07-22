@@ -10,6 +10,7 @@ const initialState = {
   editUser: false,
   idConversation: null,
   conversation: null,
+  userBlocked: null,
   toastMessage: '',
   friendRequestNotification: [],
 }
