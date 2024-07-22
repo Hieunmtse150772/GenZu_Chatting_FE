@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import userService from '@/services/userService'
 import { useParams } from 'react-router-dom'
 import { MdOutlineClose } from 'react-icons/md'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addNewMemberToGroup } from '@/redux/Slice/userSlice'
 
 const AddNewMember = ({ isVisible, onClose }) => {
@@ -13,38 +13,37 @@ const AddNewMember = ({ isVisible, onClose }) => {
   const dispatch = useDispatch()
   const { idConversation } = useParams()
   const popupRef = useRef()
+  const listFriends = useSelector((state) => state.user.lsFriends)
 
   useEffect(() => {
-    const fetchFriends = async () => {
+    const fetchFriends = () => {
       try {
-        const response = await userService.getAllFriends()
-        if (response && Array.isArray(response)) {
-          const friends = response
-            .map((item) => ({
-              friend: item?.info,
-              createdAt: item?.createdAt,
-              friendshipId: item?.friendShip,
-              groupConversation: item?.groupConversation,
-            }))
-            .filter((friend) => {
-              const isNotInGroup = !friend.groupConversation.some(
-                (gc) => gc?._id === idConversation,
-              )
-              return isNotInGroup
-            })
-
-          setFriends(friends)
-        } else {
-          console.error('Unexpected data format:', response)
+        if (!Array.isArray(listFriends)) {
+          console.error('Unexpected data format:', listFriends)
+          return
         }
+
+        const friendsNotInGroup = listFriends.reduce((acc, item) => {
+          const { info: friend, createdAt, friendShip: friendshipId, groupConversation } = item
+          const isNotInGroup = !groupConversation.some((gc) => gc?._id === idConversation)
+
+          if (isNotInGroup) {
+            acc.push({ friend, createdAt, friendshipId, groupConversation })
+          }
+
+          return acc
+        }, [])
+
+        setFriends(friendsNotInGroup)
       } catch (error) {
-        console.error('Failed to fetch friends:', error)
+        console.error('Failed to process friends:', error)
       } finally {
         setLoading(false)
       }
     }
+
     fetchFriends()
-  }, [idConversation])
+  }, [listFriends, idConversation])
 
   useEffect(() => {
     const handleClickOutside = (event) => {

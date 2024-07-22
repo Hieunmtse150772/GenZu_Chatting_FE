@@ -235,7 +235,7 @@ function* fetchMessages(action) {
     })
     // Dispatch action để cập nhật state với danh sách tin nhắn.
     // console.log(response.Messages[0])
-    yield call(watchMessageSocket(response.Messages[0]))
+    yield call(watchMessageSocket(response?.Messages[0]))
     yield put(setMessage(response))
   } catch (error) {
     console.error('Lỗi khi lấy lsMessages:', error)
