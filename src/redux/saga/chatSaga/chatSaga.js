@@ -140,7 +140,7 @@ function createSocketChannel(socket, idConversation) {
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
-      if (message.conversation?._id == idConversation) {
+            if (message.conversation?._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         console.log('hhhhhhhhhhhh')
         emit(setNewMessage(message))
@@ -449,8 +449,8 @@ function* setEmoji(action) {
 
 function* deleteHistoryMessage(action) {
   try {
-    const { data } = yield call(deleteConversation, action.payload._id)
-    yield put(setDeleteHistoryMessage(action.payload._id))
+    const { data } = yield call(deleteConversation, action.payload.idConversation)
+    yield put(setDeleteHistoryMessage(action.payload.idConversation))
   } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }
