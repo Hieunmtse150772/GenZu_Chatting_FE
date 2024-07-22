@@ -21,7 +21,7 @@ import { getUserBlocked, handleBlockUser } from '@/redux/Slice/userSlice'
   const userId = JSON.parse(getCookie('userLogin')).user._id
   const lstBlockUser = useSelector((state) => state.user.lstBlockUsers)
   console.log('user card list block user:', lstBlockUser)
-  const idUserBlocked = lstBlockUser.length != 0 ? lstBlockUser?.find((item) => item._id === user.id) 
+  const idUserBlocked = lstBlockUser?.length != 0 ? lstBlockUser?.find((item) => item._id === user.id) 
                                       : user.userBlocked?.find((item) => item === userId)
   console.log('user card user blocked', idUserBlocked)
   const handleBlockBtn = (event) => {
