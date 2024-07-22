@@ -24,6 +24,7 @@ export default function ChangeBackground({ onClose}){
     })
     const handleChange = (e) =>{
         if(!conversation) return
+        
         const background = color ? { url: color, backgroundType: 'color'} : { url: previewUrl, backgroundType: 'image',}
         const itemBackground = {
             

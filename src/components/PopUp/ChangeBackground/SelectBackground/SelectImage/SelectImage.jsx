@@ -1,31 +1,22 @@
 import { useEffect, useRef, useState } from "react"
+import { storage } from '@/utils/firebaseConfig'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 export default function SelectImage(props){
-
+    // const [image, setImage] = useState('');
     const imageRef = useRef(null)
     const handleRemove = () =>{
       imageRef.current.value = ''
     }
     const handleFileChange = async (event, type) => {
-        const file = event.target.files[0]
+       const image = event.target.files[0]
         // Nếu không có file được chọn, thoát khỏi hàm
-        if (!file) return
-    
-        // Kiểm tra kích thước file dựa trên loại file
-        if (file) {
-          switch (type) {
-            case 'image':
-              if (file.size > 3 * 1048576) {
-                // Nếu file ảnh quá lớn, hiển thị thông báo lỗi
-                alert('Hình ảnh quá lớn, vui lòng chọn ảnh khác')
-                return
-              }
-              props.handleCallBack({ url: URL.createObjectURL(file), type: type,  })
-              break
-            default:
-              break
-          }
-        }
+        if(!image) return
+        const storageRef = ref(storage, `image/${image.name}`)
+        await uploadBytes(storageRef, image)
+        const previewUrl = await getDownloadURL(storageRef)
+        console.log('select image image:', previewUrl)
+        props.handleCallBack({ url: previewUrl, type: type,  })
       }
       useEffect(()=>{
         handleRemove()
