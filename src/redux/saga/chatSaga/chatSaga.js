@@ -140,10 +140,6 @@ function createSocketChannel(socket, idConversation) {
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
-      console.log('co messsage moi ', message)
-      console.log('conversationId', message.conversation?._id)
-      console.log('conversationId 11111', idConversation)
-      console.log('condition', message.conversation?._id == idConversation)
       if (message.conversation?._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         console.log('hhhhhhhhhhhh')
@@ -151,8 +147,6 @@ function createSocketChannel(socket, idConversation) {
       }
       if (message?.data.conversation?._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
-        console.log('kkkkkkk')
-        console.log(message.data)
         emit(setNewMessage(message.data))
       }
     })

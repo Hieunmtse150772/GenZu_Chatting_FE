@@ -36,12 +36,7 @@ const RenderMessage = ({ item, autoTranslate }) => {
         </a>
       )
     case 'text':
-      return (
-        <p>
-          {console.log(autoTranslate)}
-          {item.message}
-        </p>
-      )
+      return <p>{item.message}</p>
     // case 'notification':
     //   if (item.message === '3001' || item.message === '3006') {
     //     if (item.affected_user_id && item.sender._id === userId && item.conversation.isGroupChat) {

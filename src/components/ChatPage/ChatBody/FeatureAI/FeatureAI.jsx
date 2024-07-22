@@ -62,10 +62,8 @@ const FeatureAI = memo(function FeatureAI(props) {
         message: answer,
         isAIClick: true,
       }
-      console.log('itemAnswer', itemAnswer)
       setTypeAnswered('success') // Cập nhật trạng thái trả lời là thành công
       setIsAnswerSuggClick(true) // Cập nhật state đã click của nút "Trả lời nhanh" thành true
-      console.log('isAnswerSuggClick1', isAnswerSuggClick) // In ra state isAnswerSuggClick
       dispatch(setAnswerSuggestion(itemAnswer)) // Gửi action Redux để hiển thị câu trả lời gợi ý
     } catch (error) {
       console.log(error)

@@ -98,22 +98,25 @@ const ChatFooter = () => {
   const userId = JSON.parse(getCookie('userLogin')).user._id
   // let idUserBlocked = useSelector((state) => state.user.userBlocked)
   // console.log('chat footer user block 0:', idUserBlocked)
-  const idUserBlocked_2 = () =>{ 
-    if(!lstBlockUser) return 
-    for(var item of lstBlockUser){
-      for(var item_2 of conversation.users){
-        if(item._id === item_2._id){
+  const idUserBlocked_2 = () => {
+    if (!lstBlockUser) return
+    for (var item of lstBlockUser) {
+      for (var item_2 of conversation.users) {
+        if (item._id === item_2._id) {
           return item._id
         }
       }
-  }} 
+    }
+  }
 
   // set lại user Id bị blocked từ conversation.blockedUsers cho lần render đầu tiên
   let idUserBlocked = idUserBlocked_2()
 
-  idUserBlocked = idUserBlocked && !conversation.isGroupChat ? conversation.users?.find((item) => item._id === idUserBlocked) 
-                                : conversation.blockedUsers?.find((item) => item === userId)
-  
+  idUserBlocked =
+    idUserBlocked && !conversation.isGroupChat
+      ? conversation.users?.find((item) => item._id === idUserBlocked)
+      : conversation.blockedUsers?.find((item) => item === userId)
+
   // Lấy tham số từ URL
   const param = useParams()
 
@@ -141,14 +144,12 @@ const ChatFooter = () => {
     answerSuggestionAI.map((answer, index) => {
       // Kiểm tra nếu có gợi ý trả lời
       if (answer.answerSuggestion) {
-        console.log(JSON.parse(answer.answerSuggestion))
         // parse chuỗi json sang array
         let checkMutiAnswer = JSON.parse(answer.answerSuggestion)
         // tách giá trị từ key general về list
         let answerText = checkMutiAnswer.map((item) => {
           return item.general
         })
-        console.log(answerText)
         // Cập nhật mảng câu trả lời
         setAnswerArray(answerText)
         // Hiển thị gợi ý nếu có câu trả lời
@@ -221,7 +222,6 @@ const ChatFooter = () => {
     // Nếu có file được chọn, tiến hành gửi file
     if (selectedFile?.file) {
       if (!isUploading) {
-        console.log('check')
         handleSendFile()
       }
       setIsUploading(true)
@@ -265,9 +265,6 @@ const ChatFooter = () => {
       }
     } else {
       if (inputStr != null && inputStr != undefined && inputStr != '') {
-        if (replyMessage) {
-          console.log('1', replyMessage)
-        }
         // Tạo object messageData chứa thông tin tin nhắn
         const messageData = {
           message: inputStr, // Nội dung tin nhắn
@@ -521,8 +518,7 @@ const ChatFooter = () => {
   return (
     <>
       {/* Hiển thị gợi ý trả lời từ AI */}
-      {
-      showAnswerSuggestion && isAiSuggestionClick ? (
+      {showAnswerSuggestion && isAiSuggestionClick ? (
         <div className='relative flex w-full select-none items-center justify-center space-x-2 font-mono'>
           <button
             className='absolute right-8 top-0 text-gray-500 hover:text-gray-700'
@@ -550,211 +546,214 @@ const ChatFooter = () => {
         <></>
       )}
       {/* Nếu user đã bị chặn */}
-      {idUserBlocked ? 
-        <div className='flex mb-4 w-full italic text-gray-500 select-none items-center justify-center space-x-2 font-mono'>
-            {idUserBlocked === userId ? <p> Bạn tạm thời không thể contact với người này</p> : <p> Bạn đã chặn người dùng này </p>}
-        </div>
-      :
-      // {/* Hiển thị xem trước file được chọn */}
-      <div>
-        {previewUrl && (
-          <Preview
-            previewUrl={previewUrl}
-            onDelete={handleDeletePreview}
-            isUploading={isUploading}
-          />
-        )}
-
-        {/* Input nhập liệu và các nút chức năng */}
-        <div className='relative flex items-center rounded-lg bg-mainBlue px-4 pb-4 pt-1 dark:bg-darkBlack'>
-          {replyMessage && (
-            <div className='absolute left-0 top-[-60px] w-full rounded-md bg-gray-100 p-2 shadow-md'>
-              <p className='text-sm text-gray-500'>Replying to: {replyMessage.message}</p>
-              <button
-                onClick={() => dispatch(clearReplyTo())}
-                className='text-xs text-red-500 underline'
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-          {/* Hiển thị input field hoặc trạng thái đang tải */}
-          {!isAiSuggestionClick ? (
-            <div className='loader-dots relative mt-2 h-5 w-10/12'>
-              <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
-              <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
-              <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
-              <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
-            </div>
+      {idUserBlocked ? (
+        <div className='mb-4 flex w-full select-none items-center justify-center space-x-2 font-mono italic text-gray-500'>
+          {idUserBlocked === userId ? (
+            <p> Bạn tạm thời không thể contact với người này</p>
           ) : (
-            <input
-              placeholder='Nhập tin nhắn...'
-              onChange={handleChangeInput}
-              onKeyDown={handleKeyPress}
-              onFocus={handleFocus}
-              ref={inputRef}
-              value={inputStr}
-              className={`mr-2 flex-1 rounded-full border bg-white px-4 py-2 outline-cyan-600 focus:outline dark:bg-black dark:text-white ${
-                isSpoiled ? 'show' : 'hide'
-              }`}
-              style={{
-                fontWeight: boldActive ? 'bold' : 'normal',
-                fontStyle: italicActive ? 'italic' : 'normal',
-                textDecoration: underlineActive ? 'underline' : 'none',
-              }}
-            />
+            <p> Bạn đã chặn người dùng này </p>
           )}
-
-          {/* Hiển thị menu định dạng văn bản */}
-          {isTextSelected && (
-            <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
-              <button
-                className={`tool-btn ${
-                  isSpoiled ? 'hover:bg-neutral-300' : 'bg-blue-500 text-white'
-                }`}
-                onClick={handleSpoiledClick}
-              >
-                <BiHide size={22} />
-              </button>
-              <div className='divider'></div>
-              <button onClick={() => toggleInlineStyle('bold')}>
-                <VscBold
-                  size={22}
-                  className={`tool-btn ${
-                    boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
-                  }`}
-                />
-              </button>
-              <button onClick={() => toggleInlineStyle('italic')}>
-                <GoItalic
-                  size={22}
-                  className={`tool-btn ${
-                    italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
-                  }`}
-                />
-              </button>
-              <button onClick={() => toggleInlineStyle('underline')}>
-                <BsTypeUnderline
-                  size={22}
-                  className={`tool-btn ${
-                    underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
-                  }`}
-                />
-              </button>
-            </div>
-          )}
-
-          {/* Hiển thị bảng chọn emoji */}
-          <div
-            className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
-            ref={emoteRef}
-          >
-            {isEmojiMsgClick && <EmojiMessage />}
-          </div>
-
-          {/* Các nút chức năng: đính kèm, emoji, gửi */}
-          <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
-            <div className='flex items-center justify-between'>
-              {/* Ghi âm giọng nói */}
-              <AudioRecorder
-                onRecordingComplete={addAudioElement}
-                record={isRecording}
-                title={'Ghi âm tin nhắn'}
-                onStop={(data) => onDataRecorded(data)}
-                audioURL={(audioBlob && URL.createObjectURL(audioBlob)) || ''}
-              />
-              <div
-                ref={audioContainerRef}
-                className={audioContainerRef === null ? 'hidden' : 'mx-1 flex items-center'}
-              ></div>
-              {/* Nút đính kèm file */}
-              <button
-                className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
-                onClick={toggleAttachments}
-              >
-                <MdAttachFile size={24} />
-              </button>
-              {/* Nút chọn emoji */}
-              <button
-                className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
-                ref={buttonRef}
-                onClick={handleEmojiMsgClick}
-              >
-                <MdInsertEmoticon size={24} />
-              </button>
-              {/* Nút gửi tin nhắn */}
-              <button
-                className='mx-auto rounded-full bg-blue-400 p-4 text-black hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'
-                onClick={handleSendMsg}
-              >
-                <LuSend size={18} />
-              </button>
-            </div>
-          </div>
-
-          {/* Menu đính kèm */}
-          <div
-            className={`absolute bottom-20 right-[6rem] flex flex-col space-y-2 transition-transform duration-300 ease-in-out md:right-[6rem] ${
-              showAttachments
-                ? 'translate-y-0 opacity-100'
-                : 'pointer-events-none translate-y-4 opacity-0'
-            }`}
-          >
-            <AttachmentButton
-              icon={FaFile}
-              color={'blue'}
-              onAttachBtnClick={() => handleFileButtonClick('file')}
-            />
-            <AttachmentButton
-              icon={FaImage}
-              color={'blue'}
-              onAttachBtnClick={() => handleFileButtonClick('image')}
-            />
-            <AttachmentButton
-              icon={FaVideo}
-              color={'red'}
-              onAttachBtnClick={() => handleFileButtonClick('video')}
-            />
-            {/* Nút ghi âm giọng nói */}
-            <button
-              className={`mx-auto rounded-full p-3 focus:outline-none dark:text-white ${
-                listening ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'
-              }`}
-              onMouseDown={startRecording}
-              onMouseUp={stopRecording}
-              onTouchStart={startRecording}
-              onTouchEnd={stopRecording}
-            >
-              <MdOutlineKeyboardVoice size={22} />
-            </button>
-          </div>
-
-          {/* Input file ẩn */}
-          <input
-            type='file'
-            accept='.zip,.rar,.7z,.tar,.pdf,.doc,.docx,.xls,.xlsx,.txt'
-            ref={fileInputRefs.file}
-            className='hidden'
-            onChange={(e) => handleFileChange(e, 'file')}
-          />
-          <input
-            type='file'
-            accept='image/*'
-            ref={fileInputRefs.image}
-            className='hidden'
-            onChange={(e) => handleFileChange(e, 'image')}
-          />
-          <input
-            type='file'
-            accept='video/*'
-            ref={fileInputRefs.video}
-            className='hidden'
-            onChange={(e) => handleFileChange(e, 'video')}
-          />
         </div>
-      </div>
-      }
-      
+      ) : (
+        // {/* Hiển thị xem trước file được chọn */}
+        <div>
+          {previewUrl && (
+            <Preview
+              previewUrl={previewUrl}
+              onDelete={handleDeletePreview}
+              isUploading={isUploading}
+            />
+          )}
+
+          {/* Input nhập liệu và các nút chức năng */}
+          <div className='relative flex items-center rounded-lg bg-mainBlue px-4 pb-4 pt-1 dark:bg-darkBlack'>
+            {replyMessage && (
+              <div className='absolute left-0 top-[-60px] w-full rounded-md bg-gray-100 p-2 shadow-md'>
+                <p className='text-sm text-gray-500'>Replying to: {replyMessage.message}</p>
+                <button
+                  onClick={() => dispatch(clearReplyTo())}
+                  className='text-xs text-red-500 underline'
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+            {/* Hiển thị input field hoặc trạng thái đang tải */}
+            {!isAiSuggestionClick ? (
+              <div className='loader-dots relative mt-2 h-5 w-10/12'>
+                <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+                <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+                <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+                <div className='absolute top-0 mt-1 h-3 w-3 rounded-full bg-[#93c5fd]'></div>
+              </div>
+            ) : (
+              <input
+                placeholder='Nhập tin nhắn...'
+                onChange={handleChangeInput}
+                onKeyDown={handleKeyPress}
+                onFocus={handleFocus}
+                ref={inputRef}
+                value={inputStr}
+                className={`mr-2 flex-1 rounded-full border bg-white px-4 py-2 outline-cyan-600 focus:outline dark:bg-black dark:text-white ${
+                  isSpoiled ? 'show' : 'hide'
+                }`}
+                style={{
+                  fontWeight: boldActive ? 'bold' : 'normal',
+                  fontStyle: italicActive ? 'italic' : 'normal',
+                  textDecoration: underlineActive ? 'underline' : 'none',
+                }}
+              />
+            )}
+
+            {/* Hiển thị menu định dạng văn bản */}
+            {isTextSelected && (
+              <div className='absolute -top-3 mx-auto flex cursor-pointer items-center justify-around rounded-lg bg-slate-200 p-2 shadow-lg'>
+                <button
+                  className={`tool-btn ${
+                    isSpoiled ? 'hover:bg-neutral-300' : 'bg-blue-500 text-white'
+                  }`}
+                  onClick={handleSpoiledClick}
+                >
+                  <BiHide size={22} />
+                </button>
+                <div className='divider'></div>
+                <button onClick={() => toggleInlineStyle('bold')}>
+                  <VscBold
+                    size={22}
+                    className={`tool-btn ${
+                      boldActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
+                    }`}
+                  />
+                </button>
+                <button onClick={() => toggleInlineStyle('italic')}>
+                  <GoItalic
+                    size={22}
+                    className={`tool-btn ${
+                      italicActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
+                    }`}
+                  />
+                </button>
+                <button onClick={() => toggleInlineStyle('underline')}>
+                  <BsTypeUnderline
+                    size={22}
+                    className={`tool-btn ${
+                      underlineActive ? 'bg-blue-500 text-white' : 'hover:bg-neutral-300'
+                    }`}
+                  />
+                </button>
+              </div>
+            )}
+
+            {/* Hiển thị bảng chọn emoji */}
+            <div
+              className='absolute bottom-12 right-12 mx-auto flex cursor-pointer items-center justify-between rounded-full p-2'
+              ref={emoteRef}
+            >
+              {isEmojiMsgClick && <EmojiMessage />}
+            </div>
+
+            {/* Các nút chức năng: đính kèm, emoji, gửi */}
+            <div className='mx-auto overflow-x-hidden font-semibold md:flex md:items-center'>
+              <div className='flex items-center justify-between'>
+                {/* Ghi âm giọng nói */}
+                <AudioRecorder
+                  onRecordingComplete={addAudioElement}
+                  record={isRecording}
+                  title={'Ghi âm tin nhắn'}
+                  onStop={(data) => onDataRecorded(data)}
+                  audioURL={(audioBlob && URL.createObjectURL(audioBlob)) || ''}
+                />
+                <div
+                  ref={audioContainerRef}
+                  className={audioContainerRef === null ? 'hidden' : 'mx-1 flex items-center'}
+                ></div>
+                {/* Nút đính kèm file */}
+                <button
+                  className='rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
+                  onClick={toggleAttachments}
+                >
+                  <MdAttachFile size={24} />
+                </button>
+                {/* Nút chọn emoji */}
+                <button
+                  className='mr-2 rounded-md p-1 hover:bg-blue-400 dark:text-white md:block'
+                  ref={buttonRef}
+                  onClick={handleEmojiMsgClick}
+                >
+                  <MdInsertEmoticon size={24} />
+                </button>
+                {/* Nút gửi tin nhắn */}
+                <button
+                  className='mx-auto rounded-full bg-blue-400 p-4 text-black hover:bg-blue-400 hover:text-white focus:outline-none dark:text-white'
+                  onClick={handleSendMsg}
+                >
+                  <LuSend size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Menu đính kèm */}
+            <div
+              className={`absolute bottom-20 right-[6rem] flex flex-col space-y-2 transition-transform duration-300 ease-in-out md:right-[6rem] ${
+                showAttachments
+                  ? 'translate-y-0 opacity-100'
+                  : 'pointer-events-none translate-y-4 opacity-0'
+              }`}
+            >
+              <AttachmentButton
+                icon={FaFile}
+                color={'blue'}
+                onAttachBtnClick={() => handleFileButtonClick('file')}
+              />
+              <AttachmentButton
+                icon={FaImage}
+                color={'blue'}
+                onAttachBtnClick={() => handleFileButtonClick('image')}
+              />
+              <AttachmentButton
+                icon={FaVideo}
+                color={'red'}
+                onAttachBtnClick={() => handleFileButtonClick('video')}
+              />
+              {/* Nút ghi âm giọng nói */}
+              <button
+                className={`mx-auto rounded-full p-3 focus:outline-none dark:text-white ${
+                  listening ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'
+                }`}
+                onMouseDown={startRecording}
+                onMouseUp={stopRecording}
+                onTouchStart={startRecording}
+                onTouchEnd={stopRecording}
+              >
+                <MdOutlineKeyboardVoice size={22} />
+              </button>
+            </div>
+
+            {/* Input file ẩn */}
+            <input
+              type='file'
+              accept='.zip,.rar,.7z,.tar,.pdf,.doc,.docx,.xls,.xlsx,.txt'
+              ref={fileInputRefs.file}
+              className='hidden'
+              onChange={(e) => handleFileChange(e, 'file')}
+            />
+            <input
+              type='file'
+              accept='image/*'
+              ref={fileInputRefs.image}
+              className='hidden'
+              onChange={(e) => handleFileChange(e, 'image')}
+            />
+            <input
+              type='file'
+              accept='video/*'
+              ref={fileInputRefs.video}
+              className='hidden'
+              onChange={(e) => handleFileChange(e, 'video')}
+            />
+          </div>
+        </div>
+      )}
     </>
   )
 }

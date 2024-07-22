@@ -28,7 +28,6 @@ const ChooseLanguage = ({ onBack }) => {
     try {
       // Gọi API để cập nhật ngôn ngữ
       const response = await generalService.changeLanguage(language)
-      console.log('Language updated successfully', response)
 
       i18n.changeLanguage(language)
       // Cập nhật cookie với ngôn ngữ mới
@@ -36,7 +35,6 @@ const ChooseLanguage = ({ onBack }) => {
         ...JSON.parse(getCookie('userLogin')),
         user: { ...JSON.parse(getCookie('userLogin')).user, language: language },
       }
-      console.log(newDb)
       setCookie('userLogin', JSON.stringify(newDb))
     } catch (error) {
       console.error('Failed to update language', error)
@@ -48,8 +46,6 @@ const ChooseLanguage = ({ onBack }) => {
 
   return (
     <div className='z-10 flex w-full translate-x-0 transform flex-col transition-transform'>
-      {console.log('userLogin', JSON.parse(getCookie('userLogin')))}
-      {console.log('lang in cookie', JSON.parse(getCookie('userLogin'))?.user?.language)}
       <div className='flex w-auto cursor-pointer items-center justify-start border-b-2 border-gray-200 bg-white p-2'>
         <button onClick={onBack} className='mr-4'>
           <IoMdArrowBack size={22} />

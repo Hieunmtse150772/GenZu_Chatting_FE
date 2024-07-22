@@ -42,12 +42,6 @@ const UpdateGroup = ({ isVisible, onClose, group }) => {
       url: background,
       backgroundType: backgroundType,
     }
-    console.log({
-      groupId: group._id,
-      chatName: groupName,
-      avatar: groupImage,
-      background: backgroundObject,
-    })
     dispatch(
       updateGroupChat({
         groupId: group._id,

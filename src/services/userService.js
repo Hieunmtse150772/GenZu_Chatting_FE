@@ -4,7 +4,6 @@ import { setCookie } from './Cookies'
 const signIn = async (email, password, rememberMe) => {
   try {
     const response = await axiosClient.post('/auth/sign-in', { email, password })
-    console.log(response)
     const { accessToken, refreshToken, user } = response.data.data
 
     const userData = {
@@ -12,7 +11,6 @@ const signIn = async (email, password, rememberMe) => {
       refreshToken,
       user,
     }
-    console.log(userData)
     if (!rememberMe) {
       sessionStorage.setItem('userLogin', JSON.stringify(userData))
     } else {
@@ -25,13 +23,11 @@ const signIn = async (email, password, rememberMe) => {
   }
 }
 const ChangePassword = async (oldPassword, newPassword) => {
-  console.log(oldPassword, newPassword)
   try {
     const response = await axiosClient.post('auth/change-password', {
       oldPassword: oldPassword,
       newPassword: newPassword,
     })
-    console.log(response)
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Change password not successfull')
   }
@@ -153,28 +149,28 @@ const deleteFriend = async (userID) => {
   }
 }
 
-const getUserBlocked = async () =>{
-  try{
+const getUserBlocked = async () => {
+  try {
     const response = await axiosClient.get(`/users/blockUsers`)
     return response.data
-  }catch(error){
+  } catch (error) {
     console.error('Lỗi lấy user block:', error)
   }
 }
 const blockUser = (userId) => {
-  try{
+  try {
     console.log('blockUser', userId)
     return axiosClient.patch(`/users/blockUsers?blockUserId=${userId}`)
-  }catch(error){
+  } catch (error) {
     console.error('Failed to block user', error)
   }
 }
 
 const unblockUser = async (userId) => {
-  try{
+  try {
     const response = await axiosClient.patch(`/users/unBlockUsers?blockUserId=${userId}`)
     return response.data
-  }catch(error){
+  } catch (error) {
     console.error('Failed to block user', error)
   }
 }

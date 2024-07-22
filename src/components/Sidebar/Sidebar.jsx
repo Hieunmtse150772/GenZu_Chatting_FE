@@ -95,7 +95,6 @@ const Sidebar = ({ togglePopupViewProfile }) => {
   return (
     <>
       {/* Hamburger menu */}
-      {console.log('sidebar ')}
       {!isOpen && (
         <div className='fixed top-6 z-50 h-screen md:hidden'>
           <button

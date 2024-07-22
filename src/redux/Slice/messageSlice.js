@@ -14,7 +14,6 @@ const messageSlice = createSlice({
   reducers: {
     sendMessage: (state, action) => {},
     setMessage: (state, action) => {
-      console.log(action.payload)
       return {
         ...state,
         totalPage: action.payload.totalPages,
@@ -83,7 +82,6 @@ const messageSlice = createSlice({
         isAnswerAI: answerSuggestion.isAIClick,
       }
 
-      console.log('state', state)
       return {
         ...state,
         answerAI: [newAIMessage],
@@ -104,7 +102,6 @@ const messageSlice = createSlice({
       return { ...state, selectedEmojis: [] }
     },
     handleEmojiOnMessage: (state, action) => {
-      console.log('emoji_payload:', action.payload)
       const { id_user, id_message, emoji } = action.payload
       action.payload.type = 'ADD'
 
@@ -117,8 +114,6 @@ const messageSlice = createSlice({
       }
     },
     setEmojiOnMessage: (state, action) => {
-      console.log('action:', action.payload)
-
       let message = state.message.find((msg) => msg._id === action.payload._id)
       // hanh dong update/delete emoji tren tin nhan
       // lay emoji
@@ -142,24 +137,19 @@ const messageSlice = createSlice({
     getMessagesById: (state, action) => {},
     getMessagesMore: (state, action) => {},
     setMessagesMore: (state, action) => {
-      console.log(action.payload.Messages)
       return {
         ...state,
         message: [...state.message, ...action.payload.Messages],
       }
     },
     setMessagesMoreBottom: (state, action) => {
-      console.log(action.payload.Messages)
       return {
         ...state,
         message: [...action.payload.Messages, ...state.message],
       }
     },
     setNewMessage: (state, action) => {
-      console.log('new mesg')
-
       const newMs = action.payload
-      console.log('new mesg', newMs)
       return {
         ...state,
         message: [
@@ -185,7 +175,6 @@ const messageSlice = createSlice({
     },
     translationMessage: (state, action) => {},
     setTranslationMessage: (state, action) => {
-      console.log(action.payload)
       return {
         ...state,
         message: state.message.map((message) => {
