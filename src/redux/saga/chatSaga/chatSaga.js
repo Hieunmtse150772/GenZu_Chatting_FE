@@ -35,6 +35,7 @@ import {
   deleteMemberInGroup,
   updateGroupChat,
   updateConversation,
+  updateGroupChatInStore,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -80,6 +81,7 @@ function createSocketChannel(socket, idConversation) {
       console.log('validation', data)
     })
     socket.on('notification', (data) => {
+      console.log('notifi', data)
       if (data.success && data.actionCode === 3006) {
         emit(setNewLsConversation(data.data))
       } else if (data.success && data.actionCode === 3004) {
@@ -105,6 +107,9 @@ function createSocketChannel(socket, idConversation) {
         emit(updateConversationByGroupId({ groupId, updatedConversation }))
       } else if (res.success && res.messageCode === 3002) {
         // update group in redux here
+        const conversationId = res.data?._id
+        const updatedData = res.data
+        emit(updateGroupChatInStore({ conversationId, updatedData }))
       }
     })
     socket.on('delete group', (res) => {
@@ -126,9 +131,19 @@ function createSocketChannel(socket, idConversation) {
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
       console.log('co messsage moi ', message)
+      console.log('conversationId', message.conversation?._id)
+      console.log('conversationId 11111', idConversation)
+      console.log('condition', message.conversation?._id == idConversation)
       if (message.conversation?._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
+        console.log('hhhhhhhhhhhh')
         emit(setNewMessage(message))
+      }
+      if (message?.data.conversation?._id == idConversation) {
+        // Dispatch action để cập nhật state với tin nhắn mới.
+        console.log('kkkkkkk')
+        console.log(message.data)
+        emit(setNewMessage(message.data))
       }
     })
     socket.on('response send message', (res) => {

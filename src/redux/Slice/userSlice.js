@@ -91,7 +91,7 @@ const userSlice = createSlice({
         }
       }
     },
-updateConversation: (state, action) => {
+    updateConversation: (state, action) => {
       console.log(action.payload)
       const index = state.lsConversation.findIndex(
         (item) => item._id == action.payload.conversation._id,
@@ -155,16 +155,16 @@ updateConversation: (state, action) => {
       // Tìm group tương ứng với idConversation
       const group = state.lsGroupChats.find((group) => group._id === groupId)
       // if (group) {
-        //   // Thêm idUser vào danh sách members của group nếu chưa có
-        //   if (!group.users.includes(users)) {
+      //   // Thêm idUser vào danh sách members của group nếu chưa có
+      //   if (!group.users.includes(users)) {
       //     group.users.push(users)
       //   }
       // } else {
       //   // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
-        //   console.error('Group not found')
+      //   console.error('Group not found')
       // }
     },
-updateGroupChat: (state, action) => {},
+    updateGroupChat: (state, action) => {},
     removeMemberFromGroup: (state, action) => {
       const { groupId, memberId } = action.payload
       console.log(groupId)
@@ -177,6 +177,18 @@ updateGroupChat: (state, action) => {},
       } else {
         // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
         console.error('Group not found')
+      }
+    },
+    updateGroupChatInStore: (state, action) => {
+      const { conversationId, updatedData } = action.payload
+
+      const updatedIndex = state.lsGroupChats.findIndex((chat) => chat._id === conversationId)
+
+      if (updatedIndex !== -1) {
+        state.lsGroupChats[updatedIndex] = {
+          ...state.lsGroupChats[updatedIndex],
+          ...updatedData,
+        }
       }
     },
     addMemberToGroup: (state, action) => {},
@@ -255,22 +267,21 @@ updateGroupChat: (state, action) => {},
       }
     },
     getFriendsAndConversation: () => {},
-    handleBlockUser: (state, action) =>{
-    },
-    getUserBlocked: (state, action) =>{},
-    setListBlockUsers: (state, action) =>{
+    handleBlockUser: (state, action) => {},
+    getUserBlocked: (state, action) => {},
+    setListBlockUsers: (state, action) => {
       return {
         ...state,
-        lstBlockUsers: action.payload
+        lstBlockUsers: action.payload,
       }
     },
-    setBlockUser: (state, action) =>{
+    setBlockUser: (state, action) => {
       return {
         ...state,
-        userBlocked: action.payload
+        userBlocked: action.payload,
       }
     },
-    },
+  },
 })
 
 export const {
@@ -288,6 +299,7 @@ export const {
   getLsConversation,
   setLsGroupChat,
   setLsPersonalChats,
+  updateGroupChatInStore,
   alertFriendRequest,
   sendReplyFriendRequest,
   setFriendRequestNotification,

@@ -73,7 +73,7 @@ const AddNewMember = ({ isVisible, onClose }) => {
 
   return (
     <>
-      <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+      <div className='fixed inset-0 z-50 flex h-screen items-center justify-center overflow-y-auto bg-black bg-opacity-50'>
         <div className='relative w-full max-w-lg rounded-lg bg-white p-6 shadow-lg' ref={popupRef}>
           <button
             className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
