@@ -153,6 +153,32 @@ const deleteFriend = async (userID) => {
   }
 }
 
+const getUserBlocked = async () =>{
+  try{
+    const response = await axiosClient.get(`/users/blockUsers`)
+    return response.data
+  }catch(error){
+    console.error('Lỗi lấy user block:', error)
+  }
+}
+const blockUser = (userId) => {
+  try{
+    console.log('blockUser', userId)
+    return axiosClient.patch(`/users/blockUsers?blockUserId=${userId}`)
+  }catch(error){
+    console.error('Failed to block user', error)
+  }
+}
+
+const unblockUser = async (userId) => {
+  try{
+    const response = await axiosClient.patch(`/users/unBlockUsers?blockUserId=${userId}`)
+    return response.data
+  }catch(error){
+    console.error('Failed to block user', error)
+  }
+}
+
 export default {
   signIn,
   updateUser,
@@ -168,4 +194,7 @@ export default {
   getAllFriends,
   deleteFriend,
   ChangePassword,
+  getUserBlocked,
+  blockUser,
+  unblockUser,
 }

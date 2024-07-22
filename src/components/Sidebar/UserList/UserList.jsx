@@ -79,8 +79,8 @@ const UserList = ({ togglePopupViewProfile }) => {
               lsChats.map((item) => {
                 let userInfo
                 if (item.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id) {
-                  console.log(item)
                   userInfo = {
+                    id: item.users[1]?._id,
                     name: item.users[1]?.fullName,
                     picture: item.users[1]?.picture,
                     is_online: item.users[1]?.is_online,
@@ -92,9 +92,11 @@ const UserList = ({ togglePopupViewProfile }) => {
                       ) >= 0
                         ? true
                         : false,
+                    userBlocked: item?.blockedUsers
                   }
                 } else {
                   userInfo = {
+                    id: item.users[0]?._id,
                     name: item.users[0]?.fullName,
                     picture: item.users[0]?.picture,
                     is_online: item.users[0]?.is_online,
@@ -106,6 +108,7 @@ const UserList = ({ togglePopupViewProfile }) => {
                       ) >= 0
                         ? true
                         : false,
+                    userBlocked: item?.blockedUsers
                   }
                 }
                 return (

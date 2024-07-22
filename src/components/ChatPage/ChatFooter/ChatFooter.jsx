@@ -25,6 +25,7 @@ import { storage } from '@/utils/firebaseConfig'
 import { useParams } from 'react-router-dom'
 import { TiDeleteOutline } from 'react-icons/ti'
 import Preview from './Preview/Preview'
+import { getCookie } from '@/services/Cookies'
 
 const ChatFooter = () => {
   // Trạng thái hiển thị menu đính kèm
@@ -91,6 +92,14 @@ const ChatFooter = () => {
   // Lấy gợi ý trả lời từ AI từ store Redux
   const answerSuggestionAI = useSelector((state) => state.message.answerAI)
   const conversation = useSelector((state) => state.user.conversation)
+
+  // const lstBlockUser = useSelector((state) => state.user.lstBlockUsers)
+  const userId = JSON.parse(getCookie('userLogin')).user._id
+  let idUserBlocked = useSelector((state) => state.user.userBlocked)
+  idUserBlocked = idUserBlocked ? conversation.users.find((item) => item._id === idUserBlocked) 
+                                : conversation.blockedUsers.find((item) => item === userId) 
+  console.log('chat footer user block:', idUserBlocked)
+  console.log('chat footer conversation:', conversation.blockedUsers)
   // Lấy tham số từ URL
   const param = useParams()
 
@@ -498,7 +507,8 @@ const ChatFooter = () => {
   return (
     <>
       {/* Hiển thị gợi ý trả lời từ AI */}
-      {showAnswerSuggestion && isAiSuggestionClick ? (
+      {
+      showAnswerSuggestion && isAiSuggestionClick ? (
         <div className='relative flex w-full select-none items-center justify-center space-x-2 font-mono'>
           <button
             className='absolute right-8 top-0 text-gray-500 hover:text-gray-700'
@@ -525,8 +535,13 @@ const ChatFooter = () => {
       ) : (
         <></>
       )}
-
-      {/* Hiển thị xem trước file được chọn */}
+      {/* Nếu user đã bị chặn */}
+      {idUserBlocked ? 
+        <div className='flex mb-4 w-full italic text-gray-500 select-none items-center justify-center space-x-2 font-mono'>
+            {idUserBlocked === userId ? <p> Bạn tạm thời không thể contact với người này</p> : <p> Bạn đã chặn người dùng này </p>}
+        </div>
+      :
+      // {/* Hiển thị xem trước file được chọn */}
       <div>
         {previewUrl && (
           <Preview
@@ -724,6 +739,8 @@ const ChatFooter = () => {
           />
         </div>
       </div>
+      }
+      
     </>
   )
 }

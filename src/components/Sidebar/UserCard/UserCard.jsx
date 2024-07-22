@@ -2,19 +2,36 @@ import { CgMoreO } from 'react-icons/cg'
 import userIcon from '../../../assets/user_icon.jpg'
 import { useRef, useState, useEffect, useLayoutEffect, memo } from 'react'
 import { MdPhone, MdVideocam, MdBlock, MdOutlineDelete } from 'react-icons/md'
+import { IoAlert } from "react-icons/io5";
 import { CgProfile } from 'react-icons/cg'
 import DropdownItem from '../DropdownItem/DropdownItem'
 import { getCookie } from '@/services/Cookies'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { deleteConversation } from '@/redux/Slice/messageSlice'
 import { TbPointFilled } from 'react-icons/tb'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
-const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) => {
+import { getUserBlocked, handleBlockUser } from '@/redux/Slice/userSlice'
+  const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) => {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
-
+  
   const dispatch = useDispatch()
+
+  const userId = JSON.parse(getCookie('userLogin')).user._id
+  const lstBlockUser = useSelector((state) => state.user.lstBlockUsers)
+  console.log('user card list block user:', lstBlockUser)
+  const idUserBlocked = lstBlockUser.length != 0 ? lstBlockUser?.find((item) => item._id === user.id) 
+                                      : user.userBlocked?.find((item) => item === userId)
+  console.log('user card user blocked', idUserBlocked)
+  const handleBlockBtn = (event) => {
+    const item = {
+      user,
+      type: idUserBlocked ? 'unBlock' : 'block',
+    }
+    dispatch(handleBlockUser(item))
+  }
+
   const handleDeleteBtn = () => {
     dispatch(deleteConversation(user))
   }
@@ -42,6 +59,9 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
     }
   }, [])
 
+  useLayoutEffect(() => {
+    dispatch(getUserBlocked())
+  }, [])
   return (
     <>
       <div
@@ -79,45 +99,57 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
             className='absolute right-0 top-0 z-10 mt-12 w-52 rounded-lg border bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
             ref={dropdownRef}
           >
-            <ul>
-              <DropdownItem
-                icon={CgProfile}
-                label={'Xem trang cá nhân'}
-                onClick={togglePopupViewProfile}
-                dropdownStyle={'mt-[7px] p-2'}
-                iconStyle={'h-9 w-9 p-2'}
-              />
-              <hr />
-              <DropdownItem
-                icon={MdPhone}
-                label={'Gọi thoại'}
-                dropdownStyle={'p-2'}
-                iconStyle={'h-9 w-9 p-2'}
-                onClick={() => {}}
-              />
-              <DropdownItem
-                icon={MdVideocam}
-                label={'Gọi video'}
-                dropdownStyle={'p-2'}
-                iconStyle={'h-9 w-9 p-2'}
-                onClick={() => {}}
-              />
-              <hr />
-              <DropdownItem
-                icon={MdBlock}
-                label={'Chặn'}
-                dropdownStyle={'p-2'}
-                iconStyle={'h-9 w-9 p-2'}
-                onClick={() => {}}
-              />
-              <DropdownItem
-                icon={MdOutlineDelete}
-                label={'Delete chat'}
-                dropdownStyle={'p-2'}
-                iconStyle={'h-9 w-9 p-2'}
-                onClick={handleDeleteBtn}
-              />
+            {idUserBlocked === userId ? 
+              <ul>
+                <DropdownItem
+                  icon={IoAlert}
+                  label={'Bạn tạm thời không thể liên lạc được với người này'}
+                  onClick={() =>{}}
+                  dropdownStyle={'mt-[7px] p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                />
+              </ul>
+              :
+              <ul>
+                <DropdownItem
+                  icon={CgProfile}
+                  label={'Xem trang cá nhân'}
+                  onClick={togglePopupViewProfile}
+                  dropdownStyle={'mt-[7px] p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                />
+                <hr />
+                <DropdownItem
+                  icon={MdPhone}
+                  label={'Gọi thoại'}
+                  dropdownStyle={'p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                  onClick={() => {}}
+                />
+                <DropdownItem
+                  icon={MdVideocam}
+                  label={'Gọi video'}
+                  dropdownStyle={'p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                  onClick={() => {}}
+                />
+                <hr />
+                <DropdownItem
+                  icon={MdBlock}
+                  label={idUserBlocked ? 'Bỏ Chặn' : 'Chặn'}
+                  dropdownStyle={'p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                  onClick={handleBlockBtn}
+                />
+                <DropdownItem
+                  icon={MdOutlineDelete}
+                  label={'Xóa đoạn hội thoại'}
+                  dropdownStyle={'p-2'}
+                  iconStyle={'h-9 w-9 p-2'}
+                  onClick={handleDeleteBtn}
+                />
             </ul>
+            }
           </div>
         )}
       </div>

@@ -1,8 +1,10 @@
 import {
+  setBlockUser,
   setConversation,
   setConversationFirst,
   setFriends,
   setIdConversation,
+  setListBlockUsers,
   setLsConversation,
   setLsGroupChat,
   setLsPersonalChats,
@@ -29,7 +31,7 @@ function* fetchIdConversation() {
   }
 }
 function* fetchConversation() {
-  console.log('check conver')
+console.log('check conver')
   try {
     const response = yield call(getConversations)
     yield put(setLsConversation(response.data))
@@ -41,7 +43,7 @@ function* fetchConversation() {
   }
 }
 function* fetchLsFriends() {
-  console.log('check fr')
+console.log('check fr')
   try {
     const response = yield call(userService.getAllFriends)
     console.log(response)
@@ -59,11 +61,54 @@ function* fetchConversationAndFriends() {
     console.error('Lỗi khi gọi fetchConversationAndFriends:', error.message)
   }
 }
+
+function* getUserBlocked (){
+  try{
+    const { data } = yield call(userService.getUserBlocked)
+    console.log('get user block:', data)
+    yield put(setListBlockUsers(data))
+
+  }catch(error){
+    console.error('Lỗi khi get user blocked!!!', error)
+    throw error
+  }
+}
+function* handleBlockUser(action){
+  try{
+    console.log('handleBlockUser:', action.payload)
+    // let response
+    switch(action.payload.type){
+      case 'block':
+        const response = yield call(userService.blockUser, action.payload.user.id)
+        console.log('response :', response.data.data)
+        yield put(setListBlockUsers(response.data.data.blockedUsers))
+        yield put(setBlockUser(action.payload.user.id))
+
+        break
+      case 'unBlock':
+        const {data} = yield call(userService.unblockUser, action.payload.user.id)
+        console.log('response :', data)
+
+        yield put(setListBlockUsers(data.blockedUsers))
+        yield put(setBlockUser(''))
+        break
+      default:
+        break
+    }
+    // const {data} = response
+    // console.log('data:', data)
+  }catch(error){
+    console.error('Lỗi khi chặn người dùng này!', error)
+    throw error
+  }
+}
 function* authSaga() {
   yield takeLatest('user/getIdConversation', fetchIdConversation)
   yield takeLatest('user/getLsConversation', fetchConversation)
   yield takeLatest('user/getFriends', fetchLsFriends)
   yield takeEvery('user/getFriendsAndConversation', fetchConversationAndFriends)
+  yield takeLatest('user/handleBlockUser', handleBlockUser)
+  yield takeLatest('user/getUserBlocked', getUserBlocked)
 }
 
 export default authSaga
