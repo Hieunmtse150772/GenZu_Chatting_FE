@@ -233,8 +233,9 @@ function* fetchMessages(action) {
     const response = yield call(() => {
       return getMessages(action.payload.idConversation)
     })
-
     // Dispatch action để cập nhật state với danh sách tin nhắn.
+    // console.log(response.Messages[0])
+    yield call(watchMessageSocket(response.Messages[0]))
     yield put(setMessage(response))
   } catch (error) {
     console.error('Lỗi khi lấy lsMessages:', error)
@@ -573,5 +574,5 @@ export default function* chatSaga() {
   yield takeLatest('chat/createNewConversation', createNewConversationSaga)
   yield takeLatest('user/handleChangeBackground', changeBgConversation)
   yield takeLatest('chat/searchMessageByKeyword', searchMessageByKeyword)
-  yield takeLatest('chat/watchMessageSlice', watchMessageSocket)
+  // yield takeLatest('chat/watchMessageSlice', watchMessageSocket)
 }
