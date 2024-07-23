@@ -95,6 +95,20 @@ const userSlice = createSlice({
       const index = state.lsConversation.findIndex(
         (item) => item._id == action.payload.conversation._id,
       )
+      state.lsConversation[index] = action.payload.conversation
+      if (!action.payload.conversation.isGroupChat) {
+        const indexLsChat = state.lsPersonalChats.findIndex(
+          (item) => item._id == action.payload.conversation._id,
+        )
+        console.log(indexLsChat)
+        state.lsPersonalChats[indexLsChat] = action.payload.conversation
+      } else {
+        const indexLsChat = state.lsGroupChats.findIndex(
+          (item) => item._id == action.payload.conversation._id,
+        )
+        console.log(indexLsChat)
+        state.lsGroupChats[indexLsChat] = action.payload.conversation
+      }
     },
     updateConversationGroupChat: (state, action) => {
       const { conversationId, updatedData } = action.payload
