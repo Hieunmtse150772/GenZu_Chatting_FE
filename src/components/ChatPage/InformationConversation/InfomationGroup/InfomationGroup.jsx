@@ -143,6 +143,9 @@ const InfomationGroup = ({ conversation }) => {
                       src={image.message}
                       className='h-full w-full object-cover'
                       alt='Image not Found '
+                      onError={(e) => {
+                        e.target.src = '/src/assets/Image_not_available.png'
+                      }}
                     />
                   </div>
                 ))}
@@ -177,6 +180,9 @@ const InfomationGroup = ({ conversation }) => {
                       className='h-full w-full object-cover'
                       controls
                       alt='Video not Found '
+                      onError={(e) => {
+                        e.target.src = '/src/assets/Image_not_available.png'
+                      }}
                     />
                   </div>
                 ))}
