@@ -33,7 +33,7 @@ const InfomationGroup = ({ conversation }) => {
   const [idConversationCurrent, setIdConversationCurrent] = useState(useParams())
   const listGroupChats = useSelector((state) => state.user?.lsGroupChats)
   const groupAdminId = listGroupChats.find((group) => group._id === idConversation)?.groupAdmin?._id
-  const totalMembers = listGroupChats.find((group) => group._id === idConversation)?.users
+  const totalMembers = listGroupChats.find((group) => group._id === idConversation)?.users || []
   const countMembers = listGroupChats.find((group) => group._id === idConversation)?.users.length
 
   const handleDeleteGroup = (idGroup) => {

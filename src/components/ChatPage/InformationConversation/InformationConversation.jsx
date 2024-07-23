@@ -115,7 +115,7 @@ function InformationConversation(props) {
   }, [idConversation])
   return (
     <>
-      <div className='dark:bg mx-auto h-screen max-w-2xl bg-mainBlue dark:bg-[#333333] dark:opacity-95 md:block md:translate-x-0'>
+      <div className='dark:bg mx-auto h-screen max-w-2xl bg-mainBlue dark:bg-[#333333] dark:opacity-95'>
         {personalChat?.isGroupChat ? (
           <InfomationGroup conversation={personalChat} />
         ) : (

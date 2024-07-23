@@ -187,10 +187,17 @@ const userSlice = createSlice({
     removeMemberFromGroup: (state, action) => {
       const { groupId, memberId } = action.payload
       // Tìm group tương ứng với idConversation
-      const group = state.lsGroupChats.find((group) => group._id === groupId)
-      if (group) {
+      const groupIndex = state.lsGroupChats.findIndex((group) => group._id === groupId)
+
+      if (groupIndex !== -1) {
+        const group = state.lsGroupChats[groupIndex]
         // Loại bỏ idUser khỏi danh sách members của group nếu có
-        group.users = group.users.filter((userId) => userId._id !== memberId)
+        group.users = group.users.filter((user) => user._id !== memberId)
+
+        // Kiểm tra nếu chỉ còn 1 thành viên thì xóa nhóm
+        if (group.users.length === 1) {
+          state.lsGroupChats.splice(groupIndex, 1)
+        }
       } else {
         // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
         console.error('Group not found')
