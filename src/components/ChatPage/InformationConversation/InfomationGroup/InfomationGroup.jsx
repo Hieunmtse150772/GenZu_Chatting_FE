@@ -105,15 +105,15 @@ const InfomationGroup = ({ conversation }) => {
           <DropdownItem
             icon={LiaUserFriendsSolid}
             label={`${countMembers} thành viên`}
-            dropdownStyle={'p-2'}
-            iconStyle={'h-9 w-9 p-2'}
+            dropdownStyle={'p-2 dark:text-white'}
+            iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={handleViewMemberClick}
           />
           <DropdownItem
             icon={MdOutlineAddLink}
             label={'Link tham gia nhóm'}
-            dropdownStyle={'p-2'}
-            iconStyle={'h-9 w-9 p-2'}
+            dropdownStyle={'p-2 dark:text-white'}
+            iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={() => {}}
           />
         </ul>
@@ -123,14 +123,14 @@ const InfomationGroup = ({ conversation }) => {
           <DropdownItem
             icon={IoIosSearch}
             label={'Search chat'}
-            dropdownStyle={'p-2'}
-            iconStyle={'h-9 w-9 p-2'}
+            dropdownStyle={'p-2 dark:text-white'}
+            iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={() => {}}
           />
           <DropdownItem
             icon={FaRegImage}
             label={'List of images'}
-            dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+            dropdownStyle={'p-2 text-black dark:text-white '}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={hanldeGetLsImage}
           />
@@ -166,7 +166,7 @@ const InfomationGroup = ({ conversation }) => {
           <DropdownItem
             icon={GoVideo}
             label={'List of Video'}
-            dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+            dropdownStyle={'p-2 text-black dark:text-white '}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={hanldeGetLsVideo}
           />
@@ -203,29 +203,29 @@ const InfomationGroup = ({ conversation }) => {
           <DropdownItem
             icon={FaRegEdit}
             label={'Update group'}
-            dropdownStyle={'p-2'}
-            iconStyle={'h-9 w-9 p-2'}
+            dropdownStyle={'p-2 dark:text-white'}
+            iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={handleOpenUpdateGroup}
           />
           <DropdownItem
             icon={IoIosAddCircleOutline}
             label={'Add new member'}
-            dropdownStyle={'p-2'}
-            iconStyle={'h-9 w-9 p-2'}
+            dropdownStyle={'p-2 dark:text-white'}
+            iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={handleAddNewMemberClick} // Show the AddNewMember popup
           />
           <DropdownItem
             icon={MdDeleteOutline}
             label={'Delete group'}
-            dropdownStyle={'p-2'}
-            iconStyle={'h-9 w-9 p-2'}
+            dropdownStyle={'p-2 dark:text-white'}
+            iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={() => handleDeleteGroup(conversation._id)}
           />
           <DropdownItem
             icon={IoLogInOutline}
             label={'Leave group'}
-            dropdownStyle={'p-2'}
-            iconStyle={'h-9 w-9 p-2'}
+            dropdownStyle={'p-2 dark:text-white'}
+            iconStyle={'h-9 w-9 p-2 dark:bg-slate-600 da'}
             onClick={() => {}}
           />
         </ul>

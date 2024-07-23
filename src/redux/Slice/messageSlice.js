@@ -169,6 +169,7 @@ const messageSlice = createSlice({
             emojiBy: newMs.emojiBy,
             status: newMs.status,
             replyMessage: newMs.replyMessage,
+            affected_user_id: newMs.affected_user_id,
           },
           ...state.message,
         ],
