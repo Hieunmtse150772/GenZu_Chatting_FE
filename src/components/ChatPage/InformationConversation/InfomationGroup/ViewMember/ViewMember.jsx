@@ -10,8 +10,6 @@ const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
   const popupRef = useRef()
   const dispatch = useDispatch()
   const currentUser = JSON.parse(getCookie('userLogin'))?.user
-  console.log(currentUser._id)
-  console.log(groupAdminId)
   const isCurrentUserAdmin = currentUser?._id === groupAdminId
 
   useEffect(() => {

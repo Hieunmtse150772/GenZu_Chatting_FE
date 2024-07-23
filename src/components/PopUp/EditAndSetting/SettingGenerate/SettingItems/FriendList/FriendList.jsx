@@ -1,42 +1,28 @@
 import { IoMdArrowBack } from 'react-icons/io'
 import FriendInfo from './FriendInfo/FriendInfo'
-import userService from '@/services/userService'
 import UserCardSkeleton from '@/components/Sidebar/UserCard/UserCardSkeleton/UserCardSkeleton'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector, useDispatch } from 'react-redux'
+import { removeFriend } from '@/redux/Slice/userSlice' // Assuming you have this action
 
 const FriendList = ({ onBack }) => {
-  const [friendLists, setFriendLists] = useState([])
   const [loading, setLoading] = useState(true)
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+
+  // Fetch friends from Redux store
+  const friendLists = useSelector((state) => state.user.lsFriend)
 
   useEffect(() => {
-    const fetchFriends = async () => {
-      try {
-        const response = await userService.getAllFriends()
-        if (response && Array.isArray(response)) {
-          const friends = response.map((item) => ({
-            friend: item?.info,
-            createdAt: item?.createdAt,
-            friendshipId: item?.friendShip,
-          }))
-          setFriendLists(friends)
-        } else {
-          console.error('Unexpected data format:', response)
-        }
-      } catch (error) {
-        console.error('Failed to fetch friends:', error)
-      } finally {
-        setLoading(false)
-      }
+    // Set loading to false once friends are loaded
+    if (friendLists.length > 0) {
+      setLoading(false)
     }
-    fetchFriends()
-  }, [])
+  }, [friendLists])
 
-  const handleUnfriend = (friendId) => {
-    setFriendLists((prevFriends) =>
-      prevFriends.filter((friend) => friend.friendshipId !== friendId),
-    )
+  const handleUnfriend = (friendshipId) => {
+    dispatch(removeFriend(friendshipId))
   }
 
   const formatDate = (isoString) => {
@@ -59,9 +45,9 @@ const FriendList = ({ onBack }) => {
         <div>
           {friendLists.map((item, index) => (
             <FriendInfo
-              friendInfo={item?.friend}
+              friendInfo={item?.info}
               createdAt={formatDate(item?.createdAt)}
-              friendShipId={item?.friendshipId}
+              friendShipId={item?.friendShip}
               key={index}
               onUnfriend={handleUnfriend}
             />
