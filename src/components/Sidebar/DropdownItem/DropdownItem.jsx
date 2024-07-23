@@ -7,7 +7,7 @@ const DropdownItem = ({ icon: Icon, label, onClick, dropdownStyle, iconStyle }) 
       onClick={onClick}
     >
       <Icon className={`-mr-1 rounded-full bg-slate-200 hover:bg-slate-300 ${iconStyle}`} />
-      <span className='ml-4 dark:text-white dark:hover:text-black'>{label}</span>
+      <span className='ml-4 dark:text-black'>{label}</span>
     </div>
   )
 }

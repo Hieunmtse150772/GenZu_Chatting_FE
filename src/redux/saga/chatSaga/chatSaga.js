@@ -146,12 +146,13 @@ function createSocketChannel(socket, idConversation) {
         message?.data?.conversation?._id == idConversation ||
         message?.conversation?._id === idConversation
       ) {
-        console.log(message)
+        console.log('333', message)
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message.data ? message.data : message))
       }
     })
     socket.on('response send message', (res) => {
+      console.log('response new msg', res)
       emit(setNewMessage(res.data))
     })
 
@@ -371,6 +372,7 @@ function* sendMessageGroupSaga(action) {
     messageType: action.payload.messageType ? action.payload.messageType : 'text',
     styles: action.payload.styles,
     emojiBy: action.payload.emojiBy,
+    replyMessage: action.payload.replyMessage || null,
   }
 
   try {

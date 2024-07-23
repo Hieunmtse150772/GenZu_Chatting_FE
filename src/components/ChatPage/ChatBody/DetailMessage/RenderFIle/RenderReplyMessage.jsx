@@ -1,12 +1,19 @@
 import React, { useCallback } from 'react'
 
 const RenderReplyMessage = ({ item }) => {
-  const renderReplyMessage = (replyMessage) => {
+  const renderReplyMessage = (replyMessage, info) => {
     if (!replyMessage) return null
 
     return (
       <div className='reply-message mb-2 border-l-4 border-gray-400 pl-2 text-gray-500'>
-        {/* <p className='text-sm text-gray-600'>Đang trả lời: {replyMessage.sender}</p> */}
+        <div className='flex items-center'>
+          <img
+            src={info?.picture}
+            alt={replyMessage.sender.fullName}
+            className='mr-2 h-6 w-6 rounded-full'
+          />
+          <p className='text-sm text-gray-600'>{info?.fullName}</p>
+        </div>
         {renderMessageContent(replyMessage)}
       </div>
     )
@@ -53,7 +60,7 @@ const RenderReplyMessage = ({ item }) => {
 
   return (
     <div className='message-item mb-4'>
-      {item.replyMessage && renderReplyMessage(item.replyMessage)}
+      {item.replyMessage && renderReplyMessage(item.replyMessage, item.sender)}
       <div className='original-message'>{renderMessageContent(item)}</div>
     </div>
   )
