@@ -34,7 +34,7 @@ const ForgotPassword = () => {
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>
         <div>
-          <img className='mx-auto h-12 w-auto' src='/your-logo.svg' alt='Workflow' />
+          <img className='mx-auto h-12 w-auto' src='/src/assets/logo.png' alt='Genzu Chat' />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
             Forgot Your Password?
           </h2>
@@ -104,6 +104,17 @@ const ForgotPassword = () => {
               </span>
               {loading ? 'Reset in...' : 'Send Password Reset Email'}
             </button>
+            <p className='mt-2 text-center text-sm text-gray-600'>
+              <a
+                onClick={() => {
+                  navigate('/login')
+                }}
+                href='#'
+                className='font-medium text-indigo-600 hover:text-indigo-500'
+              >
+                Sign in your account
+              </a>
+            </p>
           </div>
         </form>
       </div>

@@ -41,7 +41,7 @@ export default function ChangeForgotPassword() {
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>
         <div>
-          <img className='mx-auto h-12 w-auto' src='/your-logo.svg' alt='Workflow' />
+          <img className='mx-auto h-12 w-auto' src='/src/assets/logo.png' alt='Genzu Chat' />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
             Enter your new password
           </h2>
