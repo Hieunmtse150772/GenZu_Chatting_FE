@@ -72,7 +72,7 @@ const LoginForm = (props) => {
             Sign in to your account
           </h2>
           <p className='mt-2 text-center text-sm text-gray-600'>
-            Or
+            Or {` `}
             <a
               onClick={() => {
                 navigate('/login/signup')

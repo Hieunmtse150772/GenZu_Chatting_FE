@@ -196,6 +196,7 @@ const userSlice = createSlice({
         console.error('Group not found')
       }
     },
+    exchangeAdminGroup: (state, action) => {},
     updateGroupChatInStore: (state, action) => {
       const { conversationId, updatedData } = action.payload
 
@@ -334,6 +335,7 @@ export const {
   addNewMemberToGroup,
   deleteMemberInGroup,
   removeMemberFromGroup,
+  exchangeAdminGroup,
   deleteMemberFromGroupInStore,
   updateGroupMembers,
   deleteGroupChat,

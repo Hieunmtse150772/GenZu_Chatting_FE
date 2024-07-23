@@ -38,6 +38,7 @@ import {
   updateGroupChat,
   updateConversation,
   updateGroupChatInStore,
+  exchangeAdminGroup,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -93,7 +94,6 @@ function createSocketChannel(socket, idConversation) {
       } else if (data.success && data.actionCode === 2001) {
         emit(deleteGroupById(data.data))
       }
-      console.log('notification', data)
     })
     socket.on('response group', (res) => {
       console.log('response group', res)
@@ -140,19 +140,18 @@ function createSocketChannel(socket, idConversation) {
       console.log('update group', res)
       emit(updateGroupChat(res))
     })
+
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
       if (
         message?.data?.conversation?._id == idConversation ||
         message?.conversation?._id === idConversation
       ) {
-        console.log('333', message)
         // Dispatch action để cập nhật state với tin nhắn mới.
         emit(setNewMessage(message.data ? message.data : message))
       }
     })
     socket.on('response send message', (res) => {
-      console.log('response new msg', res)
       emit(setNewMessage(res.data))
     })
 
@@ -505,6 +504,15 @@ function* createGroupChatSaga(action) {
   }
 }
 
+function* exchangeAdminGroupSaga(action) {
+  try {
+    console.log(action)
+    yield call([socket, 'emit'], 'exchange admin group', action.payload)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 function* updateGroupChatSaga(action) {
   try {
     yield call([socket, 'emit'], 'update group', action.payload)
@@ -591,6 +599,7 @@ export default function* chatSaga() {
   yield takeLatest('chat/getMessageMoreBottom', fetchMessagesMoreBottom)
   yield takeLatest('user/createGroupChat', createGroupChatSaga)
   yield takeLatest('user/deleteGroupChat', deleteGroupChatSaga)
+  yield takeLatest('user/exchangeAdminGroup', exchangeAdminGroupSaga)
   yield takeLatest('user/addNewMemberToGroup', addNewMemberToGroupSaga)
   yield takeLatest('user/updateGroupChat', updateGroupChatSaga)
   yield takeLatest('user/removeMemberFromGroup', deleteMemberInGroupSaga)
