@@ -232,6 +232,7 @@ const ChatFooter = () => {
           idConversation: param,
           replyMessage: replyMessage ? replyMessage._id : null,
         }
+        console.log('msg data', messageData)
         // Dispatch action gửi tin nhắn
         dispatch(sendMessageGroup(messageData))
         // Xóa emoji đã chọn

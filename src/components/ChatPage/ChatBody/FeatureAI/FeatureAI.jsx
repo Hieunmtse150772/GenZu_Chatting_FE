@@ -135,6 +135,7 @@ const FeatureAI = memo(function FeatureAI(props) {
             id='setting'
             className='rounded-md p-1 hover:bg-blue-400'
             onClick={() => {
+              console.log(props.message)
               handleClickAnswer()
               handleAnswerQuestion(props.message)
             }}

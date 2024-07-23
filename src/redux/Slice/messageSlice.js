@@ -151,7 +151,7 @@ const messageSlice = createSlice({
     },
     setNewMessage: (state, action) => {
       const newMs = action.payload
-      console.log('new', newMs)
+      console.log('newMss', newMs)
       return {
         ...state,
         message: [
