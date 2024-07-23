@@ -50,7 +50,7 @@ export default function SearchFriends({ user }) {
   useEffect(() => {
     if (isCreateConversationSucces != null) {
       navigate(`/chat/${isCreateConversationSucces}`)
-      dispatch(setIsCreateNewConversation(null))
+      dispatch(setIsCreateNewConversation(false))
     }
   }, [isCreateConversationSucces])
 

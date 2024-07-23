@@ -189,7 +189,7 @@ function createSocketChannel(socket, idConversation) {
       emit(updateConversation(message))
       console.log(message)
     })
-
+    
     socket.on('changed background', (background) => {
       console.log('background', background)
       emit(setChangeBackground(background))

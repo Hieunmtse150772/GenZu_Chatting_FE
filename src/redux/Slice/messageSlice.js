@@ -7,6 +7,7 @@ const initialState = {
   answerAI: [],
   testMessage: '',
   totalPage: 1,
+  isDeleteConversation: false,
 }
 const messageSlice = createSlice({
   name: 'message',
@@ -214,6 +215,13 @@ const messageSlice = createSlice({
       return {
         ...state,
         message: [],
+        isDeleteConversation: true,
+      }
+    },
+    setFalseIsDeleteMessage: (state, action) => {
+      return {
+        ...state,
+        isDeleteConversation: false,
       }
     },
     updateStateSearch: (state, action) => {
