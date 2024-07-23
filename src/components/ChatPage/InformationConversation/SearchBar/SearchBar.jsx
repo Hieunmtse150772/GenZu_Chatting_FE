@@ -62,11 +62,13 @@ export default function SearchBar(props) {
             <div className='mx-2 mt-6 flex flex-col bg-mainBlue dark:bg-transparent'>
               <div className='flex justify-center'>
                 <img
-                  className='w-40'
+                  className='w-24'
                   src='https://www.okcretesolutions.com/wp-content/uploads/search-icon.png'
                 />
               </div>
-              <h3 className='ml-2 mt-6 font-medium italic'>Không tìm thấy kết quả</h3>
+              <h3 className='mt-6 text-center font-medium italic dark:text-white'>
+                Không tìm thấy kết quả
+              </h3>
             </div>
           )}
         </div>

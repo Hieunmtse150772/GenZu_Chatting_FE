@@ -77,11 +77,11 @@ function ChatHeader({ toggleInfo }) {
               </span>
               {customer?.is_online ? (
                 <span className='font-semibold text-green-500 dark:text-green-400'>
-                  Is Online Now
+                  {!personalChat.isGroupChat ? 'Is Online Now' : ''}
                 </span>
               ) : (
                 <span className='font-semibold text-gray-500 dark:text-slate-500'>
-                  Active {timeOffline} ago
+                  {!personalChat.isGroupChat ? `Active ${timeOffline} ago` : ''}
                 </span>
               )}
             </div>
