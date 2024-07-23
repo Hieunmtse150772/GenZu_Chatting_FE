@@ -12,6 +12,7 @@ import { updateStateSearch } from '@/redux/Slice/messageSlice'
 import ChangeBackground from '@/components/PopUp/ChangeBackground/ChangeBackground'
 import { fetchLsImage, fetchLsVideo } from '@/services/messageService'
 import { useParams } from 'react-router-dom'
+import { GoVideo } from 'react-icons/go'
 
 function InformationConversation(props) {
   const personalChat = useSelector((state) => state.user.conversation)
@@ -156,23 +157,33 @@ function InformationConversation(props) {
                   onClick={hanldeGetLsImage}
                 />
                 {showImage ? (
-                  <div className='flex max-h-[calc(3*100px)] flex-wrap gap-[3%] overflow-y-auto'>
-                    {lsImage?.map((image, index) => (
-                      <div key={index} className='my-2 h-[5.5rem] w-[5.5rem]'>
-                        <img
-                          src={image.message}
-                          className='h-full w-full object-cover'
-                          alt='Image not Found '
-                        />
-                      </div>
-                    ))}
-                  </div>
+                  lsImage ? (
+                    <div className='flex max-h-[calc(3*100px)] flex-wrap gap-[3%] overflow-y-auto'>
+                      {lsImage?.map((image, index) => (
+                        <div key={index} className='my-2 h-[5.5rem] w-[5.5rem]'>
+                          <img
+                            src={image.message}
+                            className='h-full w-full object-cover'
+                            alt='Image not Found '
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ) : lsImage?.length == 0 ? (
+                    <></>
+                  ) : (
+                    <div className='flex'>
+                      <span className='loading loading-ring loading-xs'></span>
+                      <span className='loading loading-ring loading-sm'></span>
+                      <span className='loading loading-ring loading-md'></span>
+                    </div>
+                  )
                 ) : (
                   <></>
                 )}
                 <hr />
                 <DropdownItem
-                  icon={FaRegImage}
+                  icon={GoVideo}
                   label={'List of Video'}
                   dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
@@ -195,7 +206,11 @@ function InformationConversation(props) {
                   ) : lsVideo?.length == 0 ? (
                     <></>
                   ) : (
-                    <h1>Is loading</h1>
+                    <div className='flex'>
+                      <span className='loading loading-ring loading-xs'></span>
+                      <span className='loading loading-ring loading-sm'></span>
+                      <span className='loading loading-ring loading-md'></span>
+                    </div>
                   )
                 ) : (
                   <></>
