@@ -39,6 +39,7 @@ import {
   updateConversation,
   updateGroupChatInStore,
   exchangeAdminGroup,
+  setDeleteGroupMember,
 } from '../../Slice/userSlice'
 
 // Import các hàm tiện ích và service để xử lý cookie, dịch thuật, và tương tác với API.
@@ -91,6 +92,7 @@ function createSocketChannel(socket, idConversation) {
         emit(setNewLsConversation(data.data))
       } else if (data.success && data.actionCode === 3004) {
         emit(deleteGroupById(data.data))
+        emit(setDeleteGroupMember())
       } else if (data.success && data.actionCode === 2001) {
         emit(deleteGroupById(data.data))
       }

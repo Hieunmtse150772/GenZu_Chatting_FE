@@ -10,7 +10,7 @@ import { FaRegEdit, FaRegImage } from 'react-icons/fa'
 import { MdOutlineAddLink } from 'react-icons/md'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 import DropdownItem from '@/components/Sidebar/DropdownItem/DropdownItem'
-import { deleteGroupChat } from '@/redux/Slice/userSlice'
+import { deleteGroupChat, setIsDeleteGroupChat } from '@/redux/Slice/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AddNewMember from './AddNewMember/AddNewMember'
@@ -37,6 +37,7 @@ const InfomationGroup = ({ conversation }) => {
   const countMembers = listGroupChats.find((group) => group._id === idConversation)?.users.length
 
   const handleDeleteGroup = (idGroup) => {
+    dispatch(setIsDeleteGroupChat())
     dispatch(deleteGroupChat({ id: idGroup }))
   }
 
