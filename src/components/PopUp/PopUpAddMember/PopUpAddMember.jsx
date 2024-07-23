@@ -135,6 +135,7 @@ export default function PopUpAddMember({ isVisible, onClose }) {
     setInputChatName('')
     setAvatar(null)
     setPreviewImage('')
+    setAddedFriends([])
     setIsLoading(false)
     onClose()
   }
