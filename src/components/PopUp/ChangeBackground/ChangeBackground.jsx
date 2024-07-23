@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 import ExampleBackground from "./ExampleBackground/ExampleBackground";
 import SelectBackground from "./SelectBackground/SelectBackground";
 import './ChangeBackground.scss'
@@ -65,12 +65,21 @@ export default function ChangeBackground({ onClose}){
                                     onClick={onClose}>
                                     <p> Hủy </p>
                             </button>
+
+                            { !previewUrl ? <button disabled className="inline-flex items-center gap-x-2 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold
+                                            text-black dark:text-white shadow-sm cursor-not-allowed"
+                                    onClick={() =>{}}>
+                                    <p> Xác nhận </p>
+                            </button> 
+                            :
                             <button className="inline-flex items-center gap-x-2 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold
                                             text-black dark:text-white shadow-sm hover:text-blue-500 dark:hover:text-neutral-300 focus-visible:outline 
                                             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
                                     onClick={handleChange}>
                                     <p> Xác nhận </p>
                             </button>
+                            }
+                            
                         </div>
                     </div>
 
