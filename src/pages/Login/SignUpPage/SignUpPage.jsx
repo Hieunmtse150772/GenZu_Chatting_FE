@@ -11,7 +11,8 @@ const SignUpComponent = () => {
   const [gender, setGender] = useState('male')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [picture, setPicture] = useState('')
+  const [imageFile, setImageFile] = useState()
+  const [imageUrl, setImageUrl] = useState('')
   const [error, setError] = useState('')
   const [isSuccess, setIsSuccess] = useState('')
   const [loading, setLoading] = useState(false)
@@ -22,14 +23,12 @@ const SignUpComponent = () => {
     setError('')
 
     try {
-      if (picture instanceof File) {
+      if (imageFile) {
         console.log('Input là một file')
         await uploadAndSignUp()
-      } else if (typeof picture === 'string') {
+      } else if (imageUrl) {
         console.log('Input là một string')
         await signUpWithExistingPicture()
-      } else {
-        console.log('Input không phải file hoặc string')
       }
     } catch (err) {
       console.error('Sign up failed:', err)
@@ -38,42 +37,54 @@ const SignUpComponent = () => {
       setLoading(false)
     }
   }
-  const signUpWithExistingPicture = async () => {
-    const response = await axios.post(
-      'https://genzu-chatting-be.onrender.com/auth/sign-up',
-      {
-        fullName,
-        address,
-        gender,
-        email,
-        password,
-        picture,
-      },
-      {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+  const signUpWithExistingPicture = async (imgUrl = imageUrl) => {
+    try {
+      const response = await axios.post(
+        'https://genzu-chatting-be.onrender.com/auth/sign-up',
+        {
+          fullName,
+          address,
+          gender,
+          email,
+          password,
+          picture: imgUrl,
         },
-      },
-    )
-    setIsSuccess('Sign Up successfull, please confirm in your email')
+        {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+
+      setIsSuccess('Sign Up successful, please confirm in your email')
+    } catch (error) {
+      // Xử lý lỗi ở đây, ví dụ:
+      // console.error('Sign up failed:', error.response.data.message)
+      // Hiển thị thông báo lỗi cho người dùng
+      setError(error.response.data.message)
+
+      // return error;
+    }
   }
   const uploadAndSignUp = async () => {
-    const storageRef = ref(storage, `$image/${picture.file.name}`)
-    uploadBytes(storageRef, picture)
+    console.log(imageFile)
+    const storageRef = ref(storage, `$image/${imageFile.name}`)
+    uploadBytes(storageRef, imageFile)
       .then((snapshot) => {
         return getDownloadURL(snapshot.ref)
       })
       .then((downloadURL) => {
-        setPicture(downloadURL)
+        setImageUrl(downloadURL)
         signUpWithExistingPicture()
       })
   }
   const handlePictureChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setPicture(URL.createObjectURL(e.target.files[0]))
+      setImageFile(e.target.files[0])
+      setImageUrl(URL.createObjectURL(e.target.files[0])) // Hiển thị preview
     } else if (e.target.value) {
-      setPicture(e.target.value)
+      setImageUrl(e.target.value)
     }
   }
   const handleSelectFile = () => {
@@ -180,7 +191,7 @@ const SignUpComponent = () => {
                 name='picture'
                 type='text'
                 autoComplete='url'
-                value={picture}
+                value={imageFile ? imageFile?.name : ''}
                 onChange={handlePictureChange}
                 className='relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
                 placeholder='Profile Picture URL'
