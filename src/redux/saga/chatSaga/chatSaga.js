@@ -109,6 +109,10 @@ function createSocketChannel(socket, idConversation) {
         const groupId = res.data._id
         const updatedConversation = res.data.users
         emit(updateConversationByGroupId({ groupId, updatedConversation }))
+      } else if (res.success && res.messageCode === 3023) {
+        const conversationId = res.data._id
+        const updatedData = res.data
+        emit(updateGroupChatInStore({ conversationId, updatedData }))
       } else if (res.success && res.messageCode === 3002) {
         // update group in redux here
         const conversationId = res.data?._id
@@ -327,7 +331,6 @@ function* replyAddFriendRequest(action) {
  * Saga để handle cac action chat
  */
 function* typingSaga(action) {
-  console.log(action.payload)
   yield call([socket, 'emit'], 'typing', action.payload)
 }
 /**
@@ -506,7 +509,6 @@ function* createGroupChatSaga(action) {
 
 function* exchangeAdminGroupSaga(action) {
   try {
-    console.log(action)
     yield call([socket, 'emit'], 'exchange admin group', action.payload)
   } catch (error) {
     console.log(error)

@@ -1,13 +1,18 @@
 import { useRef, useState, useEffect } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
 import { removeMemberFromGroup, exchangeAdminGroup } from '@/redux/Slice/userSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { getCookie } from '@/services/Cookies'
 import { useParams } from 'react-router-dom'
 
 const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
   const { idConversation } = useParams()
   const popupRef = useRef()
   const dispatch = useDispatch()
+  const currentUser = JSON.parse(getCookie('userLogin'))?.user
+  console.log(currentUser._id)
+  console.log(groupAdminId)
+  const isCurrentUserAdmin = currentUser?._id === groupAdminId
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -36,9 +41,6 @@ const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
   const exchangeAdmin = (idConversation, exchangeAdminId) => {
     const groupId = idConversation
     const exchangeAdmin = exchangeAdminId
-    console.log(groupId)
-    console.log(exchangeAdmin)
-    // Implement the exchange admin logic here
     dispatch(exchangeAdminGroup({ groupId, exchangeAdmin }))
   }
 
@@ -74,7 +76,9 @@ const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
                   </div>
                 </div>
 
-                {member._id !== groupAdminId ? (
+                {member._id === groupAdminId ? (
+                  <p className='text-sm font-medium text-green-600'>Group Admin</p>
+                ) : isCurrentUserAdmin ? (
                   <div className='flex space-x-2'>
                     <button
                       className='rounded-lg bg-yellow-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-yellow-400'
@@ -89,9 +93,7 @@ const ViewMember = ({ members, onClose, isVisible, groupAdminId }) => {
                       Remove
                     </button>
                   </div>
-                ) : (
-                  <p className='text-sm font-medium text-green-600'>Group Admin</p>
-                )}
+                ) : null}
               </li>
             ))}
           </ul>
