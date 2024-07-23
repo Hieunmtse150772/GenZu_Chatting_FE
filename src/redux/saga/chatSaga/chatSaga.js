@@ -142,8 +142,6 @@ function createSocketChannel(socket, idConversation) {
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
-      console.log('message', message)
-
       if (
         message?.data?.conversation?._id == idConversation ||
         message?.conversation?._id === idConversation

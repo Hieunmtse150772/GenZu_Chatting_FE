@@ -89,7 +89,7 @@ const InfomationGroup = ({ conversation }) => {
     idConversation != idConversationCurrent.idConversation && (setLsImage(null), setLsVideo(null))
   }, [idConversation])
   return (
-    <div className='flex h-screen flex-col items-center overflow-y-auto pb-10'>
+    <div className='flex h-screen flex-col items-center pb-10'>
       <h3 className='my-2 text-xl font-medium text-gray-900 dark:text-white'>Thông tin nhóm</h3>
       <img
         className='mb-3 h-24 w-24 rounded-full shadow-lg'
@@ -118,8 +118,8 @@ const InfomationGroup = ({ conversation }) => {
           />
         </ul>
       </div>
-      <div>
-        <ul className='mx-2 h-screen flex-col overflow-y-auto overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold shadow-lg dark:bg-[#1E1E1E] md:flex'>
+      <div className='overflow-y-auto'>
+        <ul className='mx-2 flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold shadow-lg dark:bg-[#1E1E1E] md:flex'>
           <DropdownItem
             icon={IoIosSearch}
             label={'Search chat'}

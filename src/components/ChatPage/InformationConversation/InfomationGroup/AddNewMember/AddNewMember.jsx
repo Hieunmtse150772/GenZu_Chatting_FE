@@ -64,9 +64,9 @@ const AddNewMember = ({ isVisible, onClose }) => {
   }, [isVisible, onClose])
 
   const handleAddToGroup = (friend, idUser, idConversation) => {
-    setGroupMembers([...groupMembers, friend])
-    setAddedMembers(new Set(addedMembers).add(idUser)) // Update added members state
     dispatch(addNewMemberToGroup({ groupId: idConversation, users: [idUser] }))
+    // Remove the added friend from the list
+    setFriends((prevFriends) => prevFriends.filter((f) => f.friend?._id !== idUser))
   }
 
   if (!isVisible) return null
