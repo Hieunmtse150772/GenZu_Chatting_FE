@@ -37,5 +37,12 @@
   "list_image": "Danh sách hình ảnh",
   "list_video": "Danh sách video",
   "change_background": "Đổi hình nền",
-  "find_friends": "Tìm bạn bè"
+  "find_friends": "Tìm bạn bè",
+  "fullName": "Họ và tên",
+  "address": "Địa chỉ",
+  "gender": "Giới tính",
+  "email": "Địa chỉ Email",
+  "phoneNumber": "Số điện thoại",
+  "picture": "Ảnh",
+  "change_success": "Thay đổi thông tin user thành công"
 }

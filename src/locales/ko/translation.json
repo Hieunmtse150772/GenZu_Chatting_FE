@@ -37,5 +37,12 @@
   "list_image": "이미지 목록",
   "list_video": "동영상 목록",
   "change_background": "배경 변경",
-  "find_friends": "친구 찾기"
+  "find_friends": "친구 찾기",
+  "fullName": "성명",
+  "address": "주소",
+  "gender": "성별",
+  "email": "이메일",
+  "phoneNumber": "전화번호",
+  "picture": "사진",
+  "change_success": "사용자 정보가 성공적으로 변경되었습니다"
 }

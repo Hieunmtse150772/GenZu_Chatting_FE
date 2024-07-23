@@ -37,5 +37,12 @@
   "list_image": "画像リスト",
   "list_video": "ビデオリスト",
   "change_background": "背景の変更",
-  "find_friends": "友達を探す"
+  "find_friends": "友達を探す",
+  "fullName": "氏名",
+  "address": "住所",
+  "gender": "性別",
+  "email": "メール",
+  "phoneNumber": "電話番号",
+  "picture": "写真",
+  "change_success": "ユーザー情報の変更が成功しました"
 }

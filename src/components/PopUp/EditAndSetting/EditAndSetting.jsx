@@ -8,8 +8,11 @@ import { checkCookie, getCookie } from '../../../services/Cookies'
 import ToastSuccesful from '../Toast/ToastSuccesful/ToastSuccesful'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../../../redux/Slice/userSlice'
+import { useTranslation } from 'react-i18next'
 
 export default function EditAndSetting({ isVisible, onClose }) {
+  const { t } = useTranslation()
+
   const [user, setUser] = useState({
     name: { value: 'Hoang Ba Thien', isDisable: true },
     email: { value: 'thienhoang241299@gmail.com', isDisable: true },
@@ -69,7 +72,7 @@ export default function EditAndSetting({ isVisible, onClose }) {
 
   return (
     <>
-      {isUpdate && <ToastSuccesful message={'Thay đổi thông tin user thành công'} />}
+      {isUpdate && <ToastSuccesful message={t('change_success')} />}
       <div className='EditAndSetting fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
         <div className='relative flex h-screen justify-around rounded-lg bg-white p-6 shadow-lg'>
           <button

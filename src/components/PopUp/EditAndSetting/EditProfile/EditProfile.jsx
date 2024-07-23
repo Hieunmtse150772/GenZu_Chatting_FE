@@ -105,7 +105,7 @@ const EditProfile = ({ user, token }) => {
       {Object.keys(profile).map((key) => (
         <div key={key} className='mb-4'>
           <label className='mb-2 block text-sm font-bold capitalize text-gray-700 dark:text-white'>
-            {key.replace(/([A-Z])/g, ' $1')}
+            {t(key)}
           </label>
           {key === 'gender' ? (
             <select

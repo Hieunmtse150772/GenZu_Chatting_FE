@@ -115,7 +115,7 @@ function InformationConversation(props) {
   }, [idConversation])
   return (
     <>
-      <div className='dark:bg mx-auto h-screen max-w-2xl bg-mainBlue dark:bg-[#333333] dark:opacity-95'>
+      <div className='dark:bg mx-auto h-screen max-w-2xl bg-mainBlue dark:bg-[#333333] dark:opacity-95 md:block md:translate-x-0'>
         {personalChat?.isGroupChat ? (
           <InfomationGroup conversation={personalChat} />
         ) : (
@@ -146,7 +146,7 @@ function InformationConversation(props) {
               {t('view_profile')}
             </a>
             <div className='w-11/12'>
-              <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
+              <ul className='mx-2 flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
                 <DropdownItem
                   icon={IoIosSearch}
                   label={t('search_chat')}

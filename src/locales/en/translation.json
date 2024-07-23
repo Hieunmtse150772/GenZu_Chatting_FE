@@ -37,5 +37,12 @@
   "list_image": "List of Image",
   "list_video": "List of Video",
   "change_background": "Change Background",
-  "find_friends": "Find your Friends"
+  "find_friends": "Find your Friends",
+  "fullName": "Full Name",
+  "address": "Address",
+  "gender": "Gender",
+  "email": "Email",
+  "phoneNumber": "Phone Number",
+  "picture": "Picture",
+  "change_success": "User information updated successfully"
 }
