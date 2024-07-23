@@ -87,6 +87,9 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
             src={user.picture}
             alt='user avatar'
             className='h-14 w-14 rounded-full object-cover'
+            onError={(e) => {
+              e.target.src = '/src/assets/no_Image.jpg'
+            }}
           />
           <TbPointFilled
             size={22}

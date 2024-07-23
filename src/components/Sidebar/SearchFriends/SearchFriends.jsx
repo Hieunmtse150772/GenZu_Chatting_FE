@@ -80,6 +80,9 @@ export default function SearchFriends({ user }) {
             }
             alt='user avatar'
             className='h-12 w-12 rounded-full object-cover'
+            onError={(e) => {
+              e.target.src = '/src/assets/no_Image.jpg'
+            }}
           />
 
           <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
@@ -164,6 +167,9 @@ export default function SearchFriends({ user }) {
             src={user?.info?.picture}
             alt='user avatar'
             className='h-12 w-12 rounded-full object-cover'
+            onError={(e) => {
+              e.target.src = '/src/assets/no_Image.jpg'
+            }}
           />
 
           <div className='flex w-full flex-col gap-2 truncate dark:text-white'>

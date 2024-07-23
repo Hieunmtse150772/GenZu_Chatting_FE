@@ -169,7 +169,7 @@ function InformationConversation(props) {
                             className='h-full w-full object-cover'
                             alt='Image not Found '
                             onError={(e) => {
-                              e.target.src = '/src/assets/Image_not_available.png'
+                              e.target.src = '/src/assets/no_Image.jpg'
                             }}
                           />
                         </div>
@@ -206,7 +206,7 @@ function InformationConversation(props) {
                             controls
                             alt='Video not Found '
                             onError={(e) => {
-                              e.target.src = '/src/assets/Image_not_available.png'
+                              e.target.src = '/src/assets/no_Image.jpg'
                             }}
                           />
                         </div>

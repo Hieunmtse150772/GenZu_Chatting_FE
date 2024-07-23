@@ -15,7 +15,7 @@ const RenderMessage = ({ item, autoTranslate }) => {
           alt='Uploaded content'
           style={{ width: 'auto', height: '200px' }}
           onError={(e) => {
-            e.target.src = '/src/assets/Image_not_available.png'
+            e.target.src = '/src/assets/no_Image.jpg'
           }}
         />
       )
@@ -29,7 +29,7 @@ const RenderMessage = ({ item, autoTranslate }) => {
           src={item.message}
           style={{ width: 'auto', height: '400px' }}
           onError={(e) => {
-            e.target.src = '/src/assets/Image_not_available.png'
+            e.target.src = '/src/assets/no_Image.jpg'
           }}
         />
       )
@@ -51,6 +51,9 @@ const RenderMessage = ({ item, autoTranslate }) => {
               src={item.sender?.picture}
               alt={item.sender?.fullName}
               className='absolute left-0 top-0 h-8 w-8 rounded-full'
+              onError={(e) => {
+                e.target.src = '/src/assets/no_Image.jpg'
+              }}
             />
           )}
           <div
