@@ -69,7 +69,7 @@ const SignUpComponent = () => {
   }
   const uploadAndSignUp = async () => {
     console.log(imageFile)
-    const storageRef = ref(storage, `$image/${imageFile.name}`)
+    const storageRef = ref(storage, `image/${imageFile.name}`)
     uploadBytes(storageRef, imageFile)
       .then((snapshot) => {
         return getDownloadURL(snapshot.ref)
