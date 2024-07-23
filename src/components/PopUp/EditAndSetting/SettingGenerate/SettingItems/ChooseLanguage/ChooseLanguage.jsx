@@ -74,6 +74,12 @@ const ChooseLanguage = ({ onBack }) => {
             onChange={() => handleLanguageChange('ja')}
             checked={selectedLanguage === 'ja'}
           />
+          <InputLanguage
+            languageValue={'ko'}
+            labelName={'Korean'}
+            onChange={() => handleLanguageChange('ko')}
+            checked={selectedLanguage === 'ko'}
+          />
         </div>
       </div>
       <div className='flex w-full flex-col rounded-lg p-4'>

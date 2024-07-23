@@ -12,6 +12,7 @@ export default function SearchFriends({ user }) {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const [isCreateNewConversation, setCreateNewConversation] = useState(false)
   const isCreateConversationSucces = useSelector((state) => state.chat.isCreateNewConversation)
+  const conversation = useSelector((state) => state.user.lsConversation[0])
   const buttonRef = useRef(null)
   const dropdownRef = useRef(null)
   const navigate = useNavigate()
@@ -49,7 +50,7 @@ export default function SearchFriends({ user }) {
   }, [])
   useEffect(() => {
     if (isCreateConversationSucces != null) {
-      navigate(`/chat/${isCreateConversationSucces}`)
+      navigate(`/chat/${conversation._id}`)
       dispatch(setIsCreateNewConversation(false))
     }
   }, [isCreateConversationSucces])

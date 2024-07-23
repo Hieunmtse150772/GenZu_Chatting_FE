@@ -77,17 +77,20 @@ const userSlice = createSlice({
       }
     },
     setNewLsConversation: (state, action) => {
-      if (action.payload.isGroupChat) {
-        return {
-          ...state,
-          lsConversation: [action.payload, ...state.lsConversation],
-          lsGroupChats: [action.payload, ...state.lsGroupChats],
-        }
-      } else {
-        return {
-          ...state,
-          lsConversation: [action.payload, ...state.lsConversation],
-          lsPersonalChats: [action.payload, ...state.lsPersonalChats],
+      const index = state.lsConversation?.findIndex((item) => item._id == action.payload._id)
+      if (index == -1) {
+        if (action.payload.isGroupChat) {
+          return {
+            ...state,
+            lsConversation: [action.payload, ...state.lsConversation],
+            lsGroupChats: [action.payload, ...state.lsGroupChats],
+          }
+        } else {
+          return {
+            ...state,
+            lsConversation: [action.payload, ...state.lsConversation],
+            lsPersonalChats: [action.payload, ...state.lsPersonalChats],
+          }
         }
       }
     },

@@ -5,6 +5,7 @@ import { getCookie } from './services/Cookies'
 import translationEN from '@/locales/en/translation.json'
 import translationVI from '@/locales/vi/translation.json'
 import translationJA from '@/locales/ja/translation.json'
+import translationKO from '@/locales/ko/translation.json'
 
 const resources = {
   en: {
@@ -15,6 +16,9 @@ const resources = {
   },
   ja: {
     translation: translationJA,
+  },
+  ko: {
+    translation: translationKO,
   },
 }
 
