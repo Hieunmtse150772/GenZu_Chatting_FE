@@ -124,6 +124,9 @@ function InformationConversation(props) {
               className='mb-3 h-24 w-24 rounded-full shadow-lg'
               src={customer?.picture}
               alt={customer?.fullName}
+              onError={(e) => {
+                e.target.src = '/src/assets/no_Image.jpg'
+              }}
             />
             <h3 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>
               {' '}

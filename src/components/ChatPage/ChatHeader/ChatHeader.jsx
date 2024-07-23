@@ -70,6 +70,9 @@ function ChatHeader({ toggleInfo }) {
               }
               alt='user avatar'
               className='h-16 w-16 rounded-full'
+              onError={(e) => {
+                e.target.src = '/src/assets/no_Image.jpg'
+              }}
             />
             <div className='flex flex-col'>
               <span className='text-xl font-semibold text-black dark:text-white md:text-2xl'>
