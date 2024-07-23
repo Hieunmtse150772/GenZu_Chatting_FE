@@ -38,6 +38,7 @@ const SignUpComponent = () => {
     }
   }
   const signUpWithExistingPicture = async (imgUrl = imageUrl) => {
+    console.log(imgUrl)
     try {
       const response = await axios.post(
         'https://genzu-chatting-be.onrender.com/auth/sign-up',
@@ -76,7 +77,7 @@ const SignUpComponent = () => {
       })
       .then((downloadURL) => {
         setImageUrl(downloadURL)
-        signUpWithExistingPicture()
+        signUpWithExistingPicture(downloadURL)
       })
   }
   const handlePictureChange = (e) => {

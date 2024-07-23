@@ -51,7 +51,7 @@ export default function Verify() {
             JSON.stringify({
               accessToken: data.data.accessToken,
               refreshToken: data.data.refreshToken,
-              user: response.data,
+              user: response.data.data,
             }),
             7,
           )
