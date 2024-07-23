@@ -21,7 +21,7 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
   const navigate = useNavigate()
   const { idConversation } = useParams()
   const isDeleteConversation = useSelector((state) => state.message.isDeleteConversation)
-  const lsConversation = useState((state) => state.user.lsConversation)
+  const lsConversation = useSelector((state) => state.user?.lsConversation)
   const userId = JSON.parse(getCookie('userLogin')).user._id
   const lstBlockUser = useSelector((state) => state.user.lstBlockUsers)
   const idUserBlocked =
