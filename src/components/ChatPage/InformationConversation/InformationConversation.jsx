@@ -11,8 +11,10 @@ import InfomationGroup from './InfomationGroup/InfomationGroup'
 import { updateStateSearch } from '@/redux/Slice/messageSlice'
 import ChangeBackground from '@/components/PopUp/ChangeBackground/ChangeBackground'
 import { fetchLsImage, fetchLsVideo } from '@/services/messageService'
+import { TbBackground } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 import { GoVideo } from 'react-icons/go'
+import { useTranslation } from 'react-i18next'
 
 function InformationConversation(props) {
   const personalChat = useSelector((state) => state.user.conversation)
@@ -26,6 +28,7 @@ function InformationConversation(props) {
   const [lsVideo, setLsVideo] = useState()
   const [idConversationCurrent, setIdConversationCurrent] = useState(useParams())
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const togglePopupViewProfile = () => {
     props.togglePopupViewProfile()
@@ -137,7 +140,7 @@ function InformationConversation(props) {
               className='my-4 inline-flex cursor-pointer items-center rounded-lg bg-black px-8 py-4 text-center text-sm font-medium text-white hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800'
               onClick={togglePopupViewProfile}
             >
-              {'view_profile'}
+              {t('view_profile')}
             </a>
             <div className='w-11/12'>
               <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
@@ -226,7 +229,7 @@ function InformationConversation(props) {
                 />
                 <hr />
                 <DropdownItem
-                  icon={PiSelectionBackground}
+                  icon={TbBackground}
                   label={'Change background'}
                   dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
