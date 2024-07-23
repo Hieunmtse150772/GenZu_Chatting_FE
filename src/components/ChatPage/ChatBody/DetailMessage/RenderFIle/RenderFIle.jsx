@@ -14,6 +14,9 @@ const RenderMessage = ({ item, autoTranslate }) => {
           src={item.message}
           alt='Uploaded content'
           style={{ width: 'auto', height: '200px' }}
+          onError={(e) => {
+            e.target.src = '/src/assets/Image_not_available.png'
+          }}
         />
       )
     case 'audio':
@@ -25,6 +28,9 @@ const RenderMessage = ({ item, autoTranslate }) => {
           controls
           src={item.message}
           style={{ width: 'auto', height: '400px' }}
+          onError={(e) => {
+            e.target.src = '/src/assets/Image_not_available.png'
+          }}
         />
       )
     case 'file':
