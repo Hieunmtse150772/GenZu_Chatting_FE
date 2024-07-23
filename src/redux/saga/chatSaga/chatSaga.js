@@ -231,7 +231,9 @@ function* handleSocketConnect(action) {
   // Gửi sự kiện 'setup' và 'join chat' đến server.
   socket.emit('setup', user)
   console.log('check join chat')
-  socket.emit('join chat', action.payload.idConversation)
+  setTimeout(() => {
+    socket.emit('join chat', action.payload.idConversation)
+  }, 1000)
   socket.emit('login', user._id)
   // Tạo event channel để lắng nghe các sự kiện socket.io.
   const socketChannel = yield call(createSocketChannel, socket, action.payload.idConversation)
