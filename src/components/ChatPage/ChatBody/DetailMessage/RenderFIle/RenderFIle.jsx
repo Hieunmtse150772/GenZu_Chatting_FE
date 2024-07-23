@@ -3,6 +3,7 @@ import React, { memo } from 'react'
 
 const RenderMessage = ({ item, autoTranslate }) => {
   const userId = JSON.parse(getCookie('userLogin')).user._id
+  const isOwnMessage = item.sender?._id === userId
 
   switch (item.messageType) {
     case 'image':
@@ -37,10 +38,23 @@ const RenderMessage = ({ item, autoTranslate }) => {
       )
     case 'text':
       return (
-        <p>
-          {/* {console.log(autoTranslate)} */}
-          {item.message}
-        </p>
+        <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} relative mb-4`}>
+          {!isOwnMessage && item.conversation?.isGroupChat && (
+            <img
+              src={item.sender?.picture}
+              alt={item.sender?.fullName}
+              className='absolute left-0 top-0 h-8 w-8 rounded-full'
+            />
+          )}
+          <div
+            className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'} max-w-[70%] ${!isOwnMessage && item.conversation?.isGroupChat ? 'ml-10' : ''}`}
+          >
+            {!isOwnMessage && item.conversation?.isGroupChat && (
+              <span className='mb-1 text-xs text-gray-500'>{item.sender?.fullName}</span>
+            )}
+            <p className={`${isOwnMessage ? 'text-right' : 'text-left'}`}>{item.message}</p>
+          </div>
+        </div>
       )
     // case 'notification':
     //   if (item.message === '3001' || item.message === '3006') {
