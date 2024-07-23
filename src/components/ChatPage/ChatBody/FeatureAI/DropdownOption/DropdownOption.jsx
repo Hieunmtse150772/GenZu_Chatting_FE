@@ -10,14 +10,11 @@ export default function DropdownOption(props) {
   const dispatch = useDispatch()
   const deleteOnesite = async () => {
     const response = await deleteMessageOnesite(props)
-    console.log(props.idMessage)
-    console.log(response.status)
     if (response.status === 200) {
       dispatch(setDeleteMessageOneSite(props.idMessage))
     }
   }
   const recallMes = () => {
-    console.log(props.idMessage)
     dispatch(recallMessageSlice(props.idMessage))
   }
 
@@ -37,7 +34,6 @@ export default function DropdownOption(props) {
       ref={dropdownRef}
     >
       {/* <div className="absolute left-48 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-white" /> */}
-      {console.log(props.owner)}
       <ul>
         <DropdownItem
           icon={MdOutlineEdit}

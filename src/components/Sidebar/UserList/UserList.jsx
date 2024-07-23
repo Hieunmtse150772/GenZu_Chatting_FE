@@ -82,6 +82,7 @@ const UserList = ({ togglePopupViewProfile }) => {
                 let userInfo
                 if (item.users[0]?._id == JSON.parse(getCookie('userLogin')).user._id) {
                   userInfo = {
+                    idConversation: item._id,
                     id: item.users[1]?._id,
                     name: item.users[1]?.fullName,
                     picture: item.users[1]?.picture,
@@ -98,6 +99,7 @@ const UserList = ({ togglePopupViewProfile }) => {
                   }
                 } else {
                   userInfo = {
+                    idConversation: item._id,
                     id: item.users[0]?._id,
                     name: item.users[0]?.fullName,
                     picture: item.users[0]?.picture,

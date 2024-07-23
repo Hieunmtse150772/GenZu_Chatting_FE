@@ -22,7 +22,7 @@ export default function SelectImage(props){
         handleRemove()
       }, [props.colorType])
     return (
-        <div className="">
+        <div className="w-full">
             <label className="mb-1 font-semibold">Select a image</label>
             <br/>
             <span className="">
@@ -31,7 +31,7 @@ export default function SelectImage(props){
             <input
                 type='file'
                 accept='image/*'
-                className=''
+                className='w-full'
                 ref={imageRef}
                 onChange={(e) => handleFileChange(e, 'image')}
             />

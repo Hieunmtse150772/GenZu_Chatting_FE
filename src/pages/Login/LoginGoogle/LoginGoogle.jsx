@@ -14,11 +14,6 @@ export default function LoginGoogle() {
     const refreshToken = queryParams.get('rt')
     const success = queryParams.get('success')
 
-    console.log('err:', err)
-    console.log('accessToken:', accessToken)
-    console.log('refreshToken:', refreshToken)
-    console.log('success:', success)
-
     if (success) {
       axios
         .get('https://genzu-chatting-be.onrender.com/auth/profile', {
@@ -28,7 +23,6 @@ export default function LoginGoogle() {
           },
         })
         .then((response) => {
-          console.log('User Profile:', response.data.data)
           setCookie(
             'userLogin',
             JSON.stringify({

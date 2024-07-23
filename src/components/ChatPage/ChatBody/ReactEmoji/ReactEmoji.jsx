@@ -1,21 +1,20 @@
+import EmojiPicker from 'emoji-picker-react'
+import { useState } from 'react'
+export default function ReactEmoji() {
+  const [chosenEmoji, setChosenEmoji] = useState(null)
 
-import EmojiPicker from 'emoji-picker-react';
-export default function ReactEmoji(){
-    const [chosenEmoji, setChosenEmoji] = useState(null);
-    console.log(chosenEmoji);
-  
-    const onEmojiClick = (event, emojiObject) => {
-      setChosenEmoji(emojiObject);
-      // handleEmote('hello')
-    };
-        
-    // const handleEmote = (Id) =>{
-    //   console.log(Id);
-    //   props.callBackEmote(Id)
-    // }
-    return (
-      <div>
-        {/* {chosenEmoji ? (
+  const onEmojiClick = (event, emojiObject) => {
+    setChosenEmoji(emojiObject)
+    // handleEmote('hello')
+  }
+
+  // const handleEmote = (Id) =>{
+  //   console.log(Id);
+  //   props.callBackEmote(Id)
+  // }
+  return (
+    <div>
+      {/* {chosenEmoji ? (
           
           // <>
             // <img src={`${chosenEmoji.srcElement.currentSrc}`} 
@@ -27,7 +26,7 @@ export default function ReactEmoji(){
           // <span>No emoji Chosen</span>
           <></>
         )} */}
-        <EmojiPicker onEmojiClick={onEmojiClick} />
-      </div>
-    );
+      <EmojiPicker onEmojiClick={onEmojiClick} />
+    </div>
+  )
 }

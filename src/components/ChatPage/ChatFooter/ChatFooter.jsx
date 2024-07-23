@@ -129,14 +129,12 @@ const ChatFooter = () => {
     answerSuggestionAI.map((answer, index) => {
       // Kiểm tra nếu có gợi ý trả lời
       if (answer.answerSuggestion) {
-        console.log(JSON.parse(answer.answerSuggestion))
         // parse chuỗi json sang array
         let checkMutiAnswer = JSON.parse(answer.answerSuggestion)
         // tách giá trị từ key general về list
         let answerText = checkMutiAnswer.map((item) => {
           return item.general
         })
-        console.log(answerText)
         // Cập nhật mảng câu trả lời
         setAnswerArray(answerText)
         // Hiển thị gợi ý nếu có câu trả lời
@@ -209,7 +207,6 @@ const ChatFooter = () => {
     // Nếu có file được chọn, tiến hành gửi file
     if (selectedFile?.file) {
       if (!isUploading) {
-        console.log('check')
         handleSendFile()
       }
       setIsUploading(true)
@@ -253,9 +250,6 @@ const ChatFooter = () => {
       }
     } else {
       if (inputStr != null && inputStr != undefined && inputStr != '') {
-        if (replyMessage) {
-          console.log('1', replyMessage)
-        }
         // Tạo object messageData chứa thông tin tin nhắn
         const messageData = {
           message: inputStr, // Nội dung tin nhắn
@@ -510,7 +504,6 @@ const ChatFooter = () => {
   return (
     <>
       {/* Hiển thị gợi ý trả lời từ AI */}
-      {console.log(conversation)}
       {showAnswerSuggestion && isAiSuggestionClick ? (
         <div className='relative flex w-full select-none items-center justify-center space-x-2 font-mono'>
           <button

@@ -60,7 +60,6 @@ axiosClient.interceptors.response.use(
             },
           },
         )
-        console.log('new response data', data.data)
         // Update the accessToken and refreshToken in cookies or global state
         setCookie(
           'userLogin',

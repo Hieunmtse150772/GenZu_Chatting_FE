@@ -104,8 +104,6 @@ export default function InputLanguageTranslation() {
   const url = 'https://genzu-chatting-be.onrender.com/auth/update-language-translate'
   const userLanguage = JSON.parse(getCookie('userLogin'))?.user?.languageTranslate
   const handleChange = (event) => {
-    console.log(getCookie('accessToken'))
-    console.log(event.target.value)
     axios
       .patch(
         url,
@@ -118,7 +116,6 @@ export default function InputLanguageTranslation() {
         },
       )
       .then((response) => {
-        console.log('Cập nhật ngôn ngữ thành công:', response.data.data)
         const newDb = {
           ...JSON.parse(getCookie('userLogin')),
           user: {

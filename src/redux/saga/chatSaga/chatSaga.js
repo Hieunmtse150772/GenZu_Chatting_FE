@@ -19,6 +19,7 @@ import {
   setMessagesMore,
   updateMessage,
   setMessagesMoreBottom,
+  updateGroupChatInStoreMessageSlice,
 } from '@/redux/Slice/messageSlice'
 import {
   addMemberToGroup,
@@ -32,6 +33,7 @@ import {
   setNewLsFriends,
   updateGroupMembers,
   deleteMemberFromGroupInStore,
+  updateConversationGroupChat,
   deleteMemberInGroup,
   updateGroupChat,
   updateConversation,
@@ -111,7 +113,15 @@ function createSocketChannel(socket, idConversation) {
         // update group in redux here
         const conversationId = res.data?._id
         const updatedData = res.data
+        const updateConversation = {
+          avatar: res.data.avatar,
+          background: res.data.background,
+          chatName: res.data.chatName,
+          _id: res.data._id,
+          isGroupChat: res.data.isGroupChat,
+        }
         emit(updateGroupChatInStore({ conversationId, updatedData }))
+        emit(updateConversationGroupChat({ conversationId, updatedData: updateConversation }))
       }
     })
     socket.on('delete group', (res) => {
@@ -132,19 +142,13 @@ function createSocketChannel(socket, idConversation) {
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
-      console.log('co messsage moi ', message)
-      console.log('conversationId', message.conversation?._id)
-      console.log('conversationId 11111', idConversation)
-      console.log('condition', message.conversation?._id == idConversation)
-      if (message.conversation?._id == idConversation) {
+            if (message.conversation?._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         console.log('hhhhhhhhhhhh')
         emit(setNewMessage(message))
       }
       if (message?.data?.conversation?._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
-        console.log('kkkkkkk')
-        console.log(message.data)
         emit(setNewMessage(message.data))
       }
     })
@@ -453,8 +457,8 @@ function* setEmoji(action) {
 
 function* deleteHistoryMessage(action) {
   try {
-    const { data } = yield call(deleteConversation, action.payload._id)
-    yield put(setDeleteHistoryMessage(action.payload._id))
+    const { data } = yield call(deleteConversation, action.payload.idConversation)
+    yield put(setDeleteHistoryMessage(action.payload.idConversation))
   } catch (error) {
     console.error('Lỗi khi xóa cuộc hội thoại:', error)
   }

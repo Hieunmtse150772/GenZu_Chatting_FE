@@ -52,8 +52,6 @@ function InformationConversation(props) {
     }
   }, [personalChat])
   const hanldeGetLsImage = async () => {
-    console.log('check')
-    console.log(showImage)
     if (showImage == false) {
       GetLsImage()
     }

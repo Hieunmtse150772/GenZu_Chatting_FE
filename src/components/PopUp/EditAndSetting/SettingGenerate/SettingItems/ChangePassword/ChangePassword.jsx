@@ -20,7 +20,7 @@ export default function ChangePassword({ onBack }) {
         setLoading(false)
         // Optionally reset form fields or show success message here
       } catch (err) {
-        console.log(err)
+        console.error(err)
         setError('Có lỗi xảy ra khi đổi mật khẩu')
         setLoading(false)
       }

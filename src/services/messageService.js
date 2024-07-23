@@ -5,12 +5,10 @@ export const getConversations = () => {
 }
 
 export const getMessages = async (messageId, page = 1) => {
-  console.log(messageId, page)
   try {
     const response = await axiosClient.get(
       `/messages/getMessagePagination?id=${messageId}&limit=40&page=${page}`,
     )
-    console.log('getMessages:', response.data)
     return response.data.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)
@@ -19,12 +17,10 @@ export const getMessages = async (messageId, page = 1) => {
 }
 // search list message theo keyword
 export const getMessagesSearch = async (conversationId, keyword) => {
-  console.log(conversationId, keyword)
   try {
     const response = await axiosClient.get(
       `/messages/searchMessage?id=${conversationId}&search=${keyword}`,
     )
-    console.log('getMessagesSearch:', response.data)
     return response.data.data
   } catch (error) {
     console.error('Lỗi khi search tin nhắn qua API:', error)
@@ -34,7 +30,6 @@ export const getMessagesSearch = async (conversationId, keyword) => {
 // lay 40 tin nhan gan tin nhan dich
 
 export const sendMessageApi = async (message, id) => {
-  console.log(message)
   try {
     const response = await axiosClient.post(`/messages/send?id=${id}`, message)
     return response.data
@@ -46,7 +41,6 @@ export const sendMessageApi = async (message, id) => {
 
 export const addEmoji = async (messageId, emoji) => {
   try {
-    console.log(messageId, emoji)
     const response = await axiosClient.post(`/messages/emoji?id=${messageId}`, {
       emoji,
     })
@@ -58,35 +52,28 @@ export const addEmoji = async (messageId, emoji) => {
 }
 
 export const updateEmoji = (emojiId, newEmoji) => {
-  console.log(emojiId, newEmoji)
   return axiosClient.patch(`/messages/emoji?id=${emojiId}`, {
     newEmoji,
   })
 }
 
 export const deleteEmoji = (messageId, emojiId) => {
-  console.log(messageId, emojiId)
   return axiosClient.delete(`/messages/emoji?emojiId=${emojiId}&messageId=${messageId}`)
 }
 
 export const deleteConversation = (idConversation) => {
-  console.log(idConversation)
   return axiosClient.delete(`/conversations?id=${idConversation}`)
 }
 
 export const deleteMessageOnesite = (idMessage) => {
-  console.log(idMessage)
   return axiosClient.patch(`/messages/deleteMessageByOneSide?id=${idMessage.idMessage}`)
 }
 export const recallMessage = (idMessage) => {
-  console.log(idMessage)
   return axiosClient.delete(`messages/recall?id=${idMessage}`)
 }
 export const createNewConversationService = async (idUser) => {
-  console.log(idUser)
   try {
     const response = await axiosClient.post(`/conversations`, { userId: idUser })
-    console.log(response.data)
     return response.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)
@@ -105,7 +92,6 @@ export const changeBackground = (background, idConversation) => {
 export const fetchLsImage = async (idConversation) => {
   try {
     const response = await axiosClient.get(`messages/images/${idConversation}`)
-    console.log('getLsImage:', response.data)
     return response.data.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)
@@ -115,7 +101,6 @@ export const fetchLsImage = async (idConversation) => {
 export const fetchLsVideo = async (idConversation) => {
   try {
     const response = await axiosClient.get(`messages/videos/${idConversation}`)
-    console.log('getLsVideo:', response.data)
     return response.data.data
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn qua API:', error)

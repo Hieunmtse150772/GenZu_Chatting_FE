@@ -92,14 +92,21 @@ const userSlice = createSlice({
       }
     },
     updateConversation: (state, action) => {
-      console.log(action.payload)
       const index = state.lsConversation.findIndex(
         (item) => item._id == action.payload.conversation._id,
       )
-      console.log(index)
+    },
+    updateConversationGroupChat: (state, action) => {
+      const { conversationId, updatedData } = action.payload
+
+      if (state.conversation._id === conversationId) {
+        state.conversation = {
+          ...state.conversation,
+          ...updatedData,
+        }
+      }
     },
     updateConversationByGroupId: (state, action) => {
-      console.log(action.payload)
       const { groupId, updatedConversation } = action.payload
       const conversationIndex = state.lsGroupChats.findIndex(
         (conversation) => conversation._id === groupId,
@@ -122,9 +129,7 @@ const userSlice = createSlice({
     },
     updateGroupMembers: (state, action) => {
       const { idConversation, users } = action.payload
-      console.log('idConversation', idConversation)
       const groupChatIndex = state.lsGroupChats.findIndex((group) => group._id === idConversation)
-      console.log('groupIndex', groupChatIndex)
 
       if (groupChatIndex !== -1) {
         state.lsGroupChats[groupChatIndex].users = users
@@ -132,11 +137,8 @@ const userSlice = createSlice({
     },
     deleteMemberFromGroupInStore: (state, action) => {
       const { idUser, idConversation } = action.payload
-      console.log(idUser)
-      console.log(idConversation)
       // Tìm group tương ứng với idConversation
       const group = state.lsGroupChats.find((group) => group._id === idConversation)
-      console.log('trigger', group)
       if (group) {
         // Loại bỏ idUser khỏi danh sách members của group nếu có
         group.users = group.users.filter((userId) => userId !== idUser)
@@ -167,8 +169,6 @@ const userSlice = createSlice({
     updateGroupChat: (state, action) => {},
     removeMemberFromGroup: (state, action) => {
       const { groupId, memberId } = action.payload
-      console.log(groupId)
-      console.log('idMember', memberId)
       // Tìm group tương ứng với idConversation
       const group = state.lsGroupChats.find((group) => group._id === groupId)
       if (group) {
@@ -223,7 +223,6 @@ const userSlice = createSlice({
       state.friendRequestNotification.push(action.payload)
     },
     setConversation: (state, action) => {
-      console.log(action.payload, state.lsConversation)
       return {
         ...state,
         conversation: state.lsConversation.find(
@@ -231,9 +230,7 @@ const userSlice = createSlice({
         ),
       }
     },
-    setConversationFirst: (state, action) => {
-      console.log(action.payload)
-    },
+    setConversationFirst: (state, action) => {},
     clearUserSlice: () => initialState,
     loginSlice: (state, action) => {},
     logoutSlice: (state, action) => {},
@@ -326,6 +323,7 @@ export const {
   deleteGroupById,
   setNewLsConversation,
   updateConversationByGroupId,
+  updateConversationGroupChat,
   handleChangeBackground,
   setChangeBackground,
   handleBlockUser,
