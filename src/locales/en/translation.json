@@ -33,5 +33,9 @@
   "cancel": "Cancel",
   "change_password": "Change Your Password",
   "language_system": "Language System",
-  "language_translation":"Language Translation"
+  "language_translation": "Language Translation",
+  "list_image": "List of Image",
+  "list_video": "List of Video",
+  "change_background": "Change Background",
+  "find_friends": "Find your Friends"
 }

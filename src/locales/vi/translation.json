@@ -33,5 +33,9 @@
   "cancel": "Hủy",
   "change_password": "Thay đổi mật khẩu",
   "language_system": "Ngôn ngữ hệ thống",
-  "language_translation": "Ngôn ngữ dịch"
+  "language_translation": "Ngôn ngữ dịch",
+  "list_image": "Danh sách hình ảnh",
+  "list_video": "Danh sách video",
+  "change_background": "Đổi hình nền",
+  "find_friends": "Tìm bạn bè"
 }

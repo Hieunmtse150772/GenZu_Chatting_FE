@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RiUserSearchLine } from 'react-icons/ri'
 import { alertFriendRequest } from '../../../redux/Slice/userSlice'
 import userService from '@/services/userService'
+import { useTranslation } from 'react-i18next'
 
 export default function PopUpFindFriends({ isVisible, onClose }) {
   const [searchTerm, setSearchTerm] = useState('')
@@ -18,7 +19,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
   const friendLists = useSelector((state) => state?.user?.lsFriends) || []
   const popupRef = useRef()
   const dispatch = useDispatch()
-
+  const { t } = useTranslation()
   const handleSearch = useCallback(async () => {
     try {
       const token = JSON.parse(getCookie('userLogin')).accessToken
@@ -138,7 +139,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
         ref={popupRef}
         className='relative mx-2 flex h-[28rem] w-[28rem] flex-col justify-around rounded-lg bg-white p-6 shadow-lg'
       >
-        <h1>Find your friends</h1>
+        <h1>{t('find_friends')}</h1>
         <button
           className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
           onClick={onClose}

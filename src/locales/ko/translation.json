@@ -33,5 +33,9 @@
   "cancel": "취소",
   "change_password": "비밀번호 변경",
   "language_system": "언어 시스템",
-  "language_translation": "언어 번역"
+  "language_translation": "언어 번역",
+  "list_image": "이미지 목록",
+  "list_video": "동영상 목록",
+  "change_background": "배경 변경",
+  "find_friends": "친구 찾기"
 }

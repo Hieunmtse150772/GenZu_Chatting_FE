@@ -146,7 +146,7 @@ function InformationConversation(props) {
               <ul className='mx-2 hidden flex-col overflow-x-hidden rounded-lg bg-white px-6 py-2 font-semibold dark:bg-[#1E1E1E] md:flex'>
                 <DropdownItem
                   icon={IoIosSearch}
-                  label={'Search chat'}
+                  label={t('search_chat')}
                   dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={handleSearchBtn}
@@ -154,7 +154,7 @@ function InformationConversation(props) {
                 <hr />
                 <DropdownItem
                   icon={FaRegImage}
-                  label={'List of images'}
+                  label={t('list_image')}
                   dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={hanldeGetLsImage}
@@ -190,7 +190,7 @@ function InformationConversation(props) {
                 <hr />
                 <DropdownItem
                   icon={GoVideo}
-                  label={'List of Video'}
+                  label={t('list_video')}
                   dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={hanldeGetLsVideo}
@@ -236,7 +236,7 @@ function InformationConversation(props) {
                 <hr />
                 <DropdownItem
                   icon={TbBackground}
-                  label={'Change background'}
+                  label={t('change_background')}
                   dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={togglePopupChangeBackground}

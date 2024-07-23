@@ -33,5 +33,9 @@
   "cancel": "キャンセル",
   "change_password": "パスワードを変更してください",
   "language_system": "言語システム",
-  "language_translation": "言語翻訳"
+  "language_translation": "言語翻訳",
+  "list_image": "画像リスト",
+  "list_video": "ビデオリスト",
+  "change_background": "背景の変更",
+  "find_friends": "友達を探す"
 }
