@@ -3,6 +3,7 @@ import Fuse from 'fuse.js'
 import userIcon from '../../assets/user_icon.jpg'
 const initialState = {
   lsFriends: [],
+  isDeleteGroupChat: false,
   lsSearchFriends: [],
   lsPersonalChats: [],
   lsGroupChats: [],
@@ -67,6 +68,19 @@ const userSlice = createSlice({
       return {
         ...state,
         idConversation: action.payload,
+      }
+    },
+    setIsDeleteGroupChat: (state, action) => {
+      return {
+        ...state,
+        isDeleteGroupChat: true,
+      }
+    },
+    setDeleteGroupMember: (state, action) => {
+      return {
+        ...state,
+        conversation: state.lsConversation[0],
+        isDeleteGroupChat: true,
       }
     },
     createGroupChat: (state, action) => {},
@@ -168,9 +182,11 @@ const userSlice = createSlice({
       }
     },
     deleteGroupById: (state, action) => {
-      state.lsGroupChats = state.lsGroupChats.filter(
+      const newLsGroupChats = state.lsGroupChats.filter(
         (groupChat) => groupChat._id !== action.payload,
       )
+      state.lsGroupChats = newLsGroupChats
+      state.conversation = state.lsGroupChats[0]
     },
     addNewMemberToGroup: (state, action) => {
       const { groupId, users } = action.payload
@@ -347,10 +363,12 @@ export const {
   deleteMemberInGroup,
   removeMemberFromGroup,
   exchangeAdminGroup,
+  setDeleteGroupMember,
   deleteMemberFromGroupInStore,
   updateGroupMembers,
   deleteGroupChat,
   deleteGroupById,
+  setIsDeleteGroupChat,
   setNewLsConversation,
   updateConversationByGroupId,
   updateConversationGroupChat,

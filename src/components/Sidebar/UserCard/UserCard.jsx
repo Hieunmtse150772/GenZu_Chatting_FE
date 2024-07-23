@@ -21,6 +21,7 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
   const navigate = useNavigate()
   const { idConversation } = useParams()
   const isDeleteConversation = useSelector((state) => state.message.isDeleteConversation)
+  const isDeleteGroupChat = useSelector((state) => state.user.isDeleteGroupChat)
   const lsConversation = useSelector((state) => state.user?.lsConversation)
   const userId = JSON.parse(getCookie('userLogin')).user._id
   const lstBlockUser = useSelector((state) => state.user.lstBlockUsers)
@@ -63,14 +64,15 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
     }
   }, [])
   useEffect(() => {
-    if (isDeleteConversation) {
+    if (isDeleteConversation || isDeleteGroupChat) {
+      console.log('haha')
       if (idConversation == lsConversation[0]._id) {
         navigate(`/chat/${lsConversation[1]?._id}`)
       } else {
         navigate(`/chat/${lsConversation[0]?._id}`)
       }
     }
-  }, [isDeleteConversation])
+  }, [isDeleteConversation, isDeleteGroupChat])
   useLayoutEffect(() => {
     dispatch(getUserBlocked())
   }, [])
