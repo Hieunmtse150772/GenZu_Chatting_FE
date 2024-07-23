@@ -6,16 +6,16 @@ import { updateGroupChat } from '@/redux/Slice/userSlice'
 const UpdateGroup = ({ isVisible, onClose, group }) => {
   const [groupName, setGroupName] = useState(group?.chatName || '')
   const [groupImage, setGroupImage] = useState(group?.avatar || '')
-  const [background, setBackground] = useState(group?.background?.url || '')
-  const [backgroundType, setBackgroundType] = useState(group?.background?.type || 'color')
+  const [background, setBackground] = useState(group?.background?.url || '#ffffff')
+  const [backgroundType, setBackgroundType] = useState(group?.background?.backgroundType || 'color')
   const popupRef = useRef()
   const dispatch = useDispatch()
 
   useEffect(() => {
     setGroupName(group?.chatName || '')
     setGroupImage(group?.avatar || '')
-    setBackground(group?.background?.url || '')
-    setBackgroundType(group?.background?.type || 'color')
+    setBackground(group?.background?.url || '#ffffff')
+    setBackgroundType(group?.background?.backgroundType || 'color')
   }, [group])
 
   useEffect(() => {
@@ -42,6 +42,12 @@ const UpdateGroup = ({ isVisible, onClose, group }) => {
       url: background,
       backgroundType: backgroundType,
     }
+    console.log({
+      groupId: group._id,
+      chatName: groupName,
+      avatar: groupImage,
+      background: backgroundObject,
+    })
     dispatch(
       updateGroupChat({
         groupId: group._id,
