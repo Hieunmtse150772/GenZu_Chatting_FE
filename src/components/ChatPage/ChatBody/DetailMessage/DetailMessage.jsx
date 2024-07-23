@@ -22,7 +22,7 @@ const DetailMessage = memo(function DetailMessage(props) {
   const resultMessage = useSelector((state) => state.chat.listSearch)
   const messages = useSelector((state) => state.message.message)
   const autoTranslate = useSelector((state) => state.user.conversation.autoTranslateList)
-  
+
   const ownerTranslate =
     autoTranslate?.findIndex((e) => e == JSON.parse(getCookie('userLogin')).user._id) == -1
       ? false

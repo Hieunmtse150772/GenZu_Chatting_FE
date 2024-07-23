@@ -4,6 +4,7 @@ import React, { memo } from 'react'
 const RenderMessage = ({ item, autoTranslate }) => {
   const userId = JSON.parse(getCookie('userLogin')).user._id
   const isOwnMessage = item.sender?._id === userId
+  const isGroupChat = item.conversation?.isGroupChat
 
   switch (item.messageType) {
     case 'image':
@@ -38,8 +39,8 @@ const RenderMessage = ({ item, autoTranslate }) => {
       )
     case 'text':
       return (
-        <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} relative mb-4`}>
-          {!isOwnMessage && item.conversation?.isGroupChat && (
+        <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} relative`}>
+          {!isOwnMessage && isGroupChat && (
             <img
               src={item.sender?.picture}
               alt={item.sender?.fullName}
@@ -47,9 +48,9 @@ const RenderMessage = ({ item, autoTranslate }) => {
             />
           )}
           <div
-            className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'} max-w-[70%] ${!isOwnMessage && item.conversation?.isGroupChat ? 'ml-10' : ''}`}
+            className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'} ${!isOwnMessage && isGroupChat ? 'ml-10' : ''}`}
           >
-            {!isOwnMessage && item.conversation?.isGroupChat && (
+            {!isOwnMessage && isGroupChat && (
               <span className='mb-1 text-xs text-gray-500'>{item.sender?.fullName}</span>
             )}
             <p className={`${isOwnMessage ? 'text-right' : 'text-left'}`}>{item.message}</p>
