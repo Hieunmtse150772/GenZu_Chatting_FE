@@ -2,10 +2,13 @@ import { FiUserX } from 'react-icons/fi'
 import React, { useState, useRef, useEffect } from 'react'
 import userIcon from '@/assets/user_icon.jpg'
 import userService from '@/services/userService'
+import { useDispatch } from 'react-redux'
+import { removeFriend } from '@/redux/Slice/userSlice'
 
 const FriendInfo = ({ friendInfo, createdAt, friendShipId, onUnfriend }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false)
   const dropdownRef = useRef(null)
+  const dispatch = useDispatch()
 
   const handleRemoveClick = () => {
     setIsDropdownVisible(!isDropdownVisible)
@@ -15,6 +18,7 @@ const FriendInfo = ({ friendInfo, createdAt, friendShipId, onUnfriend }) => {
     const response = await userService.deleteFriend(friendId)
     if (response.status === 200) {
       onUnfriend(friendId)
+      dispatch(removeFriend(friendId))
       setIsDropdownVisible(false)
     }
   }

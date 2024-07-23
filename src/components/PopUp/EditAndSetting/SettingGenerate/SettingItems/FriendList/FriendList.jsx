@@ -3,26 +3,32 @@ import FriendInfo from './FriendInfo/FriendInfo'
 import UserCardSkeleton from '@/components/Sidebar/UserCard/UserCardSkeleton/UserCardSkeleton'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector, useDispatch } from 'react-redux'
-import { removeFriend } from '@/redux/Slice/userSlice' // Assuming you have this action
+import { useSelector } from 'react-redux'
 
 const FriendList = ({ onBack }) => {
+  const [friendLists, setFriendLists] = useState([])
   const [loading, setLoading] = useState(true)
   const { t } = useTranslation()
-  const dispatch = useDispatch()
-
-  // Fetch friends from Redux store
-  const friendLists = useSelector((state) => state.user.lsFriend)
+  const lsFriends = useSelector((state) => state.user.lsFriends)
 
   useEffect(() => {
-    // Set loading to false once friends are loaded
-    if (friendLists.length > 0) {
-      setLoading(false)
+    if (Array.isArray(lsFriends)) {
+      const friends = lsFriends.map((item) => ({
+        friend: item?.info,
+        createdAt: item?.createdAt,
+        friendshipId: item?.friendShip,
+      }))
+      setFriendLists(friends)
+    } else {
+      console.error('Unexpected data format:', lsFriends)
     }
-  }, [friendLists])
+    setLoading(false)
+  }, [lsFriends])
 
-  const handleUnfriend = (friendshipId) => {
-    dispatch(removeFriend(friendshipId))
+  const handleUnfriend = (friendId) => {
+    setFriendLists((prevFriends) =>
+      prevFriends.filter((friend) => friend.friendshipId !== friendId),
+    )
   }
 
   const formatDate = (isoString) => {
@@ -45,9 +51,9 @@ const FriendList = ({ onBack }) => {
         <div>
           {friendLists.map((item, index) => (
             <FriendInfo
-              friendInfo={item?.info}
+              friendInfo={item?.friend}
               createdAt={formatDate(item?.createdAt)}
-              friendShipId={item?.friendShip}
+              friendShipId={item?.friendshipId}
               key={index}
               onUnfriend={handleUnfriend}
             />

@@ -41,6 +41,9 @@ const userSlice = createSlice({
         lsSearchFriends: [],
       }
     },
+    removeFriend: (state, action) => {
+      state.lsFriends = state.lsFriends.filter((friend) => friend.friendShip !== action.payload)
+    },
     setFriends: (state, action) => {
       return {
         ...state,
@@ -327,6 +330,7 @@ export const {
   setFriendRequestNotification,
   setNewFriendRequestNotification,
   setConversation,
+  removeFriend,
   setConversationFirst,
   setToastMessage,
   clearToastMessage,
