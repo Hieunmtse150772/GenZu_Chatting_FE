@@ -147,7 +147,7 @@ function InformationConversation(props) {
                 <DropdownItem
                   icon={IoIosSearch}
                   label={'Search chat'}
-                  dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                  dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={handleSearchBtn}
                 />
@@ -155,7 +155,7 @@ function InformationConversation(props) {
                 <DropdownItem
                   icon={FaRegImage}
                   label={'List of images'}
-                  dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                  dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={hanldeGetLsImage}
                 />
@@ -191,7 +191,7 @@ function InformationConversation(props) {
                 <DropdownItem
                   icon={GoVideo}
                   label={'List of Video'}
-                  dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                  dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={hanldeGetLsVideo}
                 />
@@ -229,7 +229,7 @@ function InformationConversation(props) {
                 <DropdownItem
                   icon={MdOutlineGTranslate}
                   label={'Auto translate'}
-                  dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                  dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={() => {}}
                 />
@@ -237,7 +237,7 @@ function InformationConversation(props) {
                 <DropdownItem
                   icon={TbBackground}
                   label={'Change background'}
-                  dropdownStyle={'p-2 text-black dark:text-white dark:hover:bg-gray-600'}
+                  dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
                   onClick={togglePopupChangeBackground}
                 />
