@@ -142,14 +142,15 @@ function createSocketChannel(socket, idConversation) {
     })
     socket.on('message received', (message) => {
       // Kiểm tra xem tin nhắn có thuộc về cuộc trò chuyện hiện tại hay không.
-            if (message.conversation?._id == idConversation) {
+      console.log('message', message)
+
+      if (
+        message?.data?.conversation?._id == idConversation ||
+        message?.conversation?._id === idConversation
+      ) {
+        console.log(message)
         // Dispatch action để cập nhật state với tin nhắn mới.
-        console.log('hhhhhhhhhhhh')
-        emit(setNewMessage(message))
-      }
-      if (message?.data?.conversation?._id == idConversation) {
-        // Dispatch action để cập nhật state với tin nhắn mới.
-        emit(setNewMessage(message.data))
+        emit(setNewMessage(message.data ? message.data : message))
       }
     })
     socket.on('response send message', (res) => {
@@ -189,7 +190,7 @@ function createSocketChannel(socket, idConversation) {
       emit(updateConversation(message))
       console.log(message)
     })
-    
+
     socket.on('changed background', (background) => {
       console.log('background', background)
       emit(setChangeBackground(background))
