@@ -14,7 +14,7 @@ import { PiSignOutBold } from 'react-icons/pi'
 import { getCookie, removeCookie } from '../../services/Cookies'
 import { useNavigate } from 'react-router-dom'
 import EditAndSetting from '../PopUp/EditAndSetting/EditAndSetting'
-import PopUpFindFriends from '../PopUp/PopUpFindFriends/PopUpFindFriends'
+const PopUpFindFriends = lazy(() => import('../PopUp/PopUpFindFriends/PopUpFindFriends'))
 const PopUpAddMenber = lazy(() => import('../PopUp/PopUpAddMember/PopUpAddMember'))
 import userService from '../../services/userService'
 import UserInfoFriendRequest from './UserInfoFriendRequest/UserInfoFriendRequest'
@@ -201,7 +201,9 @@ const Sidebar = ({ togglePopupViewProfile }) => {
         />
       )}
       <EditAndSetting isVisible={isPopupVisible} onClose={togglePopup} />
-      <PopUpFindFriends isVisible={isPopupVisibleFindFriends} onClose={togglePopupFindFriend} />
+      <Suspense>
+        <PopUpFindFriends isVisible={isPopupVisibleFindFriends} onClose={togglePopupFindFriend} />
+      </Suspense>
       <Suspense>
         <PopUpAddMenber isVisible={isPopupVisibleAddMember} onClose={togglePopupAddMember} />
       </Suspense>

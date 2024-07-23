@@ -2,6 +2,8 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { setCookie } from '../../../services/Cookies'
+import { storage } from '@/utils/firebaseConfig'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 const SignUpComponent = () => {
   const [fullName, setFullName] = useState('')
@@ -20,27 +22,15 @@ const SignUpComponent = () => {
     setError('')
 
     try {
-      const response = await axios.post(
-        'https://genzu-chatting-be.onrender.com/auth/sign-up',
-        {
-          fullName,
-          address,
-          gender,
-          email,
-          password,
-          picture,
-        },
-        {
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-      setIsSuccess('Sign Up successfull, please confirm in your email')
-
-      // navigate('/')
-      // Handle successful sign up (e.g., redirect, show success message)
+      if (picture instanceof File) {
+        console.log('Input là một file')
+        await uploadAndSignUp()
+      } else if (typeof picture === 'string') {
+        console.log('Input là một string')
+        await signUpWithExistingPicture()
+      } else {
+        console.log('Input không phải file hoặc string')
+      }
     } catch (err) {
       console.error('Sign up failed:', err)
       setError('Sign up failed. Please try again.')
@@ -48,7 +38,47 @@ const SignUpComponent = () => {
       setLoading(false)
     }
   }
-
+  const signUpWithExistingPicture = async () => {
+    const response = await axios.post(
+      'https://genzu-chatting-be.onrender.com/auth/sign-up',
+      {
+        fullName,
+        address,
+        gender,
+        email,
+        password,
+        picture,
+      },
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+    setIsSuccess('Sign Up successfull, please confirm in your email')
+  }
+  const uploadAndSignUp = async () => {
+    const storageRef = ref(storage, `$image/${picture.file.name}`)
+    uploadBytes(storageRef, picture)
+      .then((snapshot) => {
+        return getDownloadURL(snapshot.ref)
+      })
+      .then((downloadURL) => {
+        setPicture(downloadURL)
+        signUpWithExistingPicture()
+      })
+  }
+  const handlePictureChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setPicture(URL.createObjectURL(e.target.files[0]))
+    } else if (e.target.value) {
+      setPicture(e.target.value)
+    }
+  }
+  const handleSelectFile = () => {
+    document.getElementById('picture-file').click()
+  }
   return (
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>
@@ -141,9 +171,9 @@ const SignUpComponent = () => {
                 placeholder='Password'
               />
             </div>
-            <div>
+            <div className='flex'>
               <label htmlFor='picture' className='sr-only'>
-                Profile Picture URL
+                Profile Picture
               </label>
               <input
                 id='picture'
@@ -151,10 +181,21 @@ const SignUpComponent = () => {
                 type='text'
                 autoComplete='url'
                 value={picture}
-                onChange={(e) => setPicture(e.target.value)}
+                onChange={handlePictureChange}
                 className='relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
                 placeholder='Profile Picture URL'
               />
+              <input
+                id='picture-file'
+                name='picture'
+                type='file'
+                accept='image/*'
+                onChange={handlePictureChange}
+                className='hidden'
+              />
+              <button type='button' onClick={handleSelectFile}>
+                Select Image
+              </button>
             </div>
           </div>
 

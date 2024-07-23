@@ -31,7 +31,7 @@ function* fetchIdConversation() {
   }
 }
 function* fetchConversation() {
-console.log('check conver')
+  console.log('check conver')
   try {
     const response = yield call(getConversations)
     yield put(setLsConversation(response.data))
@@ -43,7 +43,7 @@ console.log('check conver')
   }
 }
 function* fetchLsFriends() {
-console.log('check fr')
+  console.log('check fr')
   try {
     const response = yield call(userService.getAllFriends)
     console.log(response)
@@ -62,22 +62,21 @@ function* fetchConversationAndFriends() {
   }
 }
 
-function* getUserBlocked (){
-  try{
+function* getUserBlocked() {
+  try {
     const { data } = yield call(userService.getUserBlocked)
     console.log('get user block:', data)
     yield put(setListBlockUsers(data))
-
-  }catch(error){
+  } catch (error) {
     console.error('Lỗi khi get user blocked!!!', error)
     throw error
   }
 }
-function* handleBlockUser(action){
-  try{
+function* handleBlockUser(action) {
+  try {
     console.log('handleBlockUser:', action.payload)
     // let response
-    switch(action.payload.type){
+    switch (action.payload.type) {
       case 'block':
         const response = yield call(userService.blockUser, action.payload.user.id)
         console.log('response :', response.data.data)
@@ -86,7 +85,7 @@ function* handleBlockUser(action){
 
         break
       case 'unBlock':
-        const {data} = yield call(userService.unblockUser, action.payload.user.id)
+        const { data } = yield call(userService.unblockUser, action.payload.user.id)
         console.log('response :', data)
 
         yield put(setListBlockUsers(data.blockedUsers))
@@ -97,7 +96,7 @@ function* handleBlockUser(action){
     }
     // const {data} = response
     // console.log('data:', data)
-  }catch(error){
+  } catch (error) {
     console.error('Lỗi khi chặn người dùng này!', error)
     throw error
   }

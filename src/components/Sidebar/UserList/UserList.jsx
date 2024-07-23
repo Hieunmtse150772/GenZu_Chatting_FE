@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { setConversation } from '@/redux/Slice/userSlice'
 import SearchFriends from '../SearchFriends/SearchFriends'
 import { getCookie } from '@/services/Cookies'
+import { resetMessageSlice } from '@/redux/Slice/messageSlice'
 
 const UserList = ({ togglePopupViewProfile }) => {
   const [activeTab, setActiveTab] = useState('personal')
@@ -23,6 +24,7 @@ const UserList = ({ togglePopupViewProfile }) => {
   const dispatch = useDispatch()
   const handleUserClick = (id) => {
     navigate(`/chat/${id}`)
+    dispatch(resetMessageSlice())
     setActiveUserID(id)
     if (!conversation) {
       dispatch(setConversation(id))
@@ -92,7 +94,7 @@ const UserList = ({ togglePopupViewProfile }) => {
                       ) >= 0
                         ? true
                         : false,
-                    userBlocked: item?.blockedUsers
+                    userBlocked: item?.blockedUsers,
                   }
                 } else {
                   userInfo = {
@@ -108,7 +110,7 @@ const UserList = ({ togglePopupViewProfile }) => {
                       ) >= 0
                         ? true
                         : false,
-                    userBlocked: item?.blockedUsers
+                    userBlocked: item?.blockedUsers,
                   }
                 }
                 return (

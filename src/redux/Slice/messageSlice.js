@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import Fuse from 'fuse.js'
 
 const initialState = {
-  message: [],
+  message: null,
   selectedEmojis: [],
   answerAI: [],
   testMessage: '',
@@ -215,12 +215,16 @@ const messageSlice = createSlice({
       }
     },
     searchMessage: (state, action) => {},
+    resetMessageSlice: (state) => {
+      return initialState
+    },
   },
 })
 
 export const {
   sendMessage,
   setMessage,
+  resetMessageSlice,
   sendMessageGroup,
   setReplyTo,
   clearReplyTo,

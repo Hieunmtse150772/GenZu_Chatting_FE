@@ -22,9 +22,6 @@ const chatSlice = createSlice({
     setSocketConnected: (state, action) => {
       state.socketConnected = action.payload
     },
-    setTyping: (state, action) => {
-      state.typing = action.payload
-    },
     setIsTyping: (state, action) => {
       state.isTyping = action.payload
     },
@@ -78,12 +75,14 @@ const chatSlice = createSlice({
       }
     },
     watchMessageSlice: (state, action) => {},
+    typingSlice: (state,action) => {},
   },
 })
 
 export const {
   setLoadMore,
   setLsPage,
+  typingSlice,
   setIsCreateNewConversation,
   getMessageMoreBottom,
   watchMessageSlice,

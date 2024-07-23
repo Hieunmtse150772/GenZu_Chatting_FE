@@ -154,20 +154,20 @@ export default function SearchFriends({ user }) {
       ) : (
         <div
           onClick={() => {
-            handleUserNoConversationClcik(user.info._id)
+            handleUserNoConversationClcik(user?.info?._id)
           }}
           className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
             isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
           } mb-1 rounded-lg ${isCreateNewConversation ? 'disabled' : ''}`}
         >
           <img
-            src={user.info.picture}
+            src={user?.info?.picture}
             alt='user avatar'
             className='h-12 w-12 rounded-full object-cover'
           />
 
           <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
-            <h3 className='truncate text-sm font-semibold'>{user.info.fullName}</h3>
+            <h3 className='truncate text-sm font-semibold'>{user?.info?.fullName}</h3>
           </div>
           <div
             className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${

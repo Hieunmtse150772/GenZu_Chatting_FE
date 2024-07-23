@@ -38,7 +38,7 @@ const RenderMessage = ({ item, autoTranslate }) => {
     case 'text':
       return (
         <p>
-          {console.log(autoTranslate)}
+          {/* {console.log(autoTranslate)} */}
           {item.message}
         </p>
       )

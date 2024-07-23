@@ -9,6 +9,7 @@ import { getMessagesMore } from '@/redux/Slice/messageSlice'
 import { getMessageMoreBottom, leaveRoomSlice, setLoadMore } from '@/redux/Slice/chatSlice'
 import LoadMore from './LoadMore/LoadMore'
 import SearchMessage from './SearchMessage/SearchMessage'
+import Typing from './Typing/Typing'
 function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
   // Component ChatBody nhận props toggleInfo
   const [backgroundStyle, setBackgroundStyle] = useState({ backgroundColor: '#6699FF' })
@@ -21,7 +22,7 @@ function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
   // const isSearchMessage = useSelector((state) => state.message.isSearchMessage)
   const resultMessage = useSelector((state) => state.message.resultMessage)
   const conversation = useSelector((state) => state.user.conversation)
-
+  const isTyping = useSelector((state) => state.chat.isTyping)
   const idConversation = useParams()
   const dispatch = useDispatch()
   const messagesListRef = useRef(null)
@@ -136,7 +137,7 @@ function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
           handleToBottom={goToBottom}
           idMessage={idMessage}
           isSearchMessage={isSearchMessage}
-        />{' '}
+        />
         {/* Hiển thị component DetailMessage với props handleToBottom được truyền vào */}
         {/* Nút "Go To Bottom" */}
         <button
@@ -149,7 +150,11 @@ function ChatBody({ isSearchMessage, idMessage, toggleInfo }) {
           <p className=''>Has a new message</p> {/* Hiển thị text "Has a new message" */}
         </button>
       </div>
-      <ChatFooter /> {/* Hiển thị component ChatFooter */}
+      {console.log(isTyping)}
+      {isTyping ? <Typing /> : <></>}
+      {/* {console.log(conversation.blockUsers.length, conversation.isGroupChat)} */}
+      <ChatFooter />
+      {/* Hiển thị component ChatFooter */}
     </div>
   )
 }

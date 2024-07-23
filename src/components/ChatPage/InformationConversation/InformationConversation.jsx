@@ -19,11 +19,11 @@ function InformationConversation(props) {
   const [timeOffline, setTimeOffline] = useState('')
   const [offlineTime, setOfflineTime] = useState(null)
   const [isOpenChangeBackground, setIsOpenChangeBackground] = useState(false)
-
   const [showImage, setShowImage] = useState(false)
-  const [lsImage, setLsImage] = useState()
+  const [lsImage, setLsImage] = useState(null)
   const [showVideo, setShowVideo] = useState(false)
   const [lsVideo, setLsVideo] = useState()
+  const [idConversationCurrent, setIdConversationCurrent] = useState(useParams())
   const dispatch = useDispatch()
 
   const togglePopupViewProfile = () => {
@@ -108,6 +108,9 @@ function InformationConversation(props) {
     return () => clearInterval(intervalId)
   }, [offlineTime])
 
+  useEffect(() => {
+    idConversation != idConversationCurrent && (setLsImage(null), setLsVideo(null))
+  }, [idConversation])
   return (
     <>
       <div className='dark:bg mx-auto h-screen max-w-2xl bg-mainBlue dark:bg-[#333333] dark:opacity-95'>

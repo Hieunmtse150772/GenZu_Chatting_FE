@@ -59,8 +59,7 @@ import { io } from 'socket.io-client'
 
 // Import các effect từ redux-saga để xử lý logic bất đồng bộ.
 import { eventChannel } from 'redux-saga'
-import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects'
-import { BsEmojiDizzyFill } from 'react-icons/bs'
+import { call, put, take, takeLatest } from 'redux-saga/effects'
 
 // Biến toàn cục để lưu trữ socket connection.
 var socket
@@ -75,7 +74,10 @@ function createSocketChannel(socket, idConversation) {
   return eventChannel((emit) => {
     // Đăng ký lắng nghe các sự kiện socket.io.
     socket.on('connected', () => emit(setSocketConnected(true)))
-    socket.on('typing', () => emit(setIsTyping(true)))
+    socket.on('typing', () => {
+      console.log('is typing')
+      emit(setIsTyping(true))
+    })
     socket.on('stop_typing', () => emit(setIsTyping(false)))
     socket.on('validation', (data) => {
       console.log('validation', data)
@@ -139,7 +141,7 @@ function createSocketChannel(socket, idConversation) {
         console.log('hhhhhhhhhhhh')
         emit(setNewMessage(message))
       }
-      if (message?.data.conversation?._id == idConversation) {
+      if (message?.data?.conversation?._id == idConversation) {
         // Dispatch action để cập nhật state với tin nhắn mới.
         console.log('kkkkkkk')
         console.log(message.data)
@@ -318,7 +320,13 @@ function* replyAddFriendRequest(action) {
   console.log('accepted')
   yield call([socket, 'emit'], 'accept request', action.payload)
 }
-
+/**
+ * Saga để handle cac action chat
+ */
+function* typingSaga(action) {
+  console.log(action.payload)
+  yield call([socket, 'emit'], 'typing', action.payload)
+}
 /**
  * Saga để gửi tin nhắn.
  * @param {object} action - Redux action.
@@ -565,9 +573,7 @@ function* searchMessageById(action) {
  * Root saga để theo dõi tất cả các action và chạy các saga tương ứng.
  */
 export default function* chatSaga() {
-  // Sử dụng takeLatest để chỉ xử lý action cuối cùng được dispatch.
   yield takeLatest('user/setReadNotification', sendReadNotification)
-  // yield takeLatest('user/setFriendRequestNotification', sendAddFriendRequest)
   yield takeLatest('chat/searchMessageById', searchMessageById)
   yield takeLatest('message/sendMessageGroup', sendMessageGroupSaga)
   yield takeLatest('message/recallMessageSlice', recallMessageSaga)
@@ -591,5 +597,6 @@ export default function* chatSaga() {
   yield takeLatest('chat/createNewConversation', createNewConversationSaga)
   yield takeLatest('user/handleChangeBackground', changeBgConversation)
   yield takeLatest('chat/searchMessageByKeyword', searchMessageByKeyword)
+  yield takeLatest('chat/typingSlice', typingSaga)
   // yield takeLatest('chat/watchMessageSlice', watchMessageSocket)
 }
