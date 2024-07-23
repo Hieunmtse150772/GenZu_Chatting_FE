@@ -15,6 +15,7 @@ import { TbBackground } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 import { GoVideo } from 'react-icons/go'
 import { useTranslation } from 'react-i18next'
+import noImage from '../../../assets/noImage.jpg'
 
 function InformationConversation(props) {
   const personalChat = useSelector((state) => state.user.conversation)
@@ -122,11 +123,11 @@ function InformationConversation(props) {
           <div className='flex flex-col items-center pb-10'>
             <img
               className='mb-3 h-24 w-24 rounded-full shadow-lg'
-              src={customer?.picture}
+              src={customer?.picture || noImage}
               alt={customer?.fullName}
-              onError={(e) => {
-                e.target.src = '/src/assets/no_Image.jpg'
-              }}
+            // onError={(e) => {
+            //   e.target.src = { noImage }
+            // }}
             />
             <h3 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>
               {' '}
@@ -168,12 +169,12 @@ function InformationConversation(props) {
                       {lsImage?.map((image, index) => (
                         <div key={index} className='my-2 h-[5.5rem] w-[5.5rem]'>
                           <img
-                            src={image.message}
+                            src={image.message || noImage}
                             className='h-full w-full object-cover'
                             alt='Image not Found '
-                            onError={(e) => {
-                              e.target.src = '/src/assets/no_Image.jpg'
-                            }}
+                          // onError={(e) => {
+                          //   e.target.src = { noImage }
+                          // }}
                           />
                         </div>
                       ))}
@@ -204,13 +205,13 @@ function InformationConversation(props) {
                       {lsVideo?.map((video, index) => (
                         <div key={index} className='my-2 h-28 w-28'>
                           <video
-                            src={video.message}
+                            src={video.message || noImage}
                             className='h-full w-full object-cover'
                             controls
                             alt='Video not Found '
-                            onError={(e) => {
-                              e.target.src = '/src/assets/no_Image.jpg'
-                            }}
+                          // onError={(e) => {
+                          //   e.target.src = { noImage }
+                          // }}
                           />
                         </div>
                       ))}
@@ -234,7 +235,7 @@ function InformationConversation(props) {
                   label={'Auto translate'}
                   dropdownStyle={'p-2 text-black dark:text-white '}
                   iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <hr />
                 <DropdownItem

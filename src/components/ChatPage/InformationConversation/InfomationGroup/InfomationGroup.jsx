@@ -18,6 +18,7 @@ import ViewMember from './ViewMember/ViewMember'
 import UpdateGroup from './UpdateGroup/UpdateGroup'
 import { fetchLsImage, fetchLsVideo } from '@/services/messageService'
 import { GoVideo } from 'react-icons/go'
+import noImage from '../../../../assets/noImage.jpg'
 
 const InfomationGroup = ({ conversation }) => {
   const dispatch = useDispatch()
@@ -115,7 +116,7 @@ const InfomationGroup = ({ conversation }) => {
             label={'Link tham gia nhóm'}
             dropdownStyle={'p-2 dark:text-white'}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
-            onClick={() => {}}
+            onClick={() => { }}
           />
         </ul>
       </div>
@@ -126,7 +127,7 @@ const InfomationGroup = ({ conversation }) => {
             label={'Search chat'}
             dropdownStyle={'p-2 dark:text-white'}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
-            onClick={() => {}}
+            onClick={() => { }}
           />
           <DropdownItem
             icon={FaRegImage}
@@ -141,12 +142,12 @@ const InfomationGroup = ({ conversation }) => {
                 {lsImage?.map((image, index) => (
                   <div key={index} className='my-2 h-[5.5rem] w-[5.5rem]'>
                     <img
-                      src={image.message}
+                      src={image.message || noImage}
                       className='h-full w-full object-cover'
                       alt='Image not Found '
-                      onError={(e) => {
-                        e.target.src = '/src/assets/no_Image.jpg'
-                      }}
+                    // onError={(e) => {
+                    //   e.target.src = { noImage }
+                    // }}
                     />
                   </div>
                 ))}
@@ -177,13 +178,13 @@ const InfomationGroup = ({ conversation }) => {
                 {lsVideo?.map((video, index) => (
                   <div key={index} className='my-2 h-28 w-28'>
                     <video
-                      src={video.message}
+                      src={video.message || noImage}
                       className='h-full w-full object-cover'
                       controls
                       alt='Video not Found '
-                      onError={(e) => {
-                        e.target.src = '/src/assets/no_Image.jpg'
-                      }}
+                    // onError={(e) => {
+                    //   e.target.src = { noImage }
+                    // }}
                     />
                   </div>
                 ))}
@@ -227,7 +228,7 @@ const InfomationGroup = ({ conversation }) => {
             label={'Leave group'}
             dropdownStyle={'p-2 dark:text-white'}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600 da'}
-            onClick={() => {}}
+            onClick={() => { }}
           />
         </ul>
       </div>

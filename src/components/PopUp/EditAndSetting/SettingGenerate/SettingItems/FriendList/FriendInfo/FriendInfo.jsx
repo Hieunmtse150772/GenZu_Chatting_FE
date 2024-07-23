@@ -1,6 +1,6 @@
 import { FiUserX } from 'react-icons/fi'
 import React, { useState, useRef, useEffect } from 'react'
-import userIcon from '@/assets/user_icon.jpg'
+import userIcon from '../../../../../../../assets/noImage.jpg'
 import userService from '@/services/userService'
 import { useDispatch } from 'react-redux'
 import { removeFriend } from '@/redux/Slice/userSlice'

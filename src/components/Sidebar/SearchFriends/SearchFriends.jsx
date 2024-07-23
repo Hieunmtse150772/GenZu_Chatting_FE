@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setConversation } from '@/redux/Slice/userSlice'
 import { createNewConversation, setIsCreateNewConversation } from '@/redux/Slice/chatSlice'
+import noImage from '../../../assets/noImage.jpg'
+
 export default function SearchFriends({ user }) {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const [isCreateNewConversation, setCreateNewConversation] = useState(false)
@@ -65,9 +67,8 @@ export default function SearchFriends({ user }) {
           onClick={() => {
             handleUserClick(user.conversation[0]._id)
           }}
-          className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
-            isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
-          } mb-1 rounded-lg`}
+          className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
+            } mb-1 rounded-lg`}
         >
           <img
             src={
@@ -81,9 +82,9 @@ export default function SearchFriends({ user }) {
             }
             alt='user avatar'
             className='h-12 w-12 rounded-full object-cover'
-            onError={(e) => {
-              e.target.src = '/src/assets/no_Image.jpg'
-            }}
+          // onError={(e) => {
+          //   e.target.src = { noImage }
+          // }}
           />
 
           <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
@@ -99,9 +100,8 @@ export default function SearchFriends({ user }) {
             </p>
           </div>
           <div
-            className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${
-              isOptionBtnClick ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-            }`}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${isOptionBtnClick ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+              }`}
             ref={buttonRef}
             onClick={handleMoreClick}
           >
@@ -117,7 +117,7 @@ export default function SearchFriends({ user }) {
                 <DropdownItem
                   icon={CgProfile}
                   label={'Xem trang cá nhân'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                   dropdownStyle={'mt-[7px] p-2'}
                   iconStyle={'h-9 w-9 p-2'}
                 />
@@ -127,14 +127,14 @@ export default function SearchFriends({ user }) {
                   label={'Gọi thoại'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <DropdownItem
                   icon={MdVideocam}
                   label={'Chat video'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <hr />
                 <DropdownItem
@@ -142,14 +142,14 @@ export default function SearchFriends({ user }) {
                   label={'Chặn'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <DropdownItem
                   icon={MdOutlineDelete}
                   label={'Delete chat'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
               </ul>
             </div>
@@ -160,26 +160,24 @@ export default function SearchFriends({ user }) {
           onClick={() => {
             handleUserNoConversationClcik(user?.info?._id)
           }}
-          className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
-            isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
-          } mb-1 rounded-lg ${isCreateNewConversation ? 'disabled' : ''}`}
+          className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
+            } mb-1 rounded-lg ${isCreateNewConversation ? 'disabled' : ''}`}
         >
           <img
-            src={user?.info?.picture}
+            src={user?.info?.picture || noImage}
             alt='user avatar'
             className='h-12 w-12 rounded-full object-cover'
-            onError={(e) => {
-              e.target.src = '/src/assets/no_Image.jpg'
-            }}
+          // onError={(e) => {
+          //   e.target.src = { noImage }
+          // }}
           />
 
           <div className='flex w-full flex-col gap-2 truncate dark:text-white'>
             <h3 className='truncate text-sm font-semibold'>{user?.info?.fullName}</h3>
           </div>
           <div
-            className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${
-              isOptionBtnClick ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-            }`}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${isOptionBtnClick ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+              }`}
             ref={buttonRef}
             onClick={handleMoreClick}
           >
@@ -195,7 +193,7 @@ export default function SearchFriends({ user }) {
                 <DropdownItem
                   icon={CgProfile}
                   label={'Xem trang cá nhân'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                   dropdownStyle={'mt-[7px] p-2'}
                   iconStyle={'h-9 w-9 p-2'}
                 />
@@ -205,14 +203,14 @@ export default function SearchFriends({ user }) {
                   label={'Gọi thoại'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <DropdownItem
                   icon={MdVideocam}
                   label={'Chat video'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <hr />
                 <DropdownItem
@@ -220,14 +218,14 @@ export default function SearchFriends({ user }) {
                   label={'Chặn'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <DropdownItem
                   icon={MdOutlineDelete}
                   label={'Delete chat'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
               </ul>
             </div>

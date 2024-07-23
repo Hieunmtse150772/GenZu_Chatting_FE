@@ -4,6 +4,7 @@ import { getCookie } from '@/services/Cookies'
 import { useSelector } from 'react-redux'
 import ChatHeaderSkeleton from './ChatHeaderSkeleton/ChatHeaderSkeleton'
 import { useEffect, useState } from 'react'
+import noImage from '../../../assets/noImage.jpg'
 
 function ChatHeader({ toggleInfo }) {
   const personalChat = useSelector((state) => state.user.conversation)
@@ -63,16 +64,16 @@ function ChatHeader({ toggleInfo }) {
             <img
               src={
                 !personalChat.isGroupChat
-                  ? customer?.picture
+                  ? customer?.picture ? customer?.picture : noImage
                   : personalChat.avatar != null
                     ? personalChat.avatar
                     : `https://i.pinimg.com/736x/e8/13/74/e8137457cebc9f60266ffab0ca4e83a6.jpg`
               }
               alt='user avatar'
               className='h-16 w-16 rounded-full'
-              onError={(e) => {
-                e.target.src = '/src/assets/no_Image.jpg'
-              }}
+            // onError={(e) => {
+            //   e.target.src = { noImage }
+            // }}
             />
             <div className='flex flex-col'>
               <span className='text-xl font-semibold text-black dark:text-white md:text-2xl'>

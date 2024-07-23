@@ -1,6 +1,6 @@
 import { getCookie } from '@/services/Cookies'
 import React, { memo } from 'react'
-
+import noImage from '../../../../../assets/noImage.jpg'
 const RenderMessage = ({ item, autoTranslate }) => {
   const userId = JSON.parse(getCookie('userLogin')).user._id
   const isOwnMessage = item.sender?._id === userId
@@ -11,12 +11,12 @@ const RenderMessage = ({ item, autoTranslate }) => {
       return (
         <img
           className='h-auto w-full'
-          src={item.message}
+          src={item.message || noImage}
           alt='Uploaded content'
           style={{ width: 'auto', height: '200px' }}
-          onError={(e) => {
-            e.target.src = '/src/assets/no_Image.jpg'
-          }}
+        // onError={(e) => {
+        //   e.target.src = { noImage }
+        // }}
         />
       )
     case 'audio':
@@ -26,11 +26,11 @@ const RenderMessage = ({ item, autoTranslate }) => {
         <video
           className='w-full'
           controls
-          src={item.message}
+          src={item.message || noImage}
           style={{ width: 'auto', height: '400px' }}
-          onError={(e) => {
-            e.target.src = '/src/assets/no_Image.jpg'
-          }}
+        // onError={(e) => {
+        //   e.target.src = { noImage }
+        // }}
         />
       )
     case 'file':
@@ -48,12 +48,12 @@ const RenderMessage = ({ item, autoTranslate }) => {
         <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} relative`}>
           {!isOwnMessage && isGroupChat && (
             <img
-              src={item.sender?.picture}
+              src={item.sender?.picture || noImage}
               alt={item.sender?.fullName}
               className='absolute left-0 top-0 h-8 w-8 rounded-full'
-              onError={(e) => {
-                e.target.src = '/src/assets/no_Image.jpg'
-              }}
+            // onError={(e) => {
+            //   e.target.src = { noImage }
+            // }}
             />
           )}
           <div

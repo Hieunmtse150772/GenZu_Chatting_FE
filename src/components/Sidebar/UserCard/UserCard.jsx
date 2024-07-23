@@ -12,6 +12,8 @@ import { TbPointFilled } from 'react-icons/tb'
 import ViewProfile from '@/components/PopUp/ViewProfile/ViewProfile'
 import { getUserBlocked, handleBlockUser } from '@/redux/Slice/userSlice'
 import { useNavigate, useParams } from 'react-router-dom'
+import noImage from '../../../assets/noImage.jpg'
+
 const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) => {
   const [isOptionBtnClick, setIsOptionBtnClick] = useState(false)
   const buttonRef = useRef(null)
@@ -80,18 +82,17 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
     <>
       <div
         onClick={onUserCardClick}
-        className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${
-          isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
-        } mb-1 rounded-lg ${!user.isRead ? 'border-2 border-blue-400' : ''}`}
+        className={`group relative flex cursor-pointer items-center space-x-4 p-2 ${isActive ? 'bg-[#74CDFF]' : 'hover:bg-[#74CDFF]'
+          } mb-1 rounded-lg ${!user.isRead ? 'border-2 border-blue-400' : ''}`}
       >
         <div className='relative h-14 w-20'>
           <img
-            src={user.picture}
+            src={user.picture || noImage}
             alt='user avatar'
             className='h-14 w-14 rounded-full object-cover'
-            onError={(e) => {
-              e.target.src = '/src/assets/no_Image.jpg'
-            }}
+          // onError={(e) => {
+          //   e.target.src = { noImage }
+          // }}
           />
           <TbPointFilled
             size={22}
@@ -103,9 +104,8 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
           <p className='truncate text-sm text-gray-500 dark:text-slate-500'>{user.latestMessage}</p>
         </div>
         <div
-          className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${
-            isOptionBtnClick ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-          }`}
+          className={`absolute right-2 top-1/2 -translate-y-1/2 transform transition-opacity ${isOptionBtnClick ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+            }`}
           ref={buttonRef}
           onClick={handleMoreClick}
         >
@@ -121,7 +121,7 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
                 <DropdownItem
                   icon={IoAlert}
                   label={'Bạn tạm thời không thể liên lạc được với người này'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                   dropdownStyle={'mt-[7px] p-2'}
                   iconStyle={'h-9 w-9 p-2'}
                 />
@@ -141,14 +141,14 @@ const UserCard = ({ user, isActive, onUserCardClick, togglePopupViewProfile }) =
                   label={'Gọi thoại'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <DropdownItem
                   icon={MdVideocam}
                   label={'Gọi video'}
                   dropdownStyle={'p-2'}
                   iconStyle={'h-9 w-9 p-2'}
-                  onClick={() => {}}
+                  onClick={() => { }}
                 />
                 <hr />
                 <DropdownItem
