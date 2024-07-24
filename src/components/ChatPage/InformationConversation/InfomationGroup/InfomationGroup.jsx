@@ -16,9 +16,11 @@ import { useParams } from 'react-router-dom'
 import AddNewMember from './AddNewMember/AddNewMember'
 import ViewMember from './ViewMember/ViewMember'
 import UpdateGroup from './UpdateGroup/UpdateGroup'
+import { removeMemberFromGroup } from '@/redux/Slice/userSlice'
 import { fetchLsImage, fetchLsVideo } from '@/services/messageService'
 import { GoVideo } from 'react-icons/go'
 import noImage from '../../../../assets/noImage.jpg'
+import { getCookie } from '@/services/Cookies'
 
 const InfomationGroup = ({ conversation }) => {
   const dispatch = useDispatch()
@@ -32,6 +34,8 @@ const InfomationGroup = ({ conversation }) => {
   const [lsVideo, setLsVideo] = useState()
   const { idConversation } = useParams()
   const [idConversationCurrent, setIdConversationCurrent] = useState(useParams())
+  const currentUserId = JSON.parse(getCookie('userLogin')).user?._id
+  console.log(JSON.parse(getCookie('userLogin')).user)
   const listGroupChats = useSelector((state) => state.user?.lsGroupChats)
   const groupAdminId = listGroupChats.find((group) => group._id === idConversation)?.groupAdmin?._id
   const totalMembers = listGroupChats.find((group) => group._id === idConversation)?.users || []
@@ -44,6 +48,12 @@ const InfomationGroup = ({ conversation }) => {
 
   const handleAddNewMemberClick = () => {
     setIsAddMemberVisible(true) // Show the AddNewMember popup
+  }
+
+  const handleLeaveGroup = (idConversation, idMember) => {
+    const groupId = idConversation
+    const memberId = idMember
+    dispatch(removeMemberFromGroup({ groupId, memberId }))
   }
 
   const handleViewMemberClick = () => {
@@ -76,7 +86,6 @@ const InfomationGroup = ({ conversation }) => {
     setLsImage(response)
   }
   const hanldeGetLsVideo = async () => {
-    console.log('check')
     console.log(showVideo)
     if (showVideo == false) {
       GetLsVideo()
@@ -116,7 +125,7 @@ const InfomationGroup = ({ conversation }) => {
             label={'Link tham gia nhóm'}
             dropdownStyle={'p-2 dark:text-white'}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
-            onClick={() => { }}
+            onClick={() => {}}
           />
         </ul>
       </div>
@@ -127,7 +136,7 @@ const InfomationGroup = ({ conversation }) => {
             label={'Search chat'}
             dropdownStyle={'p-2 dark:text-white'}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
-            onClick={() => { }}
+            onClick={() => {}}
           />
           <DropdownItem
             icon={FaRegImage}
@@ -145,9 +154,9 @@ const InfomationGroup = ({ conversation }) => {
                       src={image.message || noImage}
                       className='h-full w-full object-cover'
                       alt='Image not Found '
-                    // onError={(e) => {
-                    //   e.target.src = { noImage }
-                    // }}
+                      // onError={(e) => {
+                      //   e.target.src = { noImage }
+                      // }}
                     />
                   </div>
                 ))}
@@ -182,9 +191,9 @@ const InfomationGroup = ({ conversation }) => {
                       className='h-full w-full object-cover'
                       controls
                       alt='Video not Found '
-                    // onError={(e) => {
-                    //   e.target.src = { noImage }
-                    // }}
+                      // onError={(e) => {
+                      //   e.target.src = { noImage }
+                      // }}
                     />
                   </div>
                 ))}
@@ -228,7 +237,7 @@ const InfomationGroup = ({ conversation }) => {
             label={'Leave group'}
             dropdownStyle={'p-2 dark:text-white'}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600 da'}
-            onClick={() => { }}
+            onClick={() => handleLeaveGroup(conversation._id, currentUserId)}
           />
         </ul>
       </div>

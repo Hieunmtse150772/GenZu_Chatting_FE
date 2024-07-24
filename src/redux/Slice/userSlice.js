@@ -216,6 +216,7 @@ const userSlice = createSlice({
         // Kiểm tra nếu chỉ còn 1 thành viên thì xóa nhóm
         if (group.users.length === 1) {
           state.lsGroupChats.splice(groupIndex, 1)
+          state.isDeleteGroupChat = true
         }
       } else {
         // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới

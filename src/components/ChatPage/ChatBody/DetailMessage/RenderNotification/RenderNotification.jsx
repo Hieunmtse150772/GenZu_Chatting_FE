@@ -39,5 +39,11 @@ const RenderNotification = ({ item }) => {
       return <p>{item.sender?.fullName + ` đã xoá ` + item.affected_user_id?.fullName}</p>
     }
   }
+
+  if (item.sender?._id !== userId && item.message === '3011') {
+    if (item.conversation.isGroupChat) {
+      return <p>{item.sender?.fullName + ` đã rời khỏi nhóm ` + item.conversation?.chatName}</p>
+    }
+  }
 }
 export default RenderNotification
