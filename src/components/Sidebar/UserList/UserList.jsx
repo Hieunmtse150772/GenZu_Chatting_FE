@@ -44,8 +44,8 @@ const UserList = ({ togglePopupViewProfile }) => {
         <button
           onClick={() => setActiveTab('personal')}
           className={`flex-1 rounded-bl-xl rounded-tl-xl border p-2 text-center ${activeTab === 'personal'
-              ? 'border-blue-300 bg-blue-300 text-black shadow-lg dark:text-white'
-              : 'border-gray-300 bg-white text-black'
+            ? 'border-blue-300 bg-blue-300 text-black shadow-lg dark:text-white'
+            : 'border-gray-300 bg-white text-black'
             }`}
         >
           {t('personal_chat')}
@@ -53,8 +53,8 @@ const UserList = ({ togglePopupViewProfile }) => {
         <button
           onClick={() => setActiveTab('group')}
           className={`flex-1 rounded-br-xl rounded-tr-xl border p-2 text-center ${activeTab === 'group'
-              ? 'border-blue-300 bg-blue-300 text-black shadow-lg dark:text-white'
-              : 'border-gray-300 bg-white text-black'
+            ? 'border-blue-300 bg-blue-300 text-black shadow-lg dark:text-white'
+            : 'border-gray-300 bg-white text-black'
             }`}
         >
           {t('group_chat')}
@@ -88,7 +88,7 @@ const UserList = ({ togglePopupViewProfile }) => {
                     latestMessage: item?.latestMessage?.message,
                     isGroupChat: false,
                     isRead:
-                      item?.latestMessage?.readBy ??.findIndex(
+                      item?.latestMessage?.readBy?.findIndex(
                         (id) => id == JSON.parse(getCookie('userLogin')).user._id,
                       ) >= 0
                         ? true
