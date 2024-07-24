@@ -218,6 +218,7 @@ const userSlice = createSlice({
           state.lsGroupChats.splice(groupIndex, 1)
           state.isDeleteGroupChat = true
         }
+        state.isDeleteGroupChat = true
       } else {
         // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
         console.error('Group not found')

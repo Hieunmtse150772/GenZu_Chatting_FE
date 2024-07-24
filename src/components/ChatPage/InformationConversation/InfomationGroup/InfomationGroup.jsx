@@ -225,13 +225,24 @@ const InfomationGroup = ({ conversation }) => {
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={handleAddNewMemberClick} // Show the AddNewMember popup
           />
-          <DropdownItem
+          {currentUserId === groupAdminId ? (
+            <DropdownItem
+              icon={MdDeleteOutline}
+              label={'Delete group'}
+              dropdownStyle={'p-2 dark:text-white'}
+              iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
+              onClick={() => handleDeleteGroup(conversation._id)}
+            />
+          ) : (
+            <></>
+          )}
+          {/* <DropdownItem
             icon={MdDeleteOutline}
             label={'Delete group'}
             dropdownStyle={'p-2 dark:text-white'}
             iconStyle={'h-9 w-9 p-2 dark:bg-slate-600'}
             onClick={() => handleDeleteGroup(conversation._id)}
-          />
+          /> */}
           <DropdownItem
             icon={IoLogInOutline}
             label={'Leave group'}
