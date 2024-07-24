@@ -178,7 +178,7 @@ export default function PopUpFindFriends({ isVisible, onClose }) {
 
           {searchResult.user && (
             <ul className='no-scrollbar mt-4 h-4/5 overflow-y-auto'>
-              {searchResult.user.map((user, index) => {
+              {searchResult?.user?.map((user, index) => {
                 const isFriend = friendLists.some((friend) => friend?.info?._id === user._id)
                 return (
                   <div

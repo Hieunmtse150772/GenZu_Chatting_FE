@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import userService from '@/services/userService'
 import axios from 'axios'
-
+import logo from '../../../assets/logo.png'
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
@@ -34,7 +34,7 @@ const ForgotPassword = () => {
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>
         <div>
-          <img className='mx-auto h-12 w-auto' src='/src/assets/logo.png' alt='Genzu Chat' />
+          <img className='mx-auto h-12 w-auto' src={logo} alt='Genzu Chat' />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
             Forgot Your Password?
           </h2>

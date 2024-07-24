@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { setCookie } from '../../../services/Cookies'
 import { storage } from '@/utils/firebaseConfig'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-
+import logo from '../../../assets/logo.png'
 const SignUpComponent = () => {
   const [fullName, setFullName] = useState('')
   const [address, setAddress] = useState('')
@@ -95,7 +95,7 @@ const SignUpComponent = () => {
     <div className='flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8'>
         <div>
-          <img className='mx-auto h-12 w-auto' src='/src/assets/logo.png' alt='Logo' />
+          <img className='mx-auto h-12 w-auto' src={logo} alt='Logo' />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
             Create your account
           </h2>
