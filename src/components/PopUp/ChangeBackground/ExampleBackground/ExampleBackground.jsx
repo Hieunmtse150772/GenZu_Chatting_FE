@@ -4,19 +4,33 @@ export default function ExampleBackground(props){
     // let backgroundStyle 
     useLayoutEffect(() =>{
         let style
-        if(props.imageUrl){
+        switch (props.previewUrl.backgroundType) {
+            case 'color':
+                style = {
+                    backgroundColor: props.previewUrl.url
+                }
+                break;
+        
+            default:
+                style = {
+                    backgroundImage: `url(${props.previewUrl.url})`,
+                    backgroundSize: 'cover'
+                }
+                break;
+        }
+        // if(props.imageUrl){
 
-             style = {
-                backgroundImage: `url(${props.imageUrl})`,
-                backgroundSize: 'cover'
-            }
-        }else{
-             style = {
-                backgroundColor: props.color
-            }
+        //      style = {
+        //         backgroundImage: `url(${props.imageUrl})`,
+        //         backgroundSize: 'cover'
+        //     }
+        // }else{
+        //      style = {
+        //         backgroundColor: props.color
+        //     }
             
 
-        }
+        // }
         setBackgroundStyle(style)
     }, [props])
     return (

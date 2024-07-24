@@ -58,9 +58,9 @@ const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
         <span className='block font-medium text-gray-800 dark:text-gray-200'>
           {userInfo?.fullName}
         </span>
-        <div className='mt-2 flex space-x-2'>
+        <div className='mt-2 flex sm:flex-col sm:mb-4 lg:flex lg:flex-row lg:mr-2 lg:space-x-2'>
           <button
-            className='rounded border-b-2 border-b-blue-500 px-3 py-1 text-blue-500 hover:bg-red-600 hover:text-white'
+            className='rounded border-b-2 border-b-blue-500 px-3 py-1 mr-2 text-blue-500 hover:bg-red-600 hover:text-white sm:mb-2 sm:pr-2'
             onClick={() => {
               handleCancelFriendRequest(requestId)
             }}
@@ -68,7 +68,7 @@ const UserInfoFriendRequest = ({ userInfo, requestId, onRequestHandled }) => {
             {isLoading ? t('loading') : t('cancel')}
           </button>
           <button
-            className='rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
+            className='rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 sm:mb-2 sm:pr-2'
             onClick={() => handleAcceptFriendRequest(requestId)}
             disabled={isLoading}
           >

@@ -6,29 +6,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleChangeBackground } from "@/redux/Slice/userSlice";
 
 export default function ChangeBackground({ onClose}){
-    const [previewUrl, setPreviewUrl] = useState('')
+    const [previewUrl, setPreviewUrl] = useState({})
+    const [imageUrl, setImageUrl] = useState('')
     const [color, setColor] = useState('')
     const conversation = useSelector((state) => state.user.conversation)
     const dispatch = useDispatch()
     const handleBackgroundSelected = useCallback((item) =>{
         switch(item.type){
             case 'color':
-                setColor(item.colorItem)
-                setPreviewUrl('')
-
+                setPreviewUrl({ url: item.colorItem, backgroundType: 'color'})
                 break
             case 'image':
-                setPreviewUrl(item.url)
-                setColor('')
+                setPreviewUrl({ url: item.url, backgroundType: 'image'})
         }
     })
     const handleChange = (e) =>{
         if(!conversation) return
         
-        const background = color ? { url: color, backgroundType: 'color'} : { url: previewUrl, backgroundType: 'image',}
+        // const background = color ? { url: color, backgroundType: 'color'} : { url: previewUrl, backgroundType: 'image',}
         const itemBackground = {
             
-            background: {background: background},
+            background: {background: previewUrl},
             idConversation: conversation._id
         }
         dispatch(handleChangeBackground(itemBackground))
@@ -53,7 +51,7 @@ export default function ChangeBackground({ onClose}){
 
                             </div>
                             <div className="flex-initial w-full border-4">
-                                <ExampleBackground color={color} imageUrl={previewUrl}/>
+                                <ExampleBackground previewUrl={previewUrl}/>
 
                             </div>
 
@@ -66,7 +64,7 @@ export default function ChangeBackground({ onClose}){
                                     <p> Hủy </p>
                             </button>
 
-                            { !previewUrl ? <button disabled className="inline-flex items-center gap-x-2 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold
+                            { !previewUrl.url ? <button disabled className="inline-flex items-center gap-x-2 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold
                                             text-black dark:text-white shadow-sm cursor-not-allowed"
                                     onClick={() =>{}}>
                                     <p> Xác nhận </p>

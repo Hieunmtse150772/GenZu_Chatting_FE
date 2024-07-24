@@ -124,7 +124,7 @@ const Sidebar = ({ togglePopupViewProfile }) => {
                   </span>
                 )}
                 {dropdownNotifyVisible && (
-                  <div className='absolute right-0 z-10 mt-2 w-64 transition-all ease-in sm:max-w-[9rem] md:w-[12rem] lg:max-w-[16rem]'>
+                  <div className='absolute right-0 z-10 mt-2 w-72 transition-all ease-in sm:max-w-[9rem] md:w-[22rem] lg:max-w-[16rem]'>
                     {/* Tooltip arrow */}
                     <div className='absolute right-2 top-0.5 h-2 w-2 -translate-y-full transform border-b-8 border-l-8 border-r-8 border-b-white border-l-transparent border-r-transparent dark:border-b-gray-800'></div>
                     <div className='overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
