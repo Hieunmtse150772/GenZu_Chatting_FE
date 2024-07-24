@@ -218,7 +218,6 @@ const userSlice = createSlice({
           state.lsGroupChats.splice(groupIndex, 1)
           state.isDeleteGroupChat = true
         }
-        state.isDeleteGroupChat = true
       } else {
         // Nếu không tìm thấy group, có thể xử lý lỗi hoặc thêm group mới
         console.error('Group not found')
@@ -286,6 +285,7 @@ const userSlice = createSlice({
         (item) => item._id == action.payload._id,
       )
 
+      let index = state.lsConversation.findIndex((item) => item._id == action.payload._id)
       const conversItem = {
         background: action.payload.background,
         avatar: conversation.avatar,
@@ -300,13 +300,19 @@ const userSlice = createSlice({
         __v: conversation.__v,
         latestMessage: conversation.latestMessage,
       }
-
+      const updatedLsConversation = JSON.parse(JSON.stringify(state.lsConversation)).map((item) => {
+        console.log(item)
+        return item
+      })
       if (conversation) {
+        updatedLsConversation[index] = conversItem
         conversation = conversItem
       }
+      console.log(updatedLsConversation)
       return {
         ...state,
         conversation: conversation,
+        lsConversation: updatedLsConversation,
       }
     },
     getFriendsAndConversation: () => {},
