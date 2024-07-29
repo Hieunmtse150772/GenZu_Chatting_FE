@@ -254,6 +254,7 @@ const userSlice = createSlice({
     alertFriendRequest: (state, action) => {},
     setReadNotification: (state, action) => {},
     sendReplyFriendRequest: (state, action) => {},
+    leaveGroup: (state, action) => {},
     setFriendRequestNotification: (state, action) => {
       state.friendRequestNotification = action.payload
     },
@@ -370,6 +371,7 @@ export const {
   addNewMemberToGroup,
   deleteMemberInGroup,
   removeMemberFromGroup,
+  leaveGroup,
   exchangeAdminGroup,
   setDeleteGroupMember,
   deleteMemberFromGroupInStore,

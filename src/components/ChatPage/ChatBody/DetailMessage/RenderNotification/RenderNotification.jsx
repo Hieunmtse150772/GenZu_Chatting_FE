@@ -34,8 +34,10 @@ const RenderNotification = ({ item }) => {
     return <p>{item.sender?.fullName + ` vừa thay đổi background`}</p>
   }
 
-  if (item.message === '3012') {
+  if (item.message === '3007') {
     if (item.sender._id === userId && item.conversation.isGroupChat) {
+      return <p>{"Bạn" + ` đã xoá ` + item.affected_user_id?.fullName}</p>
+    } else {
       return <p>{item.sender?.fullName + ` đã xoá ` + item.affected_user_id?.fullName}</p>
     }
   }

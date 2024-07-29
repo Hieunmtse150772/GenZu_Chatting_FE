@@ -88,12 +88,16 @@ function createSocketChannel(socket, idConversation) {
     })
     socket.on('notification', (data) => {
       console.log('notifi', data)
-      if (data.success && data.actionCode === 3006) {
-        emit(setNewLsConversation(data.data))
+      if (data.success && data.actionCode === 3006 || data.actionCode === 3007 || data.actionCode === 3011) {
+        const groupId = data.data._id
+        const updatedConversation = data.data.users
+        emit(updateConversationByGroupId({ groupId, updatedConversation }))
       } else if (data.success && data.actionCode === 3004) {
         emit(deleteGroupById(data.data))
         emit(setDeleteGroupMember())
       } else if (data.success && data.actionCode === 2001) {
+        emit(deleteGroupById(data.data))
+      } else if (data.success && data.actionCode === 3012) {
         emit(deleteGroupById(data.data))
       }
     })
@@ -111,7 +115,13 @@ function createSocketChannel(socket, idConversation) {
         const groupId = res.data._id
         const updatedConversation = res.data.users
         emit(updateConversationByGroupId({ groupId, updatedConversation }))
-      } else if (res.success && res.messageCode === 3023) {
+      } else if (res.success && res.messageCode === 3012) {
+        emit(deleteGroupById(res.data))
+      }
+      else if (res.success && res.messageCode === 3011) {
+        emit(deleteGroupById(res.data))
+      }
+       else if (res.success && res.messageCode === 3023) {
         const conversationId = res.data._id
         const updatedData = res.data
         emit(updateGroupChatInStore({ conversationId, updatedData }))
@@ -609,6 +619,7 @@ export default function* chatSaga() {
   yield takeLatest('user/addNewMemberToGroup', addNewMemberToGroupSaga)
   yield takeLatest('user/updateGroupChat', updateGroupChatSaga)
   yield takeLatest('user/removeMemberFromGroup', deleteMemberInGroupSaga)
+  yield takeLatest('user/leaveGroup', deleteMemberInGroupSaga)
   yield takeLatest('message/sendMessage', sendMessageSaga)
   yield takeLatest('message/deleteConversation', deleteHistoryMessage)
   yield takeLatest('message/handleEmojiOnMessage', setEmoji)
